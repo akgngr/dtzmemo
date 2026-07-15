@@ -1,0 +1,761 @@
+     1→'use client';
+     2→
+     3→import React, { useState, useRef, useEffect, useCallback } from 'react';
+     4→import { motion, AnimatePresence } from 'framer-motion';
+     5→import {
+     6→  Mic, Square, Send, ArrowLeft, Volume2, Lightbulb, X,
+     7→  Loader2, RefreshCw, Sparkles, MessageCircle, CheckCircle2, Radio, Headphones,
+     8→} from 'lucide-react';
+     9→import { Card, CardContent } from '@/components/ui/card';
+    10→import { Button } from '@/components/ui/button';
+    11→import { Badge } from '@/components/ui/badge';
+    12→import { type ConversationTopic } from '@/lib/conversation-topics';
+    13→import { useAudioRecorder } from '@/hooks/use-audio-recorder';
+    14→import { useTTS } from '@/hooks/use-tts';
+    15→import { audioBlobToWavBase64, playWavBase64 } from '@/lib/audio-utils';
+    16→import { cn } from '@/lib/utils';
+    17→
+    18→type Sender = 'user' | 'ai';
+    19→
+    20→interface ChatMessage {
+    21→  id: string;
+    22→  sender: Sender;
+    23→  text: string;
+    24→  tip?: string;
+    25→  isEnding?: boolean;
+    26→  timestamp: number;
+    27→  // Optional pre-rendered WAV audio for AI messages when using GLM-4-Voice
+    28→  audioBase64?: string;
+    29→}
+    30→
+    31→interface ConversationChatProps {
+    32→  topic: ConversationTopic;
+    33→  onExit: (summary: ConversationSummary) => void;
+    34→}
+    35→
+    36→export interface ConversationSummary {
+    37→  topicId: string;
+    38→  topicTitleDe: string;
+    39→  topicTitleTr: string;
+    40→  messageCount: number;
+    41→  userMessageCount: number;
+    42→  tipsCount: number;
+    43→  durationSec: number;
+    44→  messages: ChatMessage[];
+    45→  mode: ConversationMode;
+    46→}
+    47→
+    48→type Phase = 'chatting' | 'loading-transcription' | 'loading-ai' | 'loading-voice' | 'ended';
+    49→type ConversationMode = 'voice-chat' | 'voice-text';
+    50→
+    51→const MAX_TURNS = 10;
+    52→
+    53→export function ConversationChat({ topic, onExit }: ConversationChatProps) {
+    54→  const [mode, setMode] = useState<ConversationMode>('voice-text');
+    55→  const [messages, setMessages] = useState<ChatMessage[]>([
+    56→    {
+    57→      id: 'opener',
+    58→      sender: 'ai',
+    59→      text: topic.opener,
+    60→      timestamp: Date.now(),
+    61→    },
+    62→  ]);
+    63→  const [phase, setPhase] = useState<Phase>('chatting');
+    64→  const [textInput, setTextInput] = useState('');
+    65→  const [showHints, setShowHints] = useState(false);
+    66→  const [showVocab, setShowVocab] = useState(false);
+    67→  const [error, setError] = useState<string | null>(null);
+    68→
+    69→  const recorder = useAudioRecorder({ maxDurationMs: 30_000 });
+    70→  const tts = useTTS({ lang: 'de-DE' });
+    71→  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+    72→  const startTimeRef = useRef<number>(Date.now());
+    73→  const autoPlayRef = useRef<boolean>(true);
+    74→  const lastAiMessageRef = useRef<ChatMessage | null>(null);
+    75→  const aiAudioElRef = useRef<HTMLAudioElement | null>(null);
+    76→
+    77→  // Auto-scroll to bottom on new message
+    78→  useEffect(() => {
+    79→    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    80→  }, [messages, phase]);
+    81→
+    82→  // Auto-play AI messages:
+    83→  // - In voice-chat mode (GLM-4-Voice): play the embedded audioBase64 from the model
+    84→  // - In voice-text mode: use ElevenLabs TTS via the useTTS hook
+    85→  useEffect(() => {
+    86→    if (!autoPlayRef.current) return;
+    87→    const lastMsg = messages[messages.length - 1];
+    88→    if (!lastMsg || lastMsg.sender !== 'ai') return;
+    89→    if (lastMsg === lastAiMessageRef.current) return;
+    90→    lastAiMessageRef.current = lastMsg;
+    91→
+    92→    if (lastMsg.audioBase64) {
+    93→      // GLM-4-Voice returned audio — play it directly
+    94→      if (aiAudioElRef.current) {
+    95→        try { aiAudioElRef.current.pause(); } catch {}
+    96→      }
+    97→      try {
+    98→        aiAudioElRef.current = playWavBase64(lastMsg.audioBase64);
+    99→      } catch (e) {
+   100→        console.warn('Voice-chat audio playback failed:', e);
+   101→      }
+   102→    } else {
+   103→      // Fallback to ElevenLabs TTS
+   104→      tts.speak(lastMsg.text).catch((e) => console.warn('TTS failed:', e));
+   105→    }
+   106→  }, [messages, tts]);
+   107→
+   108→  // Stop any playing audio when switching modes
+   109→  useEffect(() => {
+   110→    if (aiAudioElRef.current) {
+   111→      try { aiAudioElRef.current.pause(); } catch {}
+   112→      aiAudioElRef.current = null;
+   113→    }
+   114→    tts.stop();
+   115→  }, [mode, tts]);
+   116→
+   117→  // ===== Voice-chat mode (GLM-4-Voice) =====
+   118→  // Sends the recorded WAV directly to /api/voice and gets back text + WAV audio.
+   119→  const sendAudioForVoiceChat = useCallback(async (blob: Blob) => {
+   120→    if (!blob || blob.size === 0) {
+   121→      setError('Ses kaydı boş. Tekrar deneyin.');
+   122→      setPhase('chatting');
+   123→      return;
+   124→    }
+   125→    setPhase('loading-voice');
+   126→    setError(null);
+   127→
+   128→    try {
+   129→      const audioBase64 = await audioBlobToWavBase64(blob);
+   130→
+   131→      // Build conversation history (exclude opener + already-sent audio user turns are text)
+   132→      const history = messages
+   133→        .filter((m) => m.id !== 'opener')
+   134→        .map((m) => ({
+   135→          role: (m.sender === 'user' ? 'user' : 'assistant') as 'user' | 'assistant',
+   136→          content: m.text,
+   137→        }));
+   138→
+   139→      const userTurnIndex = messages.filter((m) => m.sender === 'user').length;
+   140→
+   141→      const response = await fetch('/api/voice', {
+   142→        method: 'POST',
+   143→        headers: { 'Content-Type': 'application/json' },
+   144→        body: JSON.stringify({
+   145→          audioBase64,
+   146→          audioFormat: 'wav',
+   147→          history,
+   148→          scenarioLabel: topic.titleDe,
+   149→          scenarioDescription: topic.titleTr,
+   150→          userRoleLabel: 'Öğrenci',
+   151→          aiRoleLabel: topic.aiRole || 'Almanca öğretmeni',
+   152→          turnIndex: userTurnIndex,
+   153→          maxTurns: MAX_TURNS,
+   154→        }),
+   155→      });
+   156→
+   157→      if (!response.ok) {
+   158→        const errData = await response.json().catch(() => ({}));
+   159→        throw new Error(errData.error || errData.detail || `HTTP ${response.status}`);
+   160→      }
+   161→
+   162→      const data = await response.json();
+   163→
+   164→      // Add a placeholder user message (we don't have a transcript, but show "Sesli cevap")
+   165→      const userMsg: ChatMessage = {
+   166→        id: `user-${Date.now()}`,
+   167→        sender: 'user',
+   168→        text: '🎤 Sesli cevap',
+   169→        timestamp: Date.now(),
+   170→      };
+   171→      const aiMsg: ChatMessage = {
+   172→        id: `ai-${Date.now()}`,
+   173→        sender: 'ai',
+   174→        text: (data.reply || '').trim() || '...',
+   175→        audioBase64: data.audioBase64 || undefined,
+   176→        isEnding: Boolean(data.isEnding),
+   177→        timestamp: Date.now() + 1,
+   178→      };
+   179→      setMessages((prev) => [...prev, userMsg, aiMsg]);
+   180→
+   181→      if (aiMsg.isEnding) {
+   182→        setTimeout(() => setPhase('ended'), 1500);
+   183→      } else {
+   184→        setPhase('chatting');
+   185→      }
+   186→    } catch (err) {
+   187→      console.error('[ConversationChat] voice-chat failed:', err);
+   188→      setError('Sesli sohbet başarısız: ' + (err as Error).message);
+   189→      setPhase('chatting');
+   190→    }
+   191→  }, [messages, topic]);
+   192→
+   193→  // ===== Voice-text mode (GLM-ASR + GLM-4.5-Air + ElevenLabs) =====
+   194→  // Sends audio for transcription, then calls /api/chat with the text.
+   195→  // Browser records webm/opus, but Zhipu ASR only accepts WAV/MP3 — so we
+   196→  // convert to WAV base64 client-side using OfflineAudioContext.
+   197→  const sendAudioForTranscription = useCallback(async (blob: Blob) => {
+   198→    if (!blob || blob.size === 0) {
+   199→      setError('Ses kaydı boş. Tekrar deneyin.');
+   200→      setPhase('chatting');
+   201→      return;
+   202→    }
+   203→    setPhase('loading-transcription');
+   204→    setError(null);
+   205→
+   206→    try {
+   207→      // Convert browser webm/opus → 44100Hz mono 16-bit PCM WAV → base64
+   208→      const audioBase64 = await audioBlobToWavBase64(blob);
+   209→
+   210→      // Hotwords — domain vocabulary from the topic boosts recognition
+   211→      const hotwords = topic.vocabulary.map((v) => v.de).slice(0, 50);
+   212→
+   213→      const response = await fetch('/api/transcribe', {
+   214→        method: 'POST',
+   215→        headers: { 'Content-Type': 'application/json' },
+   216→        body: JSON.stringify({
+   217→          audioBase64,
+   218→          audioFormat: 'wav',
+   219→          language: 'de',
+   220→          hotwords,
+   221→        }),
+   222→      });
+   223→      if (!response.ok) {
+   224→        const errData = await response.json().catch(() => ({}));
+   225→        throw new Error(errData.error || errData.detail || `HTTP ${response.status}`);
+   226→      }
+   227→      const data = await response.json();
+   228→      const transcript: string = (data.text || '').trim();
+   229→
+   230→      if (!transcript) {
+   231→        setError('Ses anlaşılamadı. Daha net ve yüksek sesle tekrar deneyin.');
+   232→        setPhase('chatting');
+   233→        return;
+   234→      }
+   235→
+   236→      // Add user message then trigger AI reply
+   237→      const userMsg: ChatMessage = {
+   238→        id: `user-${Date.now()}`,
+   239→        sender: 'user',
+   240→        text: transcript,
+   241→        timestamp: Date.now(),
+   242→      };
+   243→      setMessages((prev) => [...prev, userMsg]);
+   244→      await fetchAiReply([...messages, userMsg]);
+   245→    } catch (err) {
+   246→      console.error('[ConversationChat] transcription failed:', err);
+   247→      setError('Ses tanıma başarısız: ' + (err as Error).message);
+   248→      setPhase('chatting');
+   249→    }
+   250→  }, [messages, topic]);
+   251→
+   252→  // Mic toggle — branches by mode
+   253→  const handleMicToggle = useCallback(async () => {
+   254→    if (recorder.isRecording) {
+   255→      const blob = await recorder.stopRecording();
+   256→      if (blob) {
+   257→        if (mode === 'voice-chat') {
+   258→          await sendAudioForVoiceChat(blob);
+   259→        } else {
+   260→          await sendAudioForTranscription(blob);
+   261→        }
+   262→      } else {
+   263→        setPhase('chatting');
+   264→      }
+   265→    } else {
+   266→      // Stop any playing audio before recording
+   267→      if (aiAudioElRef.current) { try { aiAudioElRef.current.pause(); } catch {} }
+   268→      tts.stop();
+   269→      await recorder.startRecording();
+   270→    }
+   271→  }, [recorder, mode, sendAudioForVoiceChat, sendAudioForTranscription, tts]);
+   272→
+   273→  const fetchAiReply = useCallback(async (history: ChatMessage[]) => {
+   274→    setPhase('loading-ai');
+   275→    setError(null);
+   276→    try {
+   277→      const apiMessages = history
+   278→        .filter((m) => m.id !== 'opener')
+   279→        .map((m) => ({
+   280→          role: m.sender === 'user' ? 'user' : 'assistant',
+   281→          content: m.text,
+   282→        }));
+   283→      apiMessages.unshift({ role: 'assistant', content: topic.opener });
+   284→
+   285→      const userTurnIndex = history.filter((m) => m.sender === 'user').length;
+   286→
+   287→      const response = await fetch('/api/chat', {
+   288→        method: 'POST',
+   289→        headers: { 'Content-Type': 'application/json' },
+   290→        body: JSON.stringify({
+   291→          systemPrompt: topic.systemPrompt + `\n\nBu konuşma ${MAX_TURNS} turdan oluşacak. ${userTurnIndex >= MAX_TURNS - 1 ? 'Bu son tur — vedalaşarak bitir.' : ''}`,
+   292→          messages: apiMessages,
+   293→          temperature: 0.7,
+   294→          maxTokens: 400,
+   295→        }),
+   296→      });
+   297→      if (!response.ok) {
+   298→        const errData = await response.json().catch(() => ({}));
+   299→        throw new Error(errData.error || errData.detail || `HTTP ${response.status}`);
+   300→      }
+   301→      const data = await response.json();
+   302→      const aiMsg: ChatMessage = {
+   303→        id: `ai-${Date.now()}`,
+   304→        sender: 'ai',
+   305→        text: (data.reply || '').trim() || '...',
+   306→        tip: data.tip || '',
+   307→        isEnding: Boolean(data.isEnding) || userTurnIndex >= MAX_TURNS - 1,
+   308→        timestamp: Date.now(),
+   309→      };
+   310→      setMessages((prev) => [...prev, aiMsg]);
+   311→
+   312→      if (aiMsg.isEnding) {
+   313→        setTimeout(() => setPhase('ended'), 1500);
+   314→      } else {
+   315→        setPhase('chatting');
+   316→      }
+   317→    } catch (err) {
+   318→      console.error('[ConversationChat] AI reply failed:', err);
+   319→      setError('Yanıt alınamadı: ' + (err as Error).message);
+   320→      setPhase('chatting');
+   321→    }
+   322→  }, [topic]);
+   323→
+   324→  const handleSendText = useCallback(async () => {
+   325→    const text = textInput.trim();
+   326→    if (!text || phase !== 'chatting') return;
+   327→    setTextInput('');
+   328→    const userMsg: ChatMessage = {
+   329→      id: `user-${Date.now()}`,
+   330→      sender: 'user',
+   331→      text,
+   332→      timestamp: Date.now(),
+   333→    };
+   334→    setMessages((prev) => [...prev, userMsg]);
+   335→    await fetchAiReply([...messages, userMsg]);
+   336→  }, [textInput, phase, messages, fetchAiReply]);
+   337→
+   338→  const handleEndConversation = useCallback(() => {
+   339→    setPhase('ended');
+   340→  }, []);
+   341→
+   342→  // Build and send the summary when phase becomes 'ended'
+   343→  useEffect(() => {
+   344→    if (phase !== 'ended') return;
+   345→    const userMessageCount = messages.filter((m) => m.sender === 'user').length;
+   346→    const tipsCount = messages.filter((m) => m.tip && m.tip.trim()).length;
+   347→    const summary: ConversationSummary = {
+   348→      topicId: topic.id,
+   349→      topicTitleDe: topic.titleDe,
+   350→      topicTitleTr: topic.titleTr,
+   351→      messageCount: messages.length,
+   352→      userMessageCount,
+   353→      tipsCount,
+   354→      durationSec: Math.round((Date.now() - startTimeRef.current) / 1000),
+   355→      messages,
+   356→      mode,
+   357→    };
+   358→    onExit(summary);
+   359→  }, [phase, messages, topic, onExit, mode]);
+   360→
+   361→  // Replay an AI message via TTS or its embedded audio
+   362→  const replayMessage = useCallback((msg: ChatMessage) => {
+   363→    if (msg.audioBase64) {
+   364→      if (aiAudioElRef.current) { try { aiAudioElRef.current.pause(); } catch {} }
+   365→      try { aiAudioElRef.current = playWavBase64(msg.audioBase64); } catch (e) { console.warn(e); }
+   366→    } else {
+   367→      tts.speak(msg.text);
+   368→    }
+   369→  }, [tts]);
+   370→
+   371→  const formatDuration = (s: number) => {
+   372→    const m = Math.floor(s / 60);
+   373→    const sec = s % 60;
+   374→    return `${m}:${sec.toString().padStart(2, '0')}`;
+   375→  };
+   376→
+   377→  const isBusy = phase === 'loading-transcription' || phase === 'loading-ai' || phase === 'loading-voice';
+   378→
+   379→  return (
+   380→    <div className="flex flex-col h-[calc(100vh-12rem)] md:h-[calc(100vh-8rem)]">
+   381→      {/* Topic header */}
+   382→      <div className={cn('rounded-xl p-3 text-white shadow-sm', topic.color)}>
+   383→        <div className="flex items-center justify-between gap-2">
+   384→          <div className="flex items-center gap-2 min-w-0">
+   385→            <span className="text-2xl">{topic.icon}</span>
+   386→            <div className="min-w-0">
+   387→              <h2 className="text-base font-bold leading-tight truncate">{topic.titleDe}</h2>
+   388→              <p className="text-xs opacity-90 truncate">{topic.titleTr} · {topic.difficulty}</p>
+   389→            </div>
+   390→          </div>
+   391→          <div className="flex items-center gap-1 shrink-0">
+   392→            <Button
+   393→              size="sm"
+   394→              variant="ghost"
+   395→              className="text-white hover:bg-white/20 h-8 px-2"
+   396→              onClick={() => setShowVocab((v) => !v)}
+   397→              aria-label="Kelime listesi"
+   398→            >
+   399→              <Lightbulb className="h-4 w-4" />
+   400→            </Button>
+   401→            <Button
+   402→              size="sm"
+   403→              variant="ghost"
+   404→              className="text-white hover:bg-white/20 h-8 px-2"
+   405→              onClick={() => setShowHints((v) => !v)}
+   406→              aria-label="Örnek cümleler"
+   407→            >
+   408→              <MessageCircle className="h-4 w-4" />
+   409→            </Button>
+   410→            <Button
+   411→              size="sm"
+   412→              variant="ghost"
+   413→              className="text-white hover:bg-white/20 h-8 px-2"
+   414→              onClick={handleEndConversation}
+   415→            >
+   416→              <X className="h-4 w-4" />
+   417→            </Button>
+   418→          </div>
+   419→        </div>
+   420→      </div>
+   421→
+   422→      {/* Mode switcher — voice-chat (GLM-4-Voice) vs voice-text (ASR + chat + TTS) */}
+   423→      <div className="mt-2 flex items-center gap-1 rounded-lg bg-slate-100 p-1">
+   424→        <button
+   425→          onClick={() => setMode('voice-chat')}
+   426→          className={cn(
+   427→            'flex-1 flex items-center justify-center gap-1.5 rounded-md px-2 py-1.5 text-xs font-medium transition-colors',
+   428→            mode === 'voice-chat'
+   429→              ? 'bg-white text-purple-700 shadow-sm'
+   430→              : 'text-slate-600 hover:text-slate-900'
+   431→          )}
+   432→          title="GLM-4-Voice ile uçtan uca sesli sohbet"
+   433→        >
+   434→          <Headphones className="h-3.5 w-3.5" />
+   435→          Sesli Sohbet
+   436→        </button>
+   437→        <button
+   438→          onClick={() => setMode('voice-text')}
+   439→          className={cn(
+   440→            'flex-1 flex items-center justify-center gap-1.5 rounded-md px-2 py-1.5 text-xs font-medium transition-colors',
+   441→            mode === 'voice-text'
+   442→              ? 'bg-white text-emerald-700 shadow-sm'
+   443→              : 'text-slate-600 hover:text-slate-900'
+   444→          )}
+   445→          title="GLM-ASR + GLM-4.5-Air + ElevenLabs: transkript + ipucu + Almanca TTS"
+   446→        >
+   447→          <Radio className="h-3.5 w-3.5" />
+   448→          Sesli Yazışma
+   449→        </button>
+   450→      </div>
+   451→
+   452→      {/* Vocabulary drawer (collapsible) */}
+   453→      <AnimatePresence>
+   454→        {showVocab && (
+   455→          <motion.div
+   456→            initial={{ opacity: 0, height: 0 }}
+   457→            animate={{ opacity: 1, height: 'auto' }}
+   458→            exit={{ opacity: 0, height: 0 }}
+   459→            className="overflow-hidden"
+   460→          >
+   461→            <Card className="border-0 shadow-sm mt-2">
+   462→              <CardContent className="p-3">
+   463→                <div className="flex items-center justify-between mb-2">
+   464→                  <span className="text-xs font-semibold uppercase text-muted-foreground">Önemli Kelimeler</span>
+   465→                  <button onClick={() => setShowVocab(false)} className="text-xs text-muted-foreground hover:text-foreground">
+   466→                    <X className="h-3 w-3" />
+   467→                  </button>
+   468→                </div>
+   469→                <div className="grid grid-cols-2 gap-1.5">
+   470→                  {topic.vocabulary.map((v, i) => (
+   471→                    <div key={i} className="rounded bg-amber-50 px-2 py-1 text-xs">
+   472→                      <span className="font-medium text-amber-900">{v.de}</span>
+   473→                      <span className="text-amber-700 ml-1">— {v.tr}</span>
+   474→                    </div>
+   475→                  ))}
+   476→                </div>
+   477→              </CardContent>
+   478→            </Card>
+   479→          </motion.div>
+   480→        )}
+   481→      </AnimatePresence>
+   482→
+   483→      {/* Sample phrases drawer */}
+   484→      <AnimatePresence>
+   485→        {showHints && (
+   486→          <motion.div
+   487→            initial={{ opacity: 0, height: 0 }}
+   488→            animate={{ opacity: 1, height: 'auto' }}
+   489→            exit={{ opacity: 0, height: 0 }}
+   490→            className="overflow-hidden"
+   491→          >
+   492→            <Card className="border-0 shadow-sm mt-2">
+   493→              <CardContent className="p-3">
+   494→                <div className="flex items-center justify-between mb-2">
+   495→                  <span className="text-xs font-semibold uppercase text-muted-foreground">Örnek Cümleler</span>
+   496→                  <button onClick={() => setShowHints(false)} className="text-xs text-muted-foreground hover:text-foreground">
+   497→                    <X className="h-3 w-3" />
+   498→                  </button>
+   499→                </div>
+   500→                <div className="flex flex-wrap gap-1.5">
+   501→                  {topic.samplePhrases.map((p, i) => (
+   502→                    <button
+   503→                      key={i}
+   504→                      onClick={() => { setTextInput(p); setShowHints(false); }}
+   505→                      className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs text-emerald-700 hover:bg-emerald-100 transition-colors"
+   506→                    >
+   507→                      {p}
+   508→                    </button>
+   509→                  ))}
+   510→                </div>
+   511→              </CardContent>
+   512→            </Card>
+   513→          </motion.div>
+   514→        )}
+   515→      </AnimatePresence>
+   516→
+   517→      {/* Mode badge */}
+   518→      <div className="mt-2 flex justify-center">
+   519→        <Badge variant="outline" className={cn(
+   520→          'text-[10px] py-0.5 px-2',
+   521→          mode === 'voice-chat' ? 'border-purple-200 text-purple-600 bg-purple-50' : 'border-emerald-200 text-emerald-600 bg-emerald-50'
+   522→        )}>
+   523→          {mode === 'voice-chat'
+   524→            ? 'GLM-4-Voice · uçtan uca sesli sohbet (transkriptsiz)'
+   525→            : 'GLM-ASR-2512 · GLM-4.5-Air · ElevenLabs TTS'}
+   526→        </Badge>
+   527→      </div>
+   528→
+   529→      {/* Error display */}
+   530→      <AnimatePresence>
+   531→        {error && (
+   532→          <motion.div
+   533→            initial={{ opacity: 0, y: -10 }}
+   534→            animate={{ opacity: 1, y: 0 }}
+   535→            exit={{ opacity: 0, y: -10 }}
+   536→            className="mt-2 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700 flex items-start justify-between gap-2"
+   537→          >
+   538→            <div className="flex-1">
+   539→              <p className="font-medium">Hata:</p>
+   540→              <p className="mt-0.5">{error}</p>
+   541→              <p className="mt-1 opacity-80">
+   542→                {mode === 'voice-chat'
+   543→                  ? 'Sesli Yazışma moduna geçebilir veya yazarak cevap verebilirsiniz.'
+   544→                  : 'Yazarak cevap vermeye devam edebilirsiniz.'}
+   545→              </p>
+   546→            </div>
+   547→            <button onClick={() => setError(null)} className="shrink-0"><X className="h-3 w-3" /></button>
+   548→          </motion.div>
+   549→        )}
+   550→      </AnimatePresence>
+   551→
+   552→      {/* Messages area */}
+   553→      <div className="flex-1 overflow-y-auto py-3 space-y-3 min-h-0">
+   554→        {messages.map((msg) => (
+   555→          <motion.div
+   556→            key={msg.id}
+   557→            initial={{ opacity: 0, y: 10 }}
+   558→            animate={{ opacity: 1, y: 0 }}
+   559→            className={cn(
+   560→              'flex gap-2',
+   561→              msg.sender === 'user' ? 'justify-end' : 'justify-start'
+   562→            )}
+   563→          >
+   564→            {msg.sender === 'ai' && (
+   565→              <div className={cn('shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold', topic.color)}>
+   566→                {topic.icon}
+   567→              </div>
+   568→            )}
+   569→            <div className={cn(
+   570→              'max-w-[80%] rounded-2xl px-4 py-2.5 shadow-sm',
+   571→              msg.sender === 'user'
+   572→                ? mode === 'voice-chat'
+   573→                  ? 'bg-purple-600 text-white rounded-br-sm'
+   574→                  : 'bg-emerald-600 text-white rounded-br-sm'
+   575→                : 'bg-white border border-gray-100 text-gray-800 rounded-bl-sm'
+   576→            )}>
+   577→              <p className="text-sm leading-relaxed" dir="auto">{msg.text}</p>
+   578→              {msg.sender === 'ai' && (
+   579→                <div className="mt-1.5 flex items-center gap-2">
+   580→                  <button
+   581→                    onClick={() => replayMessage(msg)}
+   582→                    className={cn(
+   583→                      'text-xs hover:underline flex items-center gap-0.5',
+   584→                      msg.audioBase64 ? 'text-purple-600 hover:text-purple-800' : 'text-purple-600 hover:text-purple-800'
+   585→                    )}
+   586→                  >
+   587→                    <Volume2 className="h-3 w-3" /> Tekrar dinle
+   588→                  </button>
+   589→                  {msg.audioBase64 && (
+   590→                    <span className="text-[10px] text-purple-400 flex items-center gap-0.5">
+   591→                      <Headphones className="h-3 w-3" /> GLM-4-Voice
+   592→                    </span>
+   593→                  )}
+   594→                </div>
+   595→              )}
+   596→              {msg.tip && msg.tip.trim() && (
+   597→                <div className="mt-2 rounded-lg bg-amber-50 px-2 py-1.5 text-xs text-amber-800 border border-amber-100">
+   598→                  <span className="font-semibold">💡 İpucu: </span>{msg.tip}
+   599→                </div>
+   600→              )}
+   601→            </div>
+   602→            {msg.sender === 'user' && (
+   603→              <div className={cn(
+   604→                'shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm',
+   605→                mode === 'voice-chat' ? 'bg-purple-100 text-purple-700' : 'bg-emerald-100 text-emerald-700'
+   606→              )}>
+   607→                🧑
+   608→              </div>
+   609→            )}
+   610→          </motion.div>
+   611→        ))}
+   612→
+   613→        {/* Loading indicators */}
+   614→        {phase === 'loading-transcription' && (
+   615→          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-end gap-2">
+   616→            <div className="bg-emerald-100 rounded-2xl rounded-br-sm px-4 py-2.5 text-xs text-emerald-700 flex items-center gap-2">
+   617→              <Loader2 className="h-3 w-3 animate-spin" />
+   618→              GLM-ASR sesi metne çeviriyor...
+   619→            </div>
+   620→            <div className="shrink-0 w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 text-sm">🧑</div>
+   621→          </motion.div>
+   622→        )}
+   623→        {phase === 'loading-ai' && (
+   624→          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start gap-2">
+   625→            <div className={cn('shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white text-sm', topic.color)}>
+   626→              {topic.icon}
+   627→            </div>
+   628→            <div className="bg-white border border-gray-100 rounded-2xl rounded-bl-sm px-4 py-2.5 text-xs text-gray-500 flex items-center gap-2">
+   629→              <Loader2 className="h-3 w-3 animate-spin" />
+   630→              GLM-4.5-Air düşünüyor...
+   631→            </div>
+   632→          </motion.div>
+   633→        )}
+   634→        {phase === 'loading-voice' && (
+   635→          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start gap-2">
+   636→            <div className={cn('shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white text-sm', topic.color)}>
+   637→              {topic.icon}
+   638→            </div>
+   639→            <div className="bg-white border border-gray-100 rounded-2xl rounded-bl-sm px-4 py-2.5 text-xs text-purple-600 flex items-center gap-2">
+   640→              <Loader2 className="h-3 w-3 animate-spin" />
+   641→              GLM-4-Voice dinliyor ve yanıtlıyor...
+   642→            </div>
+   643→          </motion.div>
+   644→        )}
+   645→
+   646→        <div ref={messagesEndRef} />
+   647→      </div>
+   648→
+   649→      {/* Recording visualizer (when active) */}
+   650→      <AnimatePresence>
+   651→        {recorder.isRecording && (
+   652→          <motion.div
+   653→            initial={{ opacity: 0, y: 10 }}
+   654→            animate={{ opacity: 1, y: 0 }}
+   655→            exit={{ opacity: 0, y: 10 }}
+   656→            className={cn(
+   657→              'mb-2 flex items-center gap-3 rounded-xl px-3 py-2',
+   658→              mode === 'voice-chat' ? 'bg-purple-50' : 'bg-red-50'
+   659→            )}
+   660→          >
+   661→            <div className="flex items-center gap-1">
+   662→              {[0, 1, 2, 3, 4].map((i) => (
+   663→                <motion.span
+   664→                  key={i}
+   665→                  className={cn('w-1 rounded-full', mode === 'voice-chat' ? 'bg-purple-500' : 'bg-red-500')}
+   666→                  animate={{
+   667→                    height: [4, Math.max(4, recorder.audioLevel / 5 + i * 2), 4],
+   668→                  }}
+   669→                  transition={{
+   670→                    duration: 0.4 + i * 0.05,
+   671→                    repeat: Infinity,
+   672→                    repeatType: 'reverse',
+   673→                  }}
+   674→                  style={{ height: 4 }}
+   675→                />
+   676→              ))}
+   677→            </div>
+   678→            <span className={cn('text-xs font-medium flex-1', mode === 'voice-chat' ? 'text-purple-700' : 'text-red-700')}>
+   679→              {mode === 'voice-chat' ? 'GLM-4-Voice dinliyor...' : 'Kaydediliyor...'} {formatDuration(recorder.duration)}
+   680→            </span>
+   681→            <span className={cn('text-xs', mode === 'voice-chat' ? 'text-purple-500' : 'text-red-500')}>
+   682→              Bitirmek için mikrofona tekrar bas
+   683→            </span>
+   684→          </motion.div>
+   685→        )}
+   686→      </AnimatePresence>
+   687→
+   688→      {/* Bottom input area */}
+   689→      <div className="border-t border-gray-100 pt-3 space-y-2">
+   690→        <div className="flex items-center gap-2">
+   691→          <input
+   692→            type="text"
+   693→            value={textInput}
+   694→            onChange={(e) => setTextInput(e.target.value)}
+   695→            onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendText(); } }}
+   696→            placeholder="Yazarak da cevap verebilirsin..."
+   697→            disabled={phase !== 'chatting'}
+   698→            className="flex-1 h-11 rounded-full border border-gray-200 bg-white px-4 text-sm focus:border-emerald-400 focus:outline-none disabled:opacity-50"
+   699→            dir="auto"
+   700→          />
+   701→          <Button
+   702→            onClick={handleSendText}
+   703→            disabled={!textInput.trim() || phase !== 'chatting'}
+   704→            className="h-11 w-11 p-0 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white"
+   705→            aria-label="Gönder"
+   706→          >
+   707→            <Send className="h-4 w-4" />
+   708→          </Button>
+   709→        </div>
+   710→
+   711→        <div className="flex items-center justify-center">
+   712→          <button
+   713→            onClick={handleMicToggle}
+   714→            disabled={phase !== 'chatting' && !recorder.isRecording}
+   715→            className={cn(
+   716→              'relative flex h-16 w-16 items-center justify-center rounded-full text-white shadow-lg transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed',
+   717→              recorder.isRecording
+   718→                ? (mode === 'voice-chat' ? 'bg-purple-500 hover:bg-purple-600' : 'bg-red-500 hover:bg-red-600')
+   719→                : (mode === 'voice-chat' ? 'bg-purple-600 hover:bg-purple-700' : 'bg-emerald-600 hover:bg-emerald-700')
+   720→            )}
+   721→            aria-label={recorder.isRecording ? 'Kaydı durdur' : 'Konuş'}
+   722→          >
+   723→            {recorder.isRecording ? (
+   724→              <Square className="h-6 w-6" fill="currentColor" />
+   725→            ) : isBusy ? (
+   726→              <Loader2 className="h-6 w-6 animate-spin" />
+   727→            ) : (
+   728→              <Mic className="h-7 w-7" />
+   729→            )}
+   730→            {recorder.isRecording && (
+   731→              <>
+   732→                <motion.span
+   733→                  className="absolute inset-0 rounded-full border-2 border-white"
+   734→                  initial={{ opacity: 0.7, scale: 1 }}
+   735→                  animate={{ opacity: 0, scale: 1.8 }}
+   736→                  transition={{ duration: 1.2, repeat: Infinity }}
+   737→                />
+   738→                <motion.span
+   739→                  className="absolute inset-0 rounded-full border-2 border-white"
+   740→                  initial={{ opacity: 0.5, scale: 1 }}
+   741→                  animate={{ opacity: 0, scale: 2.2 }}
+   742→                  transition={{ duration: 1.5, repeat: Infinity, delay: 0.4 }}
+   743→                />
+   744→              </>
+   745→            )}
+   746→          </button>
+   747→        </div>
+   748→        <p className="text-center text-xs text-muted-foreground">
+   749→          {recorder.isRecording
+   750→            ? 'Konuşmayı bitirince tekrar bas'
+   751→            : phase === 'chatting'
+   752→            ? mode === 'voice-chat'
+   753→              ? '🎤 Sesli Sohbet: GLM-4-Voice doğrudan Almanca sesli cevap verir'
+   754→              : '🎤 Almanca konuşmak için mikrofona bas'
+   755→            : 'İşleniyor...'}
+   756→        </p>
+   757→      </div>
+   758→    </div>
+   759→  );
+   760→}
+   761→

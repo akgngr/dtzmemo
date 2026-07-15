@@ -1,0 +1,588 @@
+{
+  "B1_BILDBESCHREIBUNG_ERFAHRUNG": {
+    "Genel_Bilgiler": {
+      "Başlık": "B1 BILDBESCHREIBUNG ERFAHRUNG DENEYİM & TECRÜBE HAA",
+      "Açıklama": {
+        "Almanca": "ERFAHRUNG: Erzählen Sie bitte: Welche Erfahrungen haben Sie damit.",
+        "Türkçe": "DENEYİM: Lütfen bize söyleyin: Bununla ilgili deneyiminiz nedir?"
+      },
+      "Soru": {
+        "Almanca": "Welche Erfahrungen haben Sie mit diesem Thema in Ihrer Heimat oder in Deutschland gemacht?",
+        "Türkçe": "Bu konuda ülkenizde veya Almanya'da hangi deneyimleri yaşadınız?"
+      }
+    },
+    "Tüyolar": [
+      {
+        "Numara": 1,
+        "Açıklama": "Kendinizi tanıtma cümlelerinden kullanabileceğiniz ifadeler."
+      },
+      {
+        "Numara": 2,
+        "Açıklama": "Söylediklerinizin gerçeği yansıtması gerekmez. Size kolay geleni ifade edin."
+      },
+      {
+        "Numara": 3,
+        "Açıklama": "Konuyu ailenizden biri üzerine konuşarak aktarabilirsiniz."
+      },
+      {
+        "Numara": 4,
+        "Açıklama": "Basit cümleler kullanın."
+      },
+      {
+        "Numara": 5,
+        "Açıklama": "Her konuya uyan maymuncuk cümleler oluşturun ve ezberleyin."
+      },
+      {
+        "Numara": 6,
+        "Açıklama": "Güncel konulara değinin. (Korona, Irkçılık gibi)"
+      },
+      {
+        "Numara": 7,
+        "Açıklama": "Her konudan birkaç kalıp cümle ezberleyin."
+      },
+      {
+        "Numara": 8,
+        "Açıklama": "Kullanabileceğiniz diğer kalıp cümle örnekleri."
+      }
+    ],
+    "Kategoriler": {
+      "Vorstellung": {
+        "Açıklama": "Erfahrung ve soru bölümünde kendinizi tanıtma cümlelerinden kullanabileceğiniz ifadeler.",
+        "Örnekler": [
+          {
+            "Almanca": "Ich habe schon gesagt.",
+            "Türkçe": "Zaten söylemiştim."
+          },
+          {
+            "Almanca": "Ich habe einen Sohn und eine Tochter. Sie besuchen Parler Gymnasium.",
+            "Türkçe": "Bir oğlum ve bir kızım var. Onlar Parler Lisesi'ne gidiyor."
+          },
+          {
+            "Almanca": "Ich habe einen Sohn. Er ist 4 Jahre alt und besucht den Kindergarten.",
+            "Türkçe": "Bir oğlum var. 4 yaşında ve anaokuluna gidiyor."
+          },
+          {
+            "Almanca": "Nach dem Gymnasium habe ich 5 Jahre in Istanbul an der Marmara Universität Theologie studiert.",
+            "Türkçe": "Liseden sonra 5 yıl İstanbul Marmara Üniversitesinde İlahiyat okudum."
+          },
+          {
+            "Almanca": "In Istanbul habe ich in einer privaten Schule 15 Jahre lang gearbeitet.",
+            "Türkçe": "İstanbul'da 15 yıl özel bir okulda çalıştım."
+          }
+        ]
+      },
+      "İşinize_Geldiği_Gibi_Konuşun": {
+        "Açıklama": "Söylediklerinizin gerçeği yansıtması gerekmez. Kolayınıza geleni ifade edin.",
+        "Örnekler": [
+          {
+            "Konu": "LESEN (Okumak)",
+            "Almanca": [
+              "Ich lese gern Bücher.",
+              "Ich denke, es ist wichtig, Bücher zu lesen.",
+              "Ich habe viele Bücher in meinem Haus."
+            ],
+            "Türkçe": [
+              "Kitap okumayı severim.",
+              "Kitap okumanın önemli olduğunu düşünüyorum.",
+              "Evimde birçok kitap var."
+            ]
+          },
+          {
+            "Konu": "SPORT (Spor)",
+            "Almanca": [
+              "Ich mache gerne Sport.",
+              "Ich denke, es ist wichtig, Sport zu treiben.",
+              "Ich habe viele Sportgeräte in meinem Haus."
+            ],
+            "Türkçe": [
+              "Spor yapmayı severim.",
+              "Spor yapmanın önemli olduğunu düşünüyorum.",
+              "Evimde birçok spor aleti var."
+            ]
+          },
+          {
+            "Konu": "KOCHEN (Yemek Yapmak)",
+            "Almanca": [
+              "Ich koche gern.",
+              "Ich denke, es ist wichtig zu kochen.",
+              "Ich habe viele Kochbücher in meinem Haus."
+            ],
+            "Türkçe": [
+              "Yemek yapmayı severim.",
+              "Yemek yapmanın önemli olduğunu düşünüyorum.",
+              "Evimde birçok yemek kitabı var."
+            ]
+          },
+          {
+            "Konu": "TIERE (Hayvanlar)",
+            "Almanca": [
+              "Ich liebe Tiere.",
+              "Ich denke, es ist wichtig, sich um Tiere zu kümmern.",
+              "Wir haben einen Hund in meinem Haus."
+            ],
+            "Türkçe": [
+              "Hayvanları severim.",
+              "Hayvanlara bakmanın önemli olduğunu düşünüyorum.",
+              "Evimde bir köpek var."
+            ]
+          }
+        ]
+      },
+      "Aileden_Biri_Üzerine_Konuşmak": {
+        "Açıklama": "Konuyu ailenizden biri üzerine konuşarak aktarabilirsiniz.",
+        "Örnekler": [
+          {
+            "Almanca": "Mein Onkel ist auch Arzt.",
+            "Türkçe": "Dayım da doktordur."
+          },
+          {
+            "Almanca": "Mein Onkel ist auch Polizist.",
+            "Türkçe": "Dayım da polistir."
+          },
+          {
+            "Almanca": "Mein Onkel ist auch Altenpfleger.",
+            "Türkçe": "Dayım da yaşlı bakıcısıdır."
+          },
+          {
+            "Almanca": "Mein Onkel hat vielen Menschen geholfen.",
+            "Türkçe": "Dayım birçok insana yardım etti."
+          },
+          {
+            "Almanca": "Ich bin stolz auf meinen Onkel.",
+            "Türkçe": "Dayıma gurur duyuyorum."
+          },
+          {
+            "Almanca": "Mein Vater und mein Bruder haben auch in meinem Land in diesem Bereich gearbeitet.",
+            "Türkçe": "Babam ve erkek kardeşim de ülkemde bu alanda çalıştı."
+          },
+          {
+            "Almanca": "Ich liebe diesen Job sehr.",
+            "Türkçe": "Bu işi çok seviyorum."
+          },
+          {
+            "Almanca": "Ich interessiere mich für diesen Beruf.",
+            "Türkçe": "Bu mesleğe ilgi duyuyorum."
+          },
+          {
+            "Almanca": "Ich möchte, dass mein Kind in Zukunft Arzt wird.",
+            "Türkçe": "Çocuğumun gelecekte doktor olmasını istiyorum."
+          },
+          {
+            "Almanca": "Mein Kind möchte in Zukunft Arzt werden.",
+            "Türkçe": "Çocuğum gelecekte doktor olmak istiyor."
+          }
+        ]
+      },
+      "Basit_Cümleler_Kullanın": {
+        "Açıklama": "Basit cümleler kullanarak ifade edin.",
+        "Örnekler": [
+          {
+            "Almanca": "Mein Haus/Meine Wohnung ist sehr schön und neu.",
+            "Türkçe": "Evim/dairem çok güzel ve yeni."
+          },
+          {
+            "Almanca": "Meine Wohnung sieht so ähnlich aus wie auf dem Foto.",
+            "Türkçe": "Dairem fotoğraftakine benziyor."
+          },
+          {
+            "Almanca": "Mein Haus ist so.",
+            "Türkçe": "Evim böyledir."
+          },
+          {
+            "Almanca": "Mein Auto ist so.",
+            "Türkçe": "Arabam böyledir."
+          },
+          {
+            "Almanca": "Mein Kind ist so.",
+            "Türkçe": "Çocuğum böyledir."
+          },
+          {
+            "Almanca": "Mein Leben ist so.",
+            "Türkçe": "Hayatım böyledir."
+          },
+          {
+            "Almanca": "In der Nähe von meinem Haus gibt es einen Spielplatz.",
+            "Türkçe": "Evimin yakınında bir oyun alanı var."
+          },
+          {
+            "Almanca": "Wir haben einen Spielplatz.",
+            "Türkçe": "Bir oyun alanımız var."
+          },
+          {
+            "Almanca": "Wir haben eine Katze.",
+            "Türkçe": "Bir kedimiz var."
+          },
+          {
+            "Almanca": "Wir haben einen Hund.",
+            "Türkçe": "Bir köpeğimiz var."
+          },
+          {
+            "Almanca": "Meine Kinder spielen manchmal auf dem Spielplatz.",
+            "Türkçe": "Çocuklarım bazen oyun bahçesinde oynar."
+          },
+          {
+            "Almanca": "Meine Kinder spielen dort.",
+            "Türkçe": "Çocuklarım orada oynar."
+          }
+        ]
+      },
+      "Maymuncuk_Cümleler": {
+        "Açıklama": "Her konuya uyarlayabileceğiniz cümle kalıpları.",
+        "Örnekler": [
+          {
+            "Almanca": "Als Lehrer(in) unterstütze ich die Bildung.",
+            "Türkçe": "Bir öğretmen olarak, eğitimi destekliyorum."
+          },
+          {
+            "Almanca": "Als Lehrer(in) unterstütze ich das Lesen/den Sport/einen gesunden Sport/ein gesundes Leben/eine gesunde Ernährung/die Mülltrennung.",
+            "Türkçe": "Bir öğretmen olarak, okumayı/sporu/sağlıklı sporu/sağlıklı yaşamı/sağlıklı beslenmeyi/çöp ayrımını destekliyorum."
+          },
+          {
+            "Almanca": "Als Mutter/Vater/Mensch ...",
+            "Türkçe": "Anne/baba/insan olarak ..."
+          },
+          {
+            "Almanca": "Als Person mit Gewissen unterstütze ich den Schutz von Tieren.",
+            "Türkçe": "Vicdan sahibi biri olarak hayvanların korunmasını destekliyorum."
+          },
+          {
+            "Almanca": "Ich war früher gegen diese Meinung/Idee.",
+            "Türkçe": "Eskiden bu düşünceye karşıydım."
+          },
+          {
+            "Almanca": "Jetzt unterstütze ich diese Meinung/Idee.",
+            "Türkçe": "Şimdi bu fikri destekliyorum."
+          },
+          {
+            "Almanca": "Dieses Thema wird unsere Zukunft prägen.",
+            "Türkçe": "Bu konu geleceğimizi şekillendirecek."
+          },
+          {
+            "Almanca": "Dieses Bild erinnerte mich an den Wert der Bildung.",
+            "Türkçe": "Bu resim bana eğitimin değerini hatırlattı."
+          },
+          {
+            "Almanca": "Dieses Bild zeigte mir den Wert der Familie.",
+            "Türkçe": "Bu resim bana ailenin değerini gösterdi."
+          },
+          {
+            "Almanca": "Dieses Bild erinnerte mich an meine Kindheit.",
+            "Türkçe": "Bu resim bana çocukluğumu hatırlattı."
+          },
+          {
+            "Almanca": "Die Frau auf dem Bild erinnerte mich an meine Mutter.",
+            "Türkçe": "Resimdeki kadın bana annemi hatırlattı."
+          }
+        ]
+      },
+      "Güncel_Konular": {
+        "Açıklama": "Güncel konulara değinin (Korona, Irkçılık, Eğitim, Teknoloji, Çevre, Yaşlı Bakımı).",
+        "Örnekler": [
+          {
+            "Almanca": "Corona erinnerte mich an den Wert des Sports.",
+            "Türkçe": "Corona bana sporun değerini hatırlattı."
+          },
+          {
+            "Almanca": "Corona erinnerte uns an den Wert dieses Themas.",
+            "Türkçe": "Corona bize bu konunun değerini hatırlattı."
+          },
+          {
+            "Almanca": "Corona erinnerte uns an den Wert der Freundschaft.",
+            "Türkçe": "Corona bize dostluğun değerini hatırlattı."
+          },
+          {
+            "Almanca": "Corona erinnerte uns an den Wert der Gesundheit.",
+            "Türkçe": "Corona bize sağlığın değerini hatırlattı."
+          },
+          {
+            "Almanca": "Wir hatten während der Pandemie Zeit, diese Wichtigkeit besser zu verstehen.",
+            "Türkçe": "Pandemi sırasında bu önemini daha iyi anladık."
+          },
+          {
+            "Almanca": "Ich denke, dass das Foto vor der Corona fotografiert wurde, denn alle Menschen tragen keine Maske.",
+            "Türkçe": "Fotoğrafın Corona’dan önce çekildiğini düşünüyorum, çünkü kimse maske takmıyor."
+          }
+        ]
+      },
+      "Her_Konudan_Kalıp_Cümleler": {
+        "Açıklama": "Her konudan kalıp cümleler ezberleyin.",
+        "Örnekler": [
+          {
+            "Almanca": "Hier in Deutschland kann man fast alle täglichen Bedürfnisse im Supermarkt einkaufen.",
+            "Türkçe": "Almanya'da neredeyse tüm günlük ihtiyaçları süpermarkette satın alabilirsiniz."
+          },
+          {
+            "Almanca": "In Stuttgart, wo wir wohnen, gibt es REWE, Lidl, Aldi und türkische Märkte.",
+            "Türkçe": "Yaşadığımız Stuttgart'ta REWE, Lidl, Aldi ve Türk pazarları var."
+          },
+          {
+            "Almanca": "Heutzutage kann man im Internet etwas/alles bestellen oder kaufen.",
+            "Türkçe": "Günümüzde internetten bir şey/her şey sipariş edebilir veya satın alabilirsiniz."
+          },
+          {
+            "Almanca": "Bei mir ist das so: Ich kaufe meine Lebensmittel auch im Supermarkt, weil es nicht so teuer ist.",
+            "Türkçe": "Benim için şöyle: Yiyeceklerimi de süpermarkette alıyorum, çünkü o kadar pahalı değil."
+          },
+          {
+            "Almanca": "Ich möchte mein Geld sparen, deshalb gehe ich zum ALDI oder zum LIDL. Dort ist das Obst und Gemüse auch frisch.",
+            "Türkçe": "Paramı tasarruf etmek istiyorum, bu yüzden ALDI veya LIDL'e gidiyorum. Orada meyve ve sebzeler de tazedir."
+          },
+          {
+            "Almanca": "Meine Lebensmittel kaufe ich oft bei Lidl oder Aldi, manchmal auch im türkischen Supermarkt. Dort gibt es viele billige Angebote.",
+            "Türkçe": "Yiyeceklerimi genellikle Lidl veya Aldi'den, bazen de Türk süpermarketinden satın alıyorum. Orada birçok ucuz teklif var."
+          }
+        ]
+      },
+      "Diğer_Kalıp_Cümleler": {
+        "Açıklama": "Kullanılabilecek diğer kalıp cümleler.",
+        "Örnekler": [
+          {
+            "Almanca": "Es gibt viele Möglichkeiten in der Freizeit etwas zu machen, z.B. ein Picknick machen, Fahrrad fahren, Freunde treffen usw.",
+            "Türkçe": "Boş zamanlarınızda bir şeyler yapmak için pek çok fırsat vardır, örn. piknik yapmak, bisiklete binmek, arkadaşlarla buluşmak vb."
+          },
+          {
+            "Almanca": "Ich denke, der Sport ist sehr wichtig, weil man durch Sport gesund wird.",
+            "Türkçe": "Bence spor çok önemli, çünkü spor sayesinde sağlıklı olursunuz."
+          },
+          {
+            "Almanca": "Das Radfahren ist sehr wichtig, um die Umwelt zu schützen.",
+            "Türkçe": "Çevreyi korumak için bisiklet sürmek çok önemlidir."
+          },
+          {
+            "Almanca": "Das Fahrrad ist ein sehr gutes Fahrzeug, weil es gut für Gesundheit und Umwelt ist. Es ist auch sehr praktisch.",
+            "Türkçe": "Bisiklet, sağlığa ve çevreye iyi geldiği için çok iyi bir araçtır. Aynı zamanda çok kullanışlıdır."
+          },
+          {
+            "Almanca": "Ein Handy ist sehr wichtig für die Kommunikation mit Freunden.",
+            "Türkçe": "Arkadaşlarla iletişim kurmak için cep telefonu çok önemlidir."
+          },
+          {
+            "Almanca": "Ich kenne diese Situation sehr gut, weil ...",
+            "Türkçe": "Bu durumu çok iyi biliyorum, çünkü ..."
+          },
+          {
+            "Almanca": "Dieses Foto erinnert mich an die Zeit, als ich Fußball spielte.",
+            "Türkçe": "Bu fotoğraf bana futbol oynadığım zamanları hatırlatıyor."
+          },
+          {
+            "Almanca": "Dieses Foto erinnert mich an die Zeit, als ich zur Schule ging.",
+            "Türkçe": "Bu fotoğraf bana okula gittiğim zamanı hatırlatıyor."
+          },
+          {
+            "Almanca": "Die meisten Menschen in meinem Land mögen Kino wie in Deutschland.",
+            "Türkçe": "Benim ülkemde çoğu insan Almanya'daki gibi sinemayı sever."
+          },
+          {
+            "Almanca": "In meinem Land gibt es nur sehr wenige Sportmöglichkeiten.",
+            "Türkçe": "Ülkemde çok az spor olanağı var."
+          },
+          {
+            "Almanca": "In meinem Land gibt es nur sehr wenige gesundheitliche Möglichkeiten.",
+            "Türkçe": "Ülkemde çok az sağlık olanağı var."
+          },
+          {
+            "Almanca": "In meiner Heimat gibt es nur sehr wenige technologische Möglichkeiten.",
+            "Türkçe": "Ülkemde çok az teknolojik imkan var."
+          },
+          {
+            "Almanca": "In meinem Heimatland gibt es viele Einkaufsmöglichkeiten.",
+            "Türkçe": "Ülkemde pek çok alışveriş imkanı var."
+          },
+          {
+            "Almanca": "In meinem Land gibt es mehr Einkaufsmöglichkeiten als in Deutschland.",
+            "Türkçe": "Ülkemde Almanya'dakinden daha fazla alışveriş imkanı var."
+          },
+          {
+            "Almanca": "In meinem Land gibt es weniger technologische Möglichkeiten als in Deutschland.",
+            "Türkçe": "Ülkemde Almanya'dakinden daha az teknolojik fırsat var."
+          },
+          {
+            "Almanca": "Das deutsche Gesundheitssystem ist besser als in der Türkei.",
+            "Türkçe": "Alman sağlık sistemi Türkiye'dekinden daha iyidir."
+          },
+          {
+            "Almanca": "Das deutsche Bildungssystem ist besser als in der Türkei.",
+            "Türkçe": "Alman eğitim sistemi Türkiye'dekinden daha iyidir."
+          },
+          {
+            "Almanca": "Das türkische Müllsystem ist besser als in Deutschland.",
+            "Türkçe": "Türk çöp sistemi Almanya'dakinden daha iyidir."
+          }
+        ]
+      },
+      "Kişisel_Deneyimler": {
+        "Açıklama": "Kişisel deneyimlerinizi ifade eden cümleler.",
+        "Örnekler": [
+          {
+            "Almanca": "Ich denke, die ältere Generation liest heute mehr als junge Leute.",
+            "Türkçe": "Bence yaşlı nesil artık gençlerden daha çok okuyor."
+          },
+          {
+            "Almanca": "Das Buch ist die Quelle des Wissens.",
+            "Türkçe": "Kitap bilginin kaynağıdır."
+          },
+          {
+            "Almanca": "Ich finde dieses Bild nicht interessant, weil ich mich nicht für das Thema interessiere.",
+            "Türkçe": "Bu resmi ilginç bulmuyorum, çünkü konuyla ilgilenmiyorum."
+          },
+          {
+            "Almanca": "Ich mag es, wenn es warm ist.",
+            "Türkçe": "Sıcak olduğundan hoşuma gidiyor."
+          },
+          {
+            "Almanca": "Ich mag es nicht, wenn es kalt ist.",
+            "Türkçe": "Soğuk olduğundan hoşuma gitmiyor."
+          },
+          {
+            "Almanca": "Ich vertrage die Hitze nicht.",
+            "Türkçe": "Sıcağa dayanamıyorum."
+          },
+          {
+            "Almanca": "Zu Hause ist, wo man glücklich ist.",
+            "Türkçe": "Ev, mutlu olduğun yerdir."
+          },
+          {
+            "Almanca": "Dieser Ort hat eine tolle Atmosphäre.",
+            "Türkçe": "Bu yer harika bir atmosfere sahiptir."
+          },
+          {
+            "Almanca": "Ich bin immer zu Hause und kümmere mich um meine Kinder.",
+            "Türkçe": "Ben hep evdeyim ve çocuklarıma bakıyorum."
+          },
+          {
+            "Almanca": "Ich bin immer ziemlich beschäftigt.",
+            "Türkçe": "Ben her zaman meşgulüm."
+          },
+          {
+            "Almanca": "Ich habe nicht viel Zeit für mich.",
+            "Türkçe": "Kendime çok zaman ayıramıyorum."
+          },
+          {
+            "Almanca": "Wenn ich Zeit habe, fahre ich Fahrrad.",
+            "Türkçe": "Zamanım olduğunda bisiklete binerim."
+          },
+          {
+            "Almanca": "Ich gehe einmal pro Woche zum Flohmarkt.",
+            "Türkçe": "Haftada bir kez bitpazarına gidiyorum."
+          },
+          {
+            "Almanca": "Ich gehe einmal die Woche ins Fitness-Studio.",
+            "Türkçe": "Haftada bir kez spor salonuna gidiyorum."
+          },
+          {
+            "Almanca": "Ich bin letztes Jahr einer Fahrradgruppe/Laufgruppe/Tischtennisgruppe beigetreten.",
+            "Türkçe": "Geçen yıl bir bisiklet/koşu/masa tenisi grubuna katıldım."
+          },
+          {
+            "Almanca": "An seiner/ihrer Stelle würde ich online kaufen.",
+            "Türkçe": "Onun yerinde olsam internetten alışveriş yapardım."
+          },
+          {
+            "Almanca": "An seiner Stelle würde ich Urlaub machen.",
+            "Türkçe": "Onun yerinde olsam tatile giderdim."
+          },
+          {
+            "Almanca": "Ich denke, dass es die Mühe nicht wert ist.",
+            "Türkçe": "Zahmete değmeyeceğini düşünüyorum."
+          },
+          {
+            "Almanca": "Ich interessiere mich für das Kochen.",
+            "Türkçe": "Yemek yapmakla ilgileniyorum."
+          },
+          {
+            "Almanca": "Ich höre gern Musik.",
+            "Türkçe": "Müzik dinlemeyi severim."
+          },
+          {
+            "Almanca": "Wenn ich nach Hause komme, mache ich gern etwas Aktives.",
+            "Türkçe": "Eve geldiğimde aktif bir şeyler yapmayı seviyorum."
+          },
+          {
+            "Almanca": "Wenn ich unterwegs bin, mache ich gern etwas Aktives.",
+            "Türkçe": "Dışarıda olduğumda aktif bir şeyler yapmayı severim."
+          },
+          {
+            "Almanca": "Ich verbringe viel Zeit mit Twitter / mit Skype / auf Facebook.",
+            "Türkçe": "Twitter / Skype ile / Facebook'ta çok zaman geçiriyorum."
+          },
+          {
+            "Almanca": "Ich verbringe ziemlich viel Zeit vor dem Computer/Fernseher.",
+            "Türkçe": "Bilgisayar/TV karşısında çok zaman harcıyorum."
+          },
+          {
+            "Almanca": "Mein wichtigstes Hobby ist Lesen.",
+            "Türkçe": "Ana hobim okumaktır."
+          },
+          {
+            "Almanca": "Wir gehen am Wochenende meistens wandern.",
+            "Türkçe": "Hafta sonunda çoğunlukla yürüyüşe çıkıyoruz."
+          },
+          {
+            "Almanca": "In diesem Beruf muss man geduldig sein.",
+            "Türkçe": "Bu meslekte sabırlı olmalısınız."
+          },
+          {
+            "Almanca": "Ich denke, dass Fahrradfahren praktisch ist.",
+            "Türkçe": "Bisiklete binmenin pratik olduğunu düşünüyorum."
+          },
+          {
+            "Almanca": "Es gibt keine Stau.",
+            "Türkçe": "Trafik sıkışıklığı yok."
+          },
+          {
+            "Almanca": "Man/Sie ist/sind immer pünktlich.",
+            "Türkçe": "Her zaman zamanında gelirsiniz."
+          },
+          {
+            "Almanca": "In meiner Freizeit lese ich gerne Bücher.",
+            "Türkçe": "Boş zamanlarımda kitap okumayı severim."
+          },
+          {
+            "Almanca": "In meiner Freizeit mache ich gerne ein Picknick.",
+            "Türkçe": "Boş zamanlarımda pikniğe gitmeyi severim."
+          },
+          {
+            "Almanca": "Es ist schön, dass Familien/Freunde die gleichen Interessen haben.",
+            "Türkçe": "Ailelerin/arkadaşların aynı ilgi alanlarına sahip olması güzel."
+          },
+          {
+            "Almanca": "Als ich ein Kind war, habe ich Gitarre gespielt.",
+            "Türkçe": "Çocukken gitar çaldım."
+          },
+          {
+            "Almanca": "Als ich ein Kind war, habe ich Fußball gespielt.",
+            "Türkçe": "Çocukken futbol oynadım."
+          },
+          {
+            "Almanca": "Als ich ein Kind war, bin ich auch in den Kindergarten gegangen.",
+            "Türkçe": "Çocukken ben de anaokuluna gittim."
+          },
+          {
+            "Almanca": "Als ich ein Kind war, wünschte ich Arzt/Ärztin zu werden.",
+            "Türkçe": "Çocukken doktor olmak istedim."
+          },
+          {
+            "Almanca": "Mein Traumberuf war es auch Arzt zu werden.",
+            "Türkçe": "Benim de hayalimdeki meslek doktor olmaktı."
+          },
+          {
+            "Almanca": "Das Foto gefällt mir, weil es mich an meine Heimat erinnert.",
+            "Türkçe": "Fotoğrafı beğendim, çünkü bana vatanımı hatırlatıyor."
+          },
+          {
+            "Almanca": "Ich mag das Bild nicht, weil es sehr stressig aussieht.",
+            "Türkçe": "Resmi beğenmedim, çünkü çok stresli görünüyor."
+          },
+          {
+            "Almanca": "Das Bild hat mir nicht gefallen, weil es eine Menge Leute gibt.",
+            "Türkçe": "Resmi beğenmedim, çünkü çok insan var."
+          },
+          {
+            "Almanca": "Das Bild gefällt mir sehr, weil ich mich für Gesundheit interessiere.",
+            "Türkçe": "Resmi çok beğendim, çünkü sağlıkla ilgileniyorum."
+          }
+        ]
+      }
+    }
+  }
+}

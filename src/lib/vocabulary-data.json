@@ -1,0 +1,3355 @@
+[
+  {
+    "id": "v1",
+    "german": "gern",
+    "turkish": "seveve",
+    "category": "hediye",
+    "frequency": 13
+  },
+  {
+    "id": "v2",
+    "german": "Termin",
+    "turkish": "randevu",
+    "category": "termin",
+    "frequency": 13
+  },
+  {
+    "id": "v3",
+    "german": "schreibe",
+    "turkish": "yazıyorum",
+    "category": "irtibat",
+    "frequency": 12
+  },
+  {
+    "id": "v4",
+    "german": "kommen",
+    "turkish": "gelmek",
+    "category": "termin",
+    "frequency": 12
+  },
+  {
+    "id": "v5",
+    "german": "sagen",
+    "turkish": "söylemek",
+    "category": "hizli-cozum",
+    "frequency": 11
+  },
+  {
+    "id": "v6",
+    "german": "Foto",
+    "turkish": "fotoğraf",
+    "category": "bildbeschreibung",
+    "frequency": 9
+  },
+  {
+    "id": "v7",
+    "german": "Mail",
+    "turkish": "e-posta",
+    "category": "irtibat",
+    "frequency": 8
+  },
+  {
+    "id": "v8",
+    "german": "Woche",
+    "turkish": "hafta",
+    "category": "irtibat",
+    "frequency": 8
+  },
+  {
+    "id": "v9",
+    "german": "Fragen",
+    "turkish": "sorular",
+    "category": "irtibat",
+    "frequency": 8
+  },
+  {
+    "id": "v10",
+    "german": "Problem",
+    "turkish": "sorun",
+    "category": "bilgi-isteme",
+    "frequency": 8
+  },
+  {
+    "id": "v11",
+    "german": "Zeit",
+    "turkish": "zaman",
+    "category": "hizli-cozum",
+    "frequency": 8
+  },
+  {
+    "id": "v12",
+    "german": "Uhr",
+    "turkish": "saat",
+    "category": "irtibat",
+    "frequency": 8
+  },
+  {
+    "id": "v13",
+    "german": "Antwort",
+    "turkish": "yanıt",
+    "category": "cevap-bekleme",
+    "frequency": 7
+  },
+  {
+    "id": "v14",
+    "german": "erreichen",
+    "turkish": "ulaşmak",
+    "category": "irtibat",
+    "frequency": 7
+  },
+  {
+    "id": "v15",
+    "german": "Hilfe",
+    "turkish": "yardım",
+    "category": "tesekkur",
+    "frequency": 7
+  },
+  {
+    "id": "v16",
+    "german": "gibt",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 7
+  },
+  {
+    "id": "v17",
+    "german": "wissen",
+    "turkish": "bilmek",
+    "category": "termin",
+    "frequency": 7
+  },
+  {
+    "id": "v18",
+    "german": "helfen",
+    "turkish": "yardım etmek",
+    "category": "hizli-cozum",
+    "frequency": 6
+  },
+  {
+    "id": "v19",
+    "german": "Geburtstag",
+    "turkish": "doğum günü",
+    "category": "tebrik",
+    "frequency": 6
+  },
+  {
+    "id": "v20",
+    "german": "wäre",
+    "turkish": "",
+    "category": "hizli-cozum",
+    "frequency": 6
+  },
+  {
+    "id": "v21",
+    "german": "Einladung",
+    "turkish": "davet",
+    "category": "tesekkur",
+    "frequency": 6
+  },
+  {
+    "id": "v22",
+    "german": "mitbringen",
+    "turkish": "yanında getirmek",
+    "category": "bilgi-isteme",
+    "frequency": 6
+  },
+  {
+    "id": "v23",
+    "german": "möglich",
+    "turkish": "mümkün",
+    "category": "hizli-cozum",
+    "frequency": 6
+  },
+  {
+    "id": "v24",
+    "german": "senden",
+    "turkish": "göndermek",
+    "category": "yeni-urun",
+    "frequency": 6
+  },
+  {
+    "id": "v25",
+    "german": "schnell",
+    "turkish": "hızlı",
+    "category": "hizli-cozum",
+    "frequency": 6
+  },
+  {
+    "id": "v26",
+    "german": "denke",
+    "turkish": "",
+    "category": "irtibat",
+    "frequency": 6
+  },
+  {
+    "id": "v27",
+    "german": "Arzt",
+    "turkish": "doktor",
+    "category": "deneyim",
+    "frequency": 6
+  },
+  {
+    "id": "v28",
+    "german": "alles",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 5
+  },
+  {
+    "id": "v29",
+    "german": "gehört",
+    "turkish": "duyulmuş",
+    "category": "giris",
+    "frequency": 5
+  },
+  {
+    "id": "v30",
+    "german": "brauche",
+    "turkish": "ihtiyacım var",
+    "category": "bilgi-isteme",
+    "frequency": 5
+  },
+  {
+    "id": "v31",
+    "german": "Frau",
+    "turkish": "kadın/eş",
+    "category": "soru-sorma",
+    "frequency": 5
+  },
+  {
+    "id": "v32",
+    "german": "Fotoapparat",
+    "turkish": "fotoğraf makinesi",
+    "category": "garanti",
+    "frequency": 5
+  },
+  {
+    "id": "v33",
+    "german": "reparieren",
+    "turkish": "tamir etmek",
+    "category": "yeni-urun",
+    "frequency": 5
+  },
+  {
+    "id": "v34",
+    "german": "Party",
+    "turkish": "parti",
+    "category": "gelisme",
+    "frequency": 5
+  },
+  {
+    "id": "v35",
+    "german": "geben",
+    "turkish": "vermek",
+    "category": "cevap-bekleme",
+    "frequency": 5
+  },
+  {
+    "id": "v36",
+    "german": "freuen",
+    "turkish": "",
+    "category": "bilgi-isteme",
+    "frequency": 5
+  },
+  {
+    "id": "v37",
+    "german": "Nummer",
+    "turkish": "numara",
+    "category": "irtibat",
+    "frequency": 5
+  },
+  {
+    "id": "v38",
+    "german": "Meinung",
+    "turkish": "görüş",
+    "category": "bildbeschreibung",
+    "frequency": 5
+  },
+  {
+    "id": "v39",
+    "german": "schicken",
+    "turkish": "göndermek",
+    "category": "yeni-urun",
+    "frequency": 5
+  },
+  {
+    "id": "v40",
+    "german": "wichtig",
+    "turkish": "önemli",
+    "category": "bildbeschreibung",
+    "frequency": 5
+  },
+  {
+    "id": "v41",
+    "german": "Bild",
+    "turkish": "resim",
+    "category": "bildbeschreibung",
+    "frequency": 5
+  },
+  {
+    "id": "v42",
+    "german": "Sport",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 5
+  },
+  {
+    "id": "v43",
+    "german": "krank",
+    "turkish": "hasta",
+    "category": "davet-red",
+    "frequency": 4
+  },
+  {
+    "id": "v44",
+    "german": "Unterricht",
+    "turkish": "ders",
+    "category": "soru-sorma",
+    "frequency": 4
+  },
+  {
+    "id": "v45",
+    "german": "paar",
+    "turkish": "",
+    "category": "bilgi-isteme",
+    "frequency": 4
+  },
+  {
+    "id": "v46",
+    "german": "bitten",
+    "turkish": "",
+    "category": "durum",
+    "frequency": 4
+  },
+  {
+    "id": "v47",
+    "german": "Wohnung",
+    "turkish": "daire",
+    "category": "sikayet",
+    "frequency": 4
+  },
+  {
+    "id": "v48",
+    "german": "Bücher",
+    "turkish": "kitaplar",
+    "category": "deneyim",
+    "frequency": 4
+  },
+  {
+    "id": "v49",
+    "german": "bestellt",
+    "turkish": "",
+    "category": "talep",
+    "frequency": 4
+  },
+  {
+    "id": "v50",
+    "german": "könntest",
+    "turkish": "",
+    "category": "talep",
+    "frequency": 4
+  },
+  {
+    "id": "v51",
+    "german": "freue",
+    "turkish": "mutluyum",
+    "category": "bilgi-verme",
+    "frequency": 4
+  },
+  {
+    "id": "v52",
+    "german": "Bescheid",
+    "turkish": "bilgi/bildirim",
+    "category": "hizli-cozum",
+    "frequency": 4
+  },
+  {
+    "id": "v53",
+    "german": "bald",
+    "turkish": "yakında",
+    "category": "bilgi-isteme",
+    "frequency": 4
+  },
+  {
+    "id": "v54",
+    "german": "jederzeit",
+    "turkish": "",
+    "category": "irtibat",
+    "frequency": 4
+  },
+  {
+    "id": "v55",
+    "german": "Schule",
+    "turkish": "okul",
+    "category": "hastalik",
+    "frequency": 4
+  },
+  {
+    "id": "v56",
+    "german": "besser",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 4
+  },
+  {
+    "id": "v57",
+    "german": "erinnerte",
+    "turkish": "",
+    "category": "maymuncuk",
+    "frequency": 4
+  },
+  {
+    "id": "v58",
+    "german": "gefällt",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 4
+  },
+  {
+    "id": "v59",
+    "german": "hoffe",
+    "turkish": "",
+    "category": "termin",
+    "frequency": 3
+  },
+  {
+    "id": "v60",
+    "german": "lange",
+    "turkish": "uzun",
+    "category": "giris",
+    "frequency": 3
+  },
+  {
+    "id": "v61",
+    "german": "wieder",
+    "turkish": "",
+    "category": "giris",
+    "frequency": 3
+  },
+  {
+    "id": "v62",
+    "german": "Nachricht",
+    "turkish": "mesaj",
+    "category": "giris",
+    "frequency": 3
+  },
+  {
+    "id": "v63",
+    "german": "Brief",
+    "turkish": "mektup",
+    "category": "tesekkur",
+    "frequency": 3
+  },
+  {
+    "id": "v64",
+    "german": "Vertrag",
+    "turkish": "sözleşme",
+    "category": "feshetme",
+    "frequency": 3
+  },
+  {
+    "id": "v65",
+    "german": "kündigen",
+    "turkish": "fesih etmek",
+    "category": "feshetme",
+    "frequency": 3
+  },
+  {
+    "id": "v66",
+    "german": "entschuldigen",
+    "turkish": "özür dilemek",
+    "category": "davet-red",
+    "frequency": 3
+  },
+  {
+    "id": "v67",
+    "german": "Haus",
+    "turkish": "ev",
+    "category": "deneyim",
+    "frequency": 3
+  },
+  {
+    "id": "v68",
+    "german": "Gefallen",
+    "turkish": "iyilik",
+    "category": "yardim-isteme",
+    "frequency": 3
+  },
+  {
+    "id": "v69",
+    "german": "lösen",
+    "turkish": "çözmek",
+    "category": "sikayet",
+    "frequency": 3
+  },
+  {
+    "id": "v70",
+    "german": "macht",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 3
+  },
+  {
+    "id": "v71",
+    "german": "Internet",
+    "turkish": "internet",
+    "category": "deneyim",
+    "frequency": 3
+  },
+  {
+    "id": "v72",
+    "german": "zwei",
+    "turkish": "",
+    "category": "hastalik",
+    "frequency": 3
+  },
+  {
+    "id": "v73",
+    "german": "Garantie",
+    "turkish": "garanti",
+    "category": "garanti",
+    "frequency": 3
+  },
+  {
+    "id": "v74",
+    "german": "feiern",
+    "turkish": "kutlamak",
+    "category": "davet",
+    "frequency": 3
+  },
+  {
+    "id": "v75",
+    "german": "Mai",
+    "turkish": "",
+    "category": "gelisme",
+    "frequency": 3
+  },
+  {
+    "id": "v76",
+    "german": "warte",
+    "turkish": "",
+    "category": "cevap-bekleme",
+    "frequency": 3
+  },
+  {
+    "id": "v77",
+    "german": "Angelegenheit",
+    "turkish": "",
+    "category": "tesekkur",
+    "frequency": 3
+  },
+  {
+    "id": "v78",
+    "german": "beschweren",
+    "turkish": "şikayet etmek",
+    "category": "sikayet",
+    "frequency": 3
+  },
+  {
+    "id": "v79",
+    "german": "überweisen",
+    "turkish": "havale etmek",
+    "category": "yeni-urun",
+    "frequency": 3
+  },
+  {
+    "id": "v80",
+    "german": "positive",
+    "turkish": "",
+    "category": "cevap-bekleme",
+    "frequency": 3
+  },
+  {
+    "id": "v81",
+    "german": "sollte",
+    "turkish": "",
+    "category": "talep",
+    "frequency": 3
+  },
+  {
+    "id": "v82",
+    "german": "sehen",
+    "turkish": "görmek",
+    "category": "bildbeschreibung",
+    "frequency": 3
+  },
+  {
+    "id": "v83",
+    "german": "mindestens",
+    "turkish": "",
+    "category": "hastalik",
+    "frequency": 3
+  },
+  {
+    "id": "v84",
+    "german": "Waschmaschine",
+    "turkish": "çamaşır makinesi",
+    "category": "tamir",
+    "frequency": 3
+  },
+  {
+    "id": "v85",
+    "german": "kostet",
+    "turkish": "",
+    "category": "soru-sorma",
+    "frequency": 3
+  },
+  {
+    "id": "v86",
+    "german": "neuen",
+    "turkish": "",
+    "category": "yeni-urun",
+    "frequency": 3
+  },
+  {
+    "id": "v87",
+    "german": "Informationen",
+    "turkish": "bilgiler",
+    "category": "bilgi-isteme",
+    "frequency": 3
+  },
+  {
+    "id": "v88",
+    "german": "neue",
+    "turkish": "",
+    "category": "yeni-urun",
+    "frequency": 3
+  },
+  {
+    "id": "v89",
+    "german": "Telefonnummer",
+    "turkish": "telefon numarası",
+    "category": "irtibat",
+    "frequency": 3
+  },
+  {
+    "id": "v90",
+    "german": "Erkältung",
+    "turkish": "soğuk algınlığı",
+    "category": "hastalik",
+    "frequency": 3
+  },
+  {
+    "id": "v91",
+    "german": "nett",
+    "turkish": "güzel/kibar",
+    "category": "termin",
+    "frequency": 3
+  },
+  {
+    "id": "v92",
+    "german": "unterstütze",
+    "turkish": "",
+    "category": "maymuncuk",
+    "frequency": 3
+  },
+  {
+    "id": "v93",
+    "german": "Türkei",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 3
+  },
+  {
+    "id": "v94",
+    "german": "aufgenommen",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 3
+  },
+  {
+    "id": "v95",
+    "german": "Situation",
+    "turkish": "durum",
+    "category": "bildbeschreibung",
+    "frequency": 3
+  },
+  {
+    "id": "v96",
+    "german": "scheint",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 3
+  },
+  {
+    "id": "v97",
+    "german": "geht",
+    "turkish": "gidiyor/oluyor",
+    "category": "bilgi-isteme",
+    "frequency": 2
+  },
+  {
+    "id": "v98",
+    "german": "gut",
+    "turkish": "iyi",
+    "category": "deneyim",
+    "frequency": 2
+  },
+  {
+    "id": "v99",
+    "german": "gesehen",
+    "turkish": "görülmüş",
+    "category": "giris",
+    "frequency": 2
+  },
+  {
+    "id": "v100",
+    "german": "gefreut",
+    "turkish": "",
+    "category": "giris",
+    "frequency": 2
+  },
+  {
+    "id": "v101",
+    "german": "hören",
+    "turkish": "duymak",
+    "category": "cevap-bekleme",
+    "frequency": 2
+  },
+  {
+    "id": "v102",
+    "german": "informieren",
+    "turkish": "bilgilendirmek",
+    "category": "bilgi-isteme",
+    "frequency": 2
+  },
+  {
+    "id": "v103",
+    "german": "wende",
+    "turkish": "",
+    "category": "giris",
+    "frequency": 2
+  },
+  {
+    "id": "v104",
+    "german": "tun",
+    "turkish": "",
+    "category": "yardim-isteme",
+    "frequency": 2
+  },
+  {
+    "id": "v105",
+    "german": "darum",
+    "turkish": "",
+    "category": "hastalik",
+    "frequency": 2
+  },
+  {
+    "id": "v106",
+    "german": "online",
+    "turkish": "çevrimiçi",
+    "category": "durum",
+    "frequency": 2
+  },
+  {
+    "id": "v107",
+    "german": "Wochen",
+    "turkish": "",
+    "category": "hastalik",
+    "frequency": 2
+  },
+  {
+    "id": "v108",
+    "german": "funktioniert",
+    "turkish": "çalışıyor",
+    "category": "bilgi-isteme",
+    "frequency": 2
+  },
+  {
+    "id": "v109",
+    "german": "machen",
+    "turkish": "yapmak",
+    "category": "soru-sorma",
+    "frequency": 2
+  },
+  {
+    "id": "v110",
+    "german": "einladen",
+    "turkish": "davet etmek",
+    "category": "davet",
+    "frequency": 2
+  },
+  {
+    "id": "v111",
+    "german": "toll",
+    "turkish": "harika",
+    "category": "talep",
+    "frequency": 2
+  },
+  {
+    "id": "v112",
+    "german": "bekommen",
+    "turkish": "almak",
+    "category": "tamir",
+    "frequency": 2
+  },
+  {
+    "id": "v113",
+    "german": "komme",
+    "turkish": "",
+    "category": "davet-kabul",
+    "frequency": 2
+  },
+  {
+    "id": "v114",
+    "german": "Kuchen",
+    "turkish": "pasta",
+    "category": "gelisme",
+    "frequency": 2
+  },
+  {
+    "id": "v115",
+    "german": "backen",
+    "turkish": "",
+    "category": "gelisme",
+    "frequency": 2
+  },
+  {
+    "id": "v116",
+    "german": "Hochzeit",
+    "turkish": "düğün",
+    "category": "davet-red",
+    "frequency": 2
+  },
+  {
+    "id": "v117",
+    "german": "entschuldige",
+    "turkish": "",
+    "category": "davet-red",
+    "frequency": 2
+  },
+  {
+    "id": "v118",
+    "german": "Vorstellungsgespräch",
+    "turkish": "",
+    "category": "cevap-bekleme",
+    "frequency": 2
+  },
+  {
+    "id": "v119",
+    "german": "ziemlich",
+    "turkish": "",
+    "category": "davet-red",
+    "frequency": 2
+  },
+  {
+    "id": "v120",
+    "german": "beschäftigt",
+    "turkish": "meşgul",
+    "category": "davet-red",
+    "frequency": 2
+  },
+  {
+    "id": "v121",
+    "german": "mache",
+    "turkish": "",
+    "category": "davet-red",
+    "frequency": 2
+  },
+  {
+    "id": "v122",
+    "german": "Mutter",
+    "turkish": "anne",
+    "category": "maymuncuk",
+    "frequency": 2
+  },
+  {
+    "id": "v123",
+    "german": "Nachmittag",
+    "turkish": "öğleden sonra",
+    "category": "davet-red",
+    "frequency": 2
+  },
+  {
+    "id": "v124",
+    "german": "findet",
+    "turkish": "",
+    "category": "soru-sorma",
+    "frequency": 2
+  },
+  {
+    "id": "v125",
+    "german": "statt",
+    "turkish": "",
+    "category": "soru-sorma",
+    "frequency": 2
+  },
+  {
+    "id": "v126",
+    "german": "Angebot",
+    "turkish": "teklif",
+    "category": "bilgi-isteme",
+    "frequency": 2
+  },
+  {
+    "id": "v127",
+    "german": "Gebühr",
+    "turkish": "ücret",
+    "category": "sikayet",
+    "frequency": 2
+  },
+  {
+    "id": "v128",
+    "german": "Konto",
+    "turkish": "hesap",
+    "category": "yeni-urun",
+    "frequency": 2
+  },
+  {
+    "id": "v129",
+    "german": "baldige",
+    "turkish": "",
+    "category": "cevap-bekleme",
+    "frequency": 2
+  },
+  {
+    "id": "v130",
+    "german": "folgenden",
+    "turkish": "",
+    "category": "sikayet",
+    "frequency": 2
+  },
+  {
+    "id": "v131",
+    "german": "Punkte",
+    "turkish": "maddeler",
+    "category": "sikayet",
+    "frequency": 2
+  },
+  {
+    "id": "v132",
+    "german": "erledigen",
+    "turkish": "halletmek",
+    "category": "sikayet",
+    "frequency": 2
+  },
+  {
+    "id": "v133",
+    "german": "drei",
+    "turkish": "",
+    "category": "hastalik",
+    "frequency": 2
+  },
+  {
+    "id": "v134",
+    "german": "Regeln",
+    "turkish": "kurallar",
+    "category": "gorev",
+    "frequency": 2
+  },
+  {
+    "id": "v135",
+    "german": "beachten",
+    "turkish": "",
+    "category": "gorev",
+    "frequency": 2
+  },
+  {
+    "id": "v136",
+    "german": "denken",
+    "turkish": "düşünmek",
+    "category": "bilgi-isteme",
+    "frequency": 2
+  },
+  {
+    "id": "v137",
+    "german": "Monate",
+    "turkish": "",
+    "category": "garanti",
+    "frequency": 2
+  },
+  {
+    "id": "v138",
+    "german": "erst",
+    "turkish": "",
+    "category": "hastalik",
+    "frequency": 2
+  },
+  {
+    "id": "v139",
+    "german": "Reparatur",
+    "turkish": "tamir",
+    "category": "garanti",
+    "frequency": 2
+  },
+  {
+    "id": "v140",
+    "german": "melden",
+    "turkish": "bildirmek",
+    "category": "irtibat",
+    "frequency": 2
+  },
+  {
+    "id": "v141",
+    "german": "Preise",
+    "turkish": "fiyatlar",
+    "category": "bilgi-isteme",
+    "frequency": 2
+  },
+  {
+    "id": "v142",
+    "german": "Person",
+    "turkish": "",
+    "category": "hizli-cozum",
+    "frequency": 2
+  },
+  {
+    "id": "v143",
+    "german": "fragen",
+    "turkish": "",
+    "category": "hizli-cozum",
+    "frequency": 2
+  },
+  {
+    "id": "v144",
+    "german": "berichten",
+    "turkish": "",
+    "category": "bilgi-verme",
+    "frequency": 2
+  },
+  {
+    "id": "v145",
+    "german": "Handwerker",
+    "turkish": "usta",
+    "category": "tamir",
+    "frequency": 2
+  },
+  {
+    "id": "v146",
+    "german": "Hause",
+    "turkish": "",
+    "category": "tamir",
+    "frequency": 2
+  },
+  {
+    "id": "v147",
+    "german": "Maschine",
+    "turkish": "makine",
+    "category": "yeni-urun",
+    "frequency": 2
+  },
+  {
+    "id": "v148",
+    "german": "Geld",
+    "turkish": "para",
+    "category": "yeni-urun",
+    "frequency": 2
+  },
+  {
+    "id": "v149",
+    "german": "Freitag",
+    "turkish": "Cuma",
+    "category": "irtibat",
+    "frequency": 2
+  },
+  {
+    "id": "v150",
+    "german": "Verbraucherzentrale",
+    "turkish": "Tüketici Merkezi",
+    "category": "yardimci-olmazsa",
+    "frequency": 2
+  },
+  {
+    "id": "v151",
+    "german": "antworten",
+    "turkish": "",
+    "category": "termin",
+    "frequency": 2
+  },
+  {
+    "id": "v152",
+    "german": "anrufen",
+    "turkish": "aramak",
+    "category": "irtibat",
+    "frequency": 2
+  },
+  {
+    "id": "v153",
+    "german": "lautet",
+    "turkish": "",
+    "category": "irtibat",
+    "frequency": 2
+  },
+  {
+    "id": "v154",
+    "german": "Montag",
+    "turkish": "Pazartesi",
+    "category": "irtibat",
+    "frequency": 2
+  },
+  {
+    "id": "v155",
+    "german": "Wochenende",
+    "turkish": "hafta sonu",
+    "category": "irtibat",
+    "frequency": 2
+  },
+  {
+    "id": "v156",
+    "german": "erreichbar",
+    "turkish": "",
+    "category": "irtibat",
+    "frequency": 2
+  },
+  {
+    "id": "v157",
+    "german": "Sohn",
+    "turkish": "oğul",
+    "category": "hastalik",
+    "frequency": 2
+  },
+  {
+    "id": "v158",
+    "german": "bleiben",
+    "turkish": "",
+    "category": "hastalik",
+    "frequency": 2
+  },
+  {
+    "id": "v159",
+    "german": "Wahrscheinlich",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 2
+  },
+  {
+    "id": "v160",
+    "german": "Tagen",
+    "turkish": "",
+    "category": "soru-sorma",
+    "frequency": 2
+  },
+  {
+    "id": "v161",
+    "german": "krankgeschrieben",
+    "turkish": "rapor edilmiş",
+    "category": "hastalik",
+    "frequency": 2
+  },
+  {
+    "id": "v162",
+    "german": "vom",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 2
+  },
+  {
+    "id": "v163",
+    "german": "nächste",
+    "turkish": "",
+    "category": "termin",
+    "frequency": 2
+  },
+  {
+    "id": "v164",
+    "german": "vereinbaren",
+    "turkish": "",
+    "category": "termin",
+    "frequency": 2
+  },
+  {
+    "id": "v165",
+    "german": "Stunde",
+    "turkish": "saat",
+    "category": "soru-sorma",
+    "frequency": 2
+  },
+  {
+    "id": "v166",
+    "german": "dauert",
+    "turkish": "",
+    "category": "sure",
+    "frequency": 2
+  },
+  {
+    "id": "v167",
+    "german": "Kurs",
+    "turkish": "",
+    "category": "soru-sorma",
+    "frequency": 2
+  },
+  {
+    "id": "v168",
+    "german": "jemanden",
+    "turkish": "",
+    "category": "hediye",
+    "frequency": 2
+  },
+  {
+    "id": "v169",
+    "german": "glücklich",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 2
+  },
+  {
+    "id": "v170",
+    "german": "Thema",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 2
+  },
+  {
+    "id": "v171",
+    "german": "Zukunft",
+    "turkish": "gelecek",
+    "category": "maymuncuk",
+    "frequency": 2
+  },
+  {
+    "id": "v172",
+    "german": "Wert",
+    "turkish": "",
+    "category": "maymuncuk",
+    "frequency": 2
+  },
+  {
+    "id": "v173",
+    "german": "Bildung",
+    "turkish": "",
+    "category": "maymuncuk",
+    "frequency": 2
+  },
+  {
+    "id": "v174",
+    "german": "sehe",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 2
+  },
+  {
+    "id": "v175",
+    "german": "Menschen",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 2
+  },
+  {
+    "id": "v176",
+    "german": "Fahrrad",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 2
+  },
+  {
+    "id": "v177",
+    "german": "zeigt",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 2
+  },
+  {
+    "id": "v178",
+    "german": "sondern",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 2
+  },
+  {
+    "id": "v179",
+    "german": "Wetter",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 2
+  },
+  {
+    "id": "v180",
+    "german": "lese",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 2
+  },
+  {
+    "id": "v181",
+    "german": "gerne",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 2
+  },
+  {
+    "id": "v182",
+    "german": "Onkel",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 2
+  },
+  {
+    "id": "v183",
+    "german": "interessiere",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 2
+  },
+  {
+    "id": "v184",
+    "german": "Kind",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 2
+  },
+  {
+    "id": "v185",
+    "german": "Gesundheit",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 2
+  },
+  {
+    "id": "v186",
+    "german": "erinnert",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 2
+  },
+  {
+    "id": "v187",
+    "german": "Fußball",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 2
+  },
+  {
+    "id": "v188",
+    "german": "deutsche",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 2
+  },
+  {
+    "id": "v189",
+    "german": "Schönen",
+    "turkish": "",
+    "category": "giris",
+    "frequency": 1
+  },
+  {
+    "id": "v190",
+    "german": "Tag",
+    "turkish": "gün",
+    "category": "giris",
+    "frequency": 1
+  },
+  {
+    "id": "v191",
+    "german": "wünschen",
+    "turkish": "dilemek",
+    "category": "giris",
+    "frequency": 1
+  },
+  {
+    "id": "v192",
+    "german": "läuft",
+    "turkish": "çalışıyor/ilerliyor",
+    "category": "giris",
+    "frequency": 1
+  },
+  {
+    "id": "v193",
+    "german": "gute",
+    "turkish": "",
+    "category": "giris",
+    "frequency": 1
+  },
+  {
+    "id": "v194",
+    "german": "passiert",
+    "turkish": "olmuş",
+    "category": "giris",
+    "frequency": 1
+  },
+  {
+    "id": "v195",
+    "german": "angerufen",
+    "turkish": "",
+    "category": "giris",
+    "frequency": 1
+  },
+  {
+    "id": "v196",
+    "german": "konnte",
+    "turkish": "",
+    "category": "giris",
+    "frequency": 1
+  },
+  {
+    "id": "v197",
+    "german": "erreiche",
+    "turkish": "",
+    "category": "giris",
+    "frequency": 1
+  },
+  {
+    "id": "v198",
+    "german": "Firma",
+    "turkish": "şirket",
+    "category": "giris",
+    "frequency": 1
+  },
+  {
+    "id": "v199",
+    "german": "telefonisch",
+    "turkish": "telefonla",
+    "category": "giris",
+    "frequency": 1
+  },
+  {
+    "id": "v200",
+    "german": "niemanden",
+    "turkish": "",
+    "category": "giris",
+    "frequency": 1
+  },
+  {
+    "id": "v201",
+    "german": "Suche",
+    "turkish": "",
+    "category": "giris",
+    "frequency": 1
+  },
+  {
+    "id": "v202",
+    "german": "Tagesmutter",
+    "turkish": "gündüz bakıcısı",
+    "category": "giris",
+    "frequency": 1
+  },
+  {
+    "id": "v203",
+    "german": "Zeitung",
+    "turkish": "gazete",
+    "category": "giris",
+    "frequency": 1
+  },
+  {
+    "id": "v204",
+    "german": "gelesen",
+    "turkish": "okumuş",
+    "category": "giris",
+    "frequency": 1
+  },
+  {
+    "id": "v205",
+    "german": "Tageszeitung",
+    "turkish": "gündelik gazete",
+    "category": "giris",
+    "frequency": 1
+  },
+  {
+    "id": "v206",
+    "german": "Anzeige",
+    "turkish": "ilan",
+    "category": "giris",
+    "frequency": 1
+  },
+  {
+    "id": "v207",
+    "german": "interessiert",
+    "turkish": "",
+    "category": "giris",
+    "frequency": 1
+  },
+  {
+    "id": "v208",
+    "german": "erzählen",
+    "turkish": "anlatmak",
+    "category": "giris",
+    "frequency": 1
+  },
+  {
+    "id": "v209",
+    "german": "Stunden",
+    "turkish": "",
+    "category": "yardim-isteme",
+    "frequency": 1
+  },
+  {
+    "id": "v210",
+    "german": "höflichst",
+    "turkish": "en kibar şekilde",
+    "category": "yardim-isteme",
+    "frequency": 1
+  },
+  {
+    "id": "v211",
+    "german": "Mühe",
+    "turkish": "zahmet",
+    "category": "yardim-isteme",
+    "frequency": 1
+  },
+  {
+    "id": "v212",
+    "german": "geschrieben",
+    "turkish": "yazılmış",
+    "category": "yardim-etme",
+    "frequency": 1
+  },
+  {
+    "id": "v213",
+    "german": "gebeten",
+    "turkish": "",
+    "category": "yardim-etme",
+    "frequency": 1
+  },
+  {
+    "id": "v214",
+    "german": "weiterhelfen",
+    "turkish": "",
+    "category": "yardim-etme",
+    "frequency": 1
+  },
+  {
+    "id": "v215",
+    "german": "Heizung",
+    "turkish": "ısıtma",
+    "category": "durum",
+    "frequency": 1
+  },
+  {
+    "id": "v216",
+    "german": "Werkzeuge",
+    "turkish": "aletler",
+    "category": "durum",
+    "frequency": 1
+  },
+  {
+    "id": "v217",
+    "german": "plötzlich",
+    "turkish": "",
+    "category": "durum",
+    "frequency": 1
+  },
+  {
+    "id": "v218",
+    "german": "Hochzeitstag",
+    "turkish": "",
+    "category": "davet",
+    "frequency": 1
+  },
+  {
+    "id": "v219",
+    "german": "Gemeinsam",
+    "turkish": "birlikte",
+    "category": "davet",
+    "frequency": 1
+  },
+  {
+    "id": "v220",
+    "german": "Freunden",
+    "turkish": "",
+    "category": "davet",
+    "frequency": 1
+  },
+  {
+    "id": "v221",
+    "german": "wollen",
+    "turkish": "",
+    "category": "davet",
+    "frequency": 1
+  },
+  {
+    "id": "v222",
+    "german": "Teilnahme",
+    "turkish": "katılım",
+    "category": "davet",
+    "frequency": 1
+  },
+  {
+    "id": "v223",
+    "german": "feiere",
+    "turkish": "",
+    "category": "davet",
+    "frequency": 1
+  },
+  {
+    "id": "v224",
+    "german": "organisiere",
+    "turkish": "",
+    "category": "davet",
+    "frequency": 1
+  },
+  {
+    "id": "v225",
+    "german": "Restaurant",
+    "turkish": "restoran",
+    "category": "davet",
+    "frequency": 1
+  },
+  {
+    "id": "v226",
+    "german": "Kebaphaus",
+    "turkish": "",
+    "category": "davet",
+    "frequency": 1
+  },
+  {
+    "id": "v227",
+    "german": "Königstraße",
+    "turkish": "",
+    "category": "davet",
+    "frequency": 1
+  },
+  {
+    "id": "v228",
+    "german": "mitteilen",
+    "turkish": "",
+    "category": "davet-kabul",
+    "frequency": 1
+  },
+  {
+    "id": "v229",
+    "german": "Kinder",
+    "turkish": "çocuklar",
+    "category": "davet-kabul",
+    "frequency": 1
+  },
+  {
+    "id": "v230",
+    "german": "willst",
+    "turkish": "",
+    "category": "davet-kabul",
+    "frequency": 1
+  },
+  {
+    "id": "v231",
+    "german": "bedanke",
+    "turkish": "",
+    "category": "davet-kabul",
+    "frequency": 1
+  },
+  {
+    "id": "v232",
+    "german": "gekommen",
+    "turkish": "gelmiş",
+    "category": "davet-red",
+    "frequency": 1
+  },
+  {
+    "id": "v233",
+    "german": "Geburtstagfeier",
+    "turkish": "",
+    "category": "davet-red",
+    "frequency": 1
+  },
+  {
+    "id": "v234",
+    "german": "dabei",
+    "turkish": "",
+    "category": "davet-red",
+    "frequency": 1
+  },
+  {
+    "id": "v235",
+    "german": "anderen",
+    "turkish": "",
+    "category": "davet-red",
+    "frequency": 1
+  },
+  {
+    "id": "v236",
+    "german": "liebend",
+    "turkish": "",
+    "category": "davet-red",
+    "frequency": 1
+  },
+  {
+    "id": "v237",
+    "german": "Überstunden",
+    "turkish": "mesai",
+    "category": "davet-red",
+    "frequency": 1
+  },
+  {
+    "id": "v238",
+    "german": "verreist",
+    "turkish": "",
+    "category": "davet-red",
+    "frequency": 1
+  },
+  {
+    "id": "v239",
+    "german": "arbeiten",
+    "turkish": "çalışmak",
+    "category": "davet-red",
+    "frequency": 1
+  },
+  {
+    "id": "v240",
+    "german": "wichtigen",
+    "turkish": "",
+    "category": "davet-red",
+    "frequency": 1
+  },
+  {
+    "id": "v241",
+    "german": "braucht",
+    "turkish": "",
+    "category": "davet-red",
+    "frequency": 1
+  },
+  {
+    "id": "v242",
+    "german": "jeden",
+    "turkish": "",
+    "category": "davet-red",
+    "frequency": 1
+  },
+  {
+    "id": "v243",
+    "german": "Arbeit",
+    "turkish": "iş",
+    "category": "davet-red",
+    "frequency": 1
+  },
+  {
+    "id": "v244",
+    "german": "kümmern",
+    "turkish": "",
+    "category": "davet-red",
+    "frequency": 1
+  },
+  {
+    "id": "v245",
+    "german": "freundliche",
+    "turkish": "",
+    "category": "tesekkur",
+    "frequency": 1
+  },
+  {
+    "id": "v246",
+    "german": "Unterstützung",
+    "turkish": "destek",
+    "category": "tesekkur",
+    "frequency": 1
+  },
+  {
+    "id": "v247",
+    "german": "Verständnis",
+    "turkish": "anlayış",
+    "category": "tesekkur",
+    "frequency": 1
+  },
+  {
+    "id": "v248",
+    "german": "Bemühungen",
+    "turkish": "çabalar",
+    "category": "tesekkur",
+    "frequency": 1
+  },
+  {
+    "id": "v249",
+    "german": "große",
+    "turkish": "",
+    "category": "tesekkur",
+    "frequency": 1
+  },
+  {
+    "id": "v250",
+    "german": "Voraus",
+    "turkish": "",
+    "category": "tesekkur",
+    "frequency": 1
+  },
+  {
+    "id": "v251",
+    "german": "genug",
+    "turkish": "",
+    "category": "tesekkur",
+    "frequency": 1
+  },
+  {
+    "id": "v252",
+    "german": "danken",
+    "turkish": "teşekkür etmek",
+    "category": "tesekkur",
+    "frequency": 1
+  },
+  {
+    "id": "v253",
+    "german": "besorgt",
+    "turkish": "",
+    "category": "gelisme",
+    "frequency": 1
+  },
+  {
+    "id": "v254",
+    "german": "Süßigkeiten",
+    "turkish": "şekerleme",
+    "category": "gelisme",
+    "frequency": 1
+  },
+  {
+    "id": "v255",
+    "german": "unzufrieden",
+    "turkish": "memnun değil",
+    "category": "sikayet",
+    "frequency": 1
+  },
+  {
+    "id": "v256",
+    "german": "weitermachen",
+    "turkish": "",
+    "category": "sikayet",
+    "frequency": 1
+  },
+  {
+    "id": "v257",
+    "german": "umgehende",
+    "turkish": "",
+    "category": "sikayet",
+    "frequency": 1
+  },
+  {
+    "id": "v258",
+    "german": "Erstattung",
+    "turkish": "iade",
+    "category": "sikayet",
+    "frequency": 1
+  },
+  {
+    "id": "v259",
+    "german": "IBAN",
+    "turkish": "",
+    "category": "sikayet",
+    "frequency": 1
+  },
+  {
+    "id": "v260",
+    "german": "Sparkasse",
+    "turkish": "",
+    "category": "sikayet",
+    "frequency": 1
+  },
+  {
+    "id": "v261",
+    "german": "Mach",
+    "turkish": "",
+    "category": "sikayet",
+    "frequency": 1
+  },
+  {
+    "id": "v262",
+    "german": "Sorgen",
+    "turkish": "",
+    "category": "sikayet",
+    "frequency": 1
+  },
+  {
+    "id": "v263",
+    "german": "Probleme",
+    "turkish": "",
+    "category": "sikayet",
+    "frequency": 1
+  },
+  {
+    "id": "v264",
+    "german": "Vermieter",
+    "turkish": "ev sahibi",
+    "category": "gorev",
+    "frequency": 1
+  },
+  {
+    "id": "v265",
+    "german": "Chef",
+    "turkish": "patron",
+    "category": "gorev",
+    "frequency": 1
+  },
+  {
+    "id": "v266",
+    "german": "Rechte",
+    "turkish": "haklar",
+    "category": "gorev",
+    "frequency": 1
+  },
+  {
+    "id": "v267",
+    "german": "Mieter",
+    "turkish": "kiracı",
+    "category": "gorev",
+    "frequency": 1
+  },
+  {
+    "id": "v268",
+    "german": "Standpunkt",
+    "turkish": "duruş",
+    "category": "gorev",
+    "frequency": 1
+  },
+  {
+    "id": "v269",
+    "german": "Sache",
+    "turkish": "iş/durum",
+    "category": "gorev",
+    "frequency": 1
+  },
+  {
+    "id": "v270",
+    "german": "alt",
+    "turkish": "eski",
+    "category": "garanti",
+    "frequency": 1
+  },
+  {
+    "id": "v271",
+    "german": "bedeutet",
+    "turkish": "",
+    "category": "garanti",
+    "frequency": 1
+  },
+  {
+    "id": "v272",
+    "german": "Ersatz",
+    "turkish": "",
+    "category": "garanti",
+    "frequency": 1
+  },
+  {
+    "id": "v273",
+    "german": "besorgen",
+    "turkish": "sağlamak",
+    "category": "bilgi-isteme",
+    "frequency": 1
+  },
+  {
+    "id": "v274",
+    "german": "ausführlichere",
+    "turkish": "",
+    "category": "bilgi-isteme",
+    "frequency": 1
+  },
+  {
+    "id": "v275",
+    "german": "welche",
+    "turkish": "",
+    "category": "bilgi-isteme",
+    "frequency": 1
+  },
+  {
+    "id": "v276",
+    "german": "Unterlagen",
+    "turkish": "belgeler",
+    "category": "bilgi-isteme",
+    "frequency": 1
+  },
+  {
+    "id": "v277",
+    "german": "Schicken",
+    "turkish": "göndermek",
+    "category": "bilgi-isteme",
+    "frequency": 1
+  },
+  {
+    "id": "v278",
+    "german": "Datei",
+    "turkish": "dosya",
+    "category": "bilgi-isteme",
+    "frequency": 1
+  },
+  {
+    "id": "v279",
+    "german": "Auskunft",
+    "turkish": "bilgi",
+    "category": "bilgi-isteme",
+    "frequency": 1
+  },
+  {
+    "id": "v280",
+    "german": "bezüglich",
+    "turkish": "",
+    "category": "bilgi-isteme",
+    "frequency": 1
+  },
+  {
+    "id": "v281",
+    "german": "äußerst",
+    "turkish": "",
+    "category": "hizli-cozum",
+    "frequency": 1
+  },
+  {
+    "id": "v282",
+    "german": "dankbar",
+    "turkish": "",
+    "category": "hizli-cozum",
+    "frequency": 1
+  },
+  {
+    "id": "v283",
+    "german": "prüfen",
+    "turkish": "incelemek",
+    "category": "hizli-cozum",
+    "frequency": 1
+  },
+  {
+    "id": "v284",
+    "german": "andere",
+    "turkish": "",
+    "category": "hizli-cozum",
+    "frequency": 1
+  },
+  {
+    "id": "v285",
+    "german": "bestanden",
+    "turkish": "geçmiş",
+    "category": "bilgi-verme",
+    "frequency": 1
+  },
+  {
+    "id": "v286",
+    "german": "abgesagt",
+    "turkish": "iptal edilmiş",
+    "category": "bilgi-verme",
+    "frequency": 1
+  },
+  {
+    "id": "v287",
+    "german": "Herzlichen",
+    "turkish": "içten",
+    "category": "tebrik",
+    "frequency": 1
+  },
+  {
+    "id": "v288",
+    "german": "Glückwunsch",
+    "turkish": "tebrik",
+    "category": "tebrik",
+    "frequency": 1
+  },
+  {
+    "id": "v289",
+    "german": "wünsche",
+    "turkish": "",
+    "category": "tebrik",
+    "frequency": 1
+  },
+  {
+    "id": "v290",
+    "german": "Erfolg",
+    "turkish": "başarı",
+    "category": "tebrik",
+    "frequency": 1
+  },
+  {
+    "id": "v291",
+    "german": "Prüfung",
+    "turkish": "sınav",
+    "category": "tebrik",
+    "frequency": 1
+  },
+  {
+    "id": "v292",
+    "german": "Vorschlag",
+    "turkish": "öneri",
+    "category": "tamir",
+    "frequency": 1
+  },
+  {
+    "id": "v293",
+    "german": "Techniker",
+    "turkish": "teknisyen",
+    "category": "tamir",
+    "frequency": 1
+  },
+  {
+    "id": "v294",
+    "german": "Jemand",
+    "turkish": "",
+    "category": "tamir",
+    "frequency": 1
+  },
+  {
+    "id": "v295",
+    "german": "Anschluss",
+    "turkish": "bağlantı",
+    "category": "tamir",
+    "frequency": 1
+  },
+  {
+    "id": "v296",
+    "german": "kontrollieren",
+    "turkish": "kontrol etmek",
+    "category": "tamir",
+    "frequency": 1
+  },
+  {
+    "id": "v297",
+    "german": "Fernseher",
+    "turkish": "televizyon",
+    "category": "yeni-urun",
+    "frequency": 1
+  },
+  {
+    "id": "v298",
+    "german": "lassen",
+    "turkish": "",
+    "category": "yeni-urun",
+    "frequency": 1
+  },
+  {
+    "id": "v299",
+    "german": "Lösung",
+    "turkish": "çözüm",
+    "category": "yardimci-olmazsa",
+    "frequency": 1
+  },
+  {
+    "id": "v300",
+    "german": "gekaufte",
+    "turkish": "",
+    "category": "yardimci-olmazsa",
+    "frequency": 1
+  },
+  {
+    "id": "v301",
+    "german": "Ware",
+    "turkish": "mal",
+    "category": "yardimci-olmazsa",
+    "frequency": 1
+  },
+  {
+    "id": "v302",
+    "german": "wechseln",
+    "turkish": "değiştirmek",
+    "category": "yardimci-olmazsa",
+    "frequency": 1
+  },
+  {
+    "id": "v303",
+    "german": "gewechselt",
+    "turkish": "",
+    "category": "yardimci-olmazsa",
+    "frequency": 1
+  },
+  {
+    "id": "v304",
+    "german": "melde",
+    "turkish": "",
+    "category": "yardimci-olmazsa",
+    "frequency": 1
+  },
+  {
+    "id": "v305",
+    "german": "Fall",
+    "turkish": "",
+    "category": "yardimci-olmazsa",
+    "frequency": 1
+  },
+  {
+    "id": "v306",
+    "german": "nächsten",
+    "turkish": "",
+    "category": "feshetme",
+    "frequency": 1
+  },
+  {
+    "id": "v307",
+    "german": "möglichen",
+    "turkish": "",
+    "category": "feshetme",
+    "frequency": 1
+  },
+  {
+    "id": "v308",
+    "german": "schriftliche",
+    "turkish": "",
+    "category": "feshetme",
+    "frequency": 1
+  },
+  {
+    "id": "v309",
+    "german": "Kündigungsbestätigung",
+    "turkish": "",
+    "category": "feshetme",
+    "frequency": 1
+  },
+  {
+    "id": "v310",
+    "german": "Bestätigung",
+    "turkish": "onay",
+    "category": "feshetme",
+    "frequency": 1
+  },
+  {
+    "id": "v311",
+    "german": "sicher",
+    "turkish": "güvenli",
+    "category": "feshetme",
+    "frequency": 1
+  },
+  {
+    "id": "v312",
+    "german": "Ordnung",
+    "turkish": "düzen",
+    "category": "feshetme",
+    "frequency": 1
+  },
+  {
+    "id": "v313",
+    "german": "kontaktieren",
+    "turkish": "",
+    "category": "irtibat",
+    "frequency": 1
+  },
+  {
+    "id": "v314",
+    "german": "direkt",
+    "turkish": "",
+    "category": "irtibat",
+    "frequency": 1
+  },
+  {
+    "id": "v315",
+    "german": "einfachsten",
+    "turkish": "",
+    "category": "irtibat",
+    "frequency": 1
+  },
+  {
+    "id": "v316",
+    "german": "täglich",
+    "turkish": "",
+    "category": "irtibat",
+    "frequency": 1
+  },
+  {
+    "id": "v317",
+    "german": "abends",
+    "turkish": "",
+    "category": "irtibat",
+    "frequency": 1
+  },
+  {
+    "id": "v318",
+    "german": "arbeite",
+    "turkish": "",
+    "category": "irtibat",
+    "frequency": 1
+  },
+  {
+    "id": "v319",
+    "german": "folgender",
+    "turkish": "",
+    "category": "irtibat",
+    "frequency": 1
+  },
+  {
+    "id": "v320",
+    "german": "Falls",
+    "turkish": "",
+    "category": "irtibat",
+    "frequency": 1
+  },
+  {
+    "id": "v321",
+    "german": "Schreiben",
+    "turkish": "",
+    "category": "irtibat",
+    "frequency": 1
+  },
+  {
+    "id": "v322",
+    "german": "rufen",
+    "turkish": "",
+    "category": "irtibat",
+    "frequency": 1
+  },
+  {
+    "id": "v323",
+    "german": "Mobilnummer",
+    "turkish": "",
+    "category": "irtibat",
+    "frequency": 1
+  },
+  {
+    "id": "v324",
+    "german": "Adresse",
+    "turkish": "adres",
+    "category": "irtibat",
+    "frequency": 1
+  },
+  {
+    "id": "v325",
+    "german": "Fälle",
+    "turkish": "",
+    "category": "irtibat",
+    "frequency": 1
+  },
+  {
+    "id": "v326",
+    "german": "besuchen",
+    "turkish": "ziyaret etmek",
+    "category": "hastalik",
+    "frequency": 1
+  },
+  {
+    "id": "v327",
+    "german": "teile",
+    "turkish": "",
+    "category": "hastalik",
+    "frequency": 1
+  },
+  {
+    "id": "v328",
+    "german": "Ali",
+    "turkish": "",
+    "category": "hastalik",
+    "frequency": 1
+  },
+  {
+    "id": "v329",
+    "german": "gesundheitlichen",
+    "turkish": "",
+    "category": "hastalik",
+    "frequency": 1
+  },
+  {
+    "id": "v330",
+    "german": "Gründen",
+    "turkish": "",
+    "category": "hastalik",
+    "frequency": 1
+  },
+  {
+    "id": "v331",
+    "german": "beim",
+    "turkish": "",
+    "category": "hastalik",
+    "frequency": 1
+  },
+  {
+    "id": "v332",
+    "german": "hohes",
+    "turkish": "",
+    "category": "hastalik",
+    "frequency": 1
+  },
+  {
+    "id": "v333",
+    "german": "Fieber",
+    "turkish": "ateş",
+    "category": "hastalik",
+    "frequency": 1
+  },
+  {
+    "id": "v334",
+    "german": "Bett",
+    "turkish": "",
+    "category": "hastalik",
+    "frequency": 1
+  },
+  {
+    "id": "v335",
+    "german": "zurückkommen",
+    "turkish": "geri dönmek",
+    "category": "hastalik",
+    "frequency": 1
+  },
+  {
+    "id": "v336",
+    "german": "Ende",
+    "turkish": "son",
+    "category": "hastalik",
+    "frequency": 1
+  },
+  {
+    "id": "v337",
+    "german": "Anhang",
+    "turkish": "",
+    "category": "hastalik",
+    "frequency": 1
+  },
+  {
+    "id": "v338",
+    "german": "finden",
+    "turkish": "bulmak",
+    "category": "hastalik",
+    "frequency": 1
+  },
+  {
+    "id": "v339",
+    "german": "Krankenschreibung",
+    "turkish": "rapor",
+    "category": "hastalik",
+    "frequency": 1
+  },
+  {
+    "id": "v340",
+    "german": "fünfzehn",
+    "turkish": "",
+    "category": "hastalik",
+    "frequency": 1
+  },
+  {
+    "id": "v341",
+    "german": "Tage",
+    "turkish": "",
+    "category": "hastalik",
+    "frequency": 1
+  },
+  {
+    "id": "v342",
+    "german": "Hausaufgaben",
+    "turkish": "ev ödevi",
+    "category": "hastalik",
+    "frequency": 1
+  },
+  {
+    "id": "v343",
+    "german": "fühle",
+    "turkish": "",
+    "category": "hastalik",
+    "frequency": 1
+  },
+  {
+    "id": "v344",
+    "german": "Würdest",
+    "turkish": "",
+    "category": "talep",
+    "frequency": 1
+  },
+  {
+    "id": "v345",
+    "german": "Aufgaben",
+    "turkish": "",
+    "category": "talep",
+    "frequency": 1
+  },
+  {
+    "id": "v346",
+    "german": "übernehmen",
+    "turkish": "üstlenmek",
+    "category": "talep",
+    "frequency": 1
+  },
+  {
+    "id": "v347",
+    "german": "Büromaterial",
+    "turkish": "",
+    "category": "talep",
+    "frequency": 1
+  },
+  {
+    "id": "v348",
+    "german": "wichtige",
+    "turkish": "",
+    "category": "talep",
+    "frequency": 1
+  },
+  {
+    "id": "v349",
+    "german": "Punkt",
+    "turkish": "",
+    "category": "talep",
+    "frequency": 1
+  },
+  {
+    "id": "v350",
+    "german": "Rechnungen",
+    "turkish": "",
+    "category": "talep",
+    "frequency": 1
+  },
+  {
+    "id": "v351",
+    "german": "erledigt",
+    "turkish": "halleddilmiş",
+    "category": "talep",
+    "frequency": 1
+  },
+  {
+    "id": "v352",
+    "german": "Pflanze",
+    "turkish": "",
+    "category": "talep",
+    "frequency": 1
+  },
+  {
+    "id": "v353",
+    "german": "Schreibtisch",
+    "turkish": "",
+    "category": "talep",
+    "frequency": 1
+  },
+  {
+    "id": "v354",
+    "german": "gießen",
+    "turkish": "",
+    "category": "talep",
+    "frequency": 1
+  },
+  {
+    "id": "v355",
+    "german": "passen",
+    "turkish": "",
+    "category": "termin",
+    "frequency": 1
+  },
+  {
+    "id": "v356",
+    "german": "Besuch",
+    "turkish": "",
+    "category": "termin",
+    "frequency": 1
+  },
+  {
+    "id": "v357",
+    "german": "Samstag",
+    "turkish": "",
+    "category": "termin",
+    "frequency": 1
+  },
+  {
+    "id": "v358",
+    "german": "beste",
+    "turkish": "",
+    "category": "termin",
+    "frequency": 1
+  },
+  {
+    "id": "v359",
+    "german": "egal",
+    "turkish": "",
+    "category": "termin",
+    "frequency": 1
+  },
+  {
+    "id": "v360",
+    "german": "welcher",
+    "turkish": "",
+    "category": "termin",
+    "frequency": 1
+  },
+  {
+    "id": "v361",
+    "german": "Wochentag",
+    "turkish": "",
+    "category": "termin",
+    "frequency": 1
+  },
+  {
+    "id": "v362",
+    "german": "Stuttgart",
+    "turkish": "",
+    "category": "termin",
+    "frequency": 1
+  },
+  {
+    "id": "v363",
+    "german": "wollte",
+    "turkish": "",
+    "category": "termin",
+    "frequency": 1
+  },
+  {
+    "id": "v364",
+    "german": "treffen",
+    "turkish": "",
+    "category": "termin",
+    "frequency": 1
+  },
+  {
+    "id": "v365",
+    "german": "tut",
+    "turkish": "",
+    "category": "termin",
+    "frequency": 1
+  },
+  {
+    "id": "v366",
+    "german": "leid",
+    "turkish": "",
+    "category": "termin",
+    "frequency": 1
+  },
+  {
+    "id": "v367",
+    "german": "absagen",
+    "turkish": "",
+    "category": "termin",
+    "frequency": 1
+  },
+  {
+    "id": "v368",
+    "german": "Vater",
+    "turkish": "baba",
+    "category": "termin",
+    "frequency": 1
+  },
+  {
+    "id": "v369",
+    "german": "Krankenhaus",
+    "turkish": "hastane",
+    "category": "termin",
+    "frequency": 1
+  },
+  {
+    "id": "v370",
+    "german": "ausmachen",
+    "turkish": "",
+    "category": "termin",
+    "frequency": 1
+  },
+  {
+    "id": "v371",
+    "german": "Verfügung",
+    "turkish": "",
+    "category": "termin",
+    "frequency": 1
+  },
+  {
+    "id": "v372",
+    "german": "stehen",
+    "turkish": "durmak",
+    "category": "termin",
+    "frequency": 1
+  },
+  {
+    "id": "v373",
+    "german": "Vermietung",
+    "turkish": "",
+    "category": "odeme",
+    "frequency": 1
+  },
+  {
+    "id": "v374",
+    "german": "bezahlen",
+    "turkish": "",
+    "category": "odeme",
+    "frequency": 1
+  },
+  {
+    "id": "v375",
+    "german": "Kreditkarte",
+    "turkish": "kredi kartı",
+    "category": "odeme",
+    "frequency": 1
+  },
+  {
+    "id": "v376",
+    "german": "Geschäft",
+    "turkish": "mağaza/iş",
+    "category": "odeme",
+    "frequency": 1
+  },
+  {
+    "id": "v377",
+    "german": "bezahle",
+    "turkish": "",
+    "category": "odeme",
+    "frequency": 1
+  },
+  {
+    "id": "v378",
+    "german": "bar",
+    "turkish": "nakit",
+    "category": "odeme",
+    "frequency": 1
+  },
+  {
+    "id": "v379",
+    "german": "berechnen",
+    "turkish": "",
+    "category": "odeme",
+    "frequency": 1
+  },
+  {
+    "id": "v380",
+    "german": "weiß",
+    "turkish": "",
+    "category": "sure",
+    "frequency": 1
+  },
+  {
+    "id": "v381",
+    "german": "genau",
+    "turkish": "",
+    "category": "sure",
+    "frequency": 1
+  },
+  {
+    "id": "v382",
+    "german": "insgesamt",
+    "turkish": "",
+    "category": "sure",
+    "frequency": 1
+  },
+  {
+    "id": "v383",
+    "german": "Schreib",
+    "turkish": "",
+    "category": "cevap-bekleme",
+    "frequency": 1
+  },
+  {
+    "id": "v384",
+    "german": "zurück",
+    "turkish": "",
+    "category": "cevap-bekleme",
+    "frequency": 1
+  },
+  {
+    "id": "v385",
+    "german": "Information",
+    "turkish": "bilgi",
+    "category": "cevap-bekleme",
+    "frequency": 1
+  },
+  {
+    "id": "v386",
+    "german": "schenken",
+    "turkish": "",
+    "category": "hediye",
+    "frequency": 1
+  },
+  {
+    "id": "v387",
+    "german": "Habt",
+    "turkish": "",
+    "category": "hediye",
+    "frequency": 1
+  },
+  {
+    "id": "v388",
+    "german": "Küche",
+    "turkish": "",
+    "category": "hediye",
+    "frequency": 1
+  },
+  {
+    "id": "v389",
+    "german": "Geschenk",
+    "turkish": "hediye",
+    "category": "hediye",
+    "frequency": 1
+  },
+  {
+    "id": "v390",
+    "german": "erlauben",
+    "turkish": "",
+    "category": "soru-sorma",
+    "frequency": 1
+  },
+  {
+    "id": "v391",
+    "german": "stellen",
+    "turkish": "",
+    "category": "soru-sorma",
+    "frequency": 1
+  },
+  {
+    "id": "v392",
+    "german": "beginnt",
+    "turkish": "",
+    "category": "soru-sorma",
+    "frequency": 1
+  },
+  {
+    "id": "v393",
+    "german": "wichtigste",
+    "turkish": "",
+    "category": "soru-sorma",
+    "frequency": 1
+  },
+  {
+    "id": "v394",
+    "german": "Frage",
+    "turkish": "soru",
+    "category": "soru-sorma",
+    "frequency": 1
+  },
+  {
+    "id": "v395",
+    "german": "pro",
+    "turkish": "",
+    "category": "soru-sorma",
+    "frequency": 1
+  },
+  {
+    "id": "v396",
+    "german": "Computerkurs",
+    "turkish": "",
+    "category": "soru-sorma",
+    "frequency": 1
+  },
+  {
+    "id": "v397",
+    "german": "Paar",
+    "turkish": "",
+    "category": "soru-sorma",
+    "frequency": 1
+  },
+  {
+    "id": "v398",
+    "german": "welchen",
+    "turkish": "",
+    "category": "soru-sorma",
+    "frequency": 1
+  },
+  {
+    "id": "v399",
+    "german": "Hätten",
+    "turkish": "",
+    "category": "soru-sorma",
+    "frequency": 1
+  },
+  {
+    "id": "v400",
+    "german": "dagegen",
+    "turkish": "",
+    "category": "soru-sorma",
+    "frequency": 1
+  },
+  {
+    "id": "v401",
+    "german": "mitbringe",
+    "turkish": "",
+    "category": "soru-sorma",
+    "frequency": 1
+  },
+  {
+    "id": "v402",
+    "german": "prägen",
+    "turkish": "",
+    "category": "maymuncuk",
+    "frequency": 1
+  },
+  {
+    "id": "v403",
+    "german": "Kindheit",
+    "turkish": "",
+    "category": "maymuncuk",
+    "frequency": 1
+  },
+  {
+    "id": "v404",
+    "german": "früher",
+    "turkish": "",
+    "category": "maymuncuk",
+    "frequency": 1
+  },
+  {
+    "id": "v405",
+    "german": "Jetzt",
+    "turkish": "şimdi",
+    "category": "maymuncuk",
+    "frequency": 1
+  },
+  {
+    "id": "v406",
+    "german": "Lehrer",
+    "turkish": "",
+    "category": "maymuncuk",
+    "frequency": 1
+  },
+  {
+    "id": "v407",
+    "german": "Gewissen",
+    "turkish": "",
+    "category": "maymuncuk",
+    "frequency": 1
+  },
+  {
+    "id": "v408",
+    "german": "Schutz",
+    "turkish": "",
+    "category": "maymuncuk",
+    "frequency": 1
+  },
+  {
+    "id": "v409",
+    "german": "Tieren",
+    "turkish": "",
+    "category": "maymuncuk",
+    "frequency": 1
+  },
+  {
+    "id": "v410",
+    "german": "thematisiert",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v411",
+    "german": "Heimatland",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v412",
+    "german": "anders",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v413",
+    "german": "finde",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v414",
+    "german": "Deutschland",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v415",
+    "german": "fahren",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v416",
+    "german": "drinnen",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v417",
+    "german": "Büro",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v418",
+    "german": "draußen",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v419",
+    "german": "Park",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v420",
+    "german": "Sommer",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v421",
+    "german": "Sommerkleidung",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v422",
+    "german": "tragen",
+    "turkish": "taşımak/giymek",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v423",
+    "german": "Winter",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v424",
+    "german": "Winterkleidung",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v425",
+    "german": "trägt",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v426",
+    "german": "zufrieden",
+    "turkish": "memnun",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v427",
+    "german": "müde",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v428",
+    "german": "gestresst",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v429",
+    "german": "Hintergrund",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v430",
+    "german": "Bäume",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v431",
+    "german": "mag",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v432",
+    "german": "traurig",
+    "turkish": "üzgün",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v433",
+    "german": "Atmosphäre",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v434",
+    "german": "wirkt",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v435",
+    "german": "ruhig",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v436",
+    "german": "freundlich",
+    "turkish": "kibar",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v437",
+    "german": "mittags",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v438",
+    "german": "Stress",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v439",
+    "german": "befreien",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v440",
+    "german": "schlechter",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v441",
+    "german": "Himmel",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v442",
+    "german": "grau",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v443",
+    "german": "Sonne",
+    "turkish": "",
+    "category": "bildbeschreibung",
+    "frequency": 1
+  },
+  {
+    "id": "v444",
+    "german": "lesen",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v445",
+    "german": "treiben",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v446",
+    "german": "koche",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v447",
+    "german": "liebe",
+    "turkish": "sevgili",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v448",
+    "german": "Tiere",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v449",
+    "german": "stolz",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v450",
+    "german": "Beruf",
+    "turkish": "meslek",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v451",
+    "german": "sieht",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v452",
+    "german": "ähnlich",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v453",
+    "german": "Nähe",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v454",
+    "german": "Spielplatz",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v455",
+    "german": "Corona",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v456",
+    "german": "Heutzutage",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v457",
+    "german": "bestellen",
+    "turkish": "sipariş etmek",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v458",
+    "german": "kenne",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v459",
+    "german": "spielte",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v460",
+    "german": "Land",
+    "turkish": "ülke",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v461",
+    "german": "wenige",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v462",
+    "german": "Sportmöglichkeiten",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v463",
+    "german": "Gesundheitssystem",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v464",
+    "german": "Bildungssystem",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v465",
+    "german": "fahre",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v466",
+    "german": "gehe",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v467",
+    "german": "einmal",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v468",
+    "german": "ins",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v469",
+    "german": "Fitness",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v470",
+    "german": "Studio",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v471",
+    "german": "Freizeit",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v472",
+    "german": "gespielt",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v473",
+    "german": "Heimat",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v474",
+    "german": "höre",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v475",
+    "german": "Musik",
+    "turkish": "müzik",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v476",
+    "german": "schön",
+    "turkish": "güzel",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v477",
+    "german": "Familien",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v478",
+    "german": "gleichen",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  },
+  {
+    "id": "v479",
+    "german": "Interessen",
+    "turkish": "",
+    "category": "deneyim",
+    "frequency": 1
+  }
+]

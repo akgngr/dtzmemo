@@ -1,0 +1,1111 @@
+{
+  "Brief_Kaliplari": {
+    "Giris_Kalip_Cümleleri": [
+      {
+        "Almanca": "Zuerst möchte ich Ihnen einen Schönen Tag wünschen. Wie geht es?",
+        "Türkçe": "Öncelikle size güzel bir gün diliyorum. Nasılsınız?"
+      },
+      {
+        "Almanca": "Ich hoffe, dass alles bei Ihnen gut läuft.",
+        "Türkçe": "Umarım her şey sizin için iyidir."
+      },
+      {
+        "Almanca": "Wir haben uns so lange nicht gesehen.",
+        "Türkçe": "Uzun zamandır görüşmedik."
+      },
+      {
+        "Almanca": "Ich habe mich gefreut, wieder von dir zu hören.",
+        "Türkçe": "Senden tekrar haber almak beni mutlu etti."
+      },
+      {
+        "Almanca": "Ich habe eine gute Nachricht für dich.",
+        "Türkçe": "Sana iyi bir haberim var."
+      },
+      {
+        "Almanca": "Hast du schon gehört, was passiert ist?",
+        "Türkçe": "Olup bitenleri duydun mu?"
+      },
+      {
+        "Almanca": "Ich schreibe Ihnen diese Nachricht / E-Mail, weil ich gehört habe, dass...",
+        "Türkçe": "Size bu mesajı/epostayı yazıyorum, çünkü ... duydum."
+      },
+      {
+        "Almanca": "Ich schreibe Ihnen diese E-Mail, weil ich gehört habe, dass Sie krank sind.",
+        "Türkçe": "Size bu e-postayı yazıyorum, çünkü hastalandığınızı duydum."
+      },
+      {
+        "Almanca": "Ich schreibe, um Ihnen meine Antwort zu sagen.",
+        "Türkçe": "Yanıtımı vermek için yazıyorum."
+      },
+      {
+        "Almanca": "Ich habe angerufen, aber leider konnte ich Sie nicht erreichen.",
+        "Türkçe": "Aradım, ama ne yazık ki ulaşamadım."
+      },
+      {
+        "Almanca": "Ich erreiche bei der Firma telefonisch niemanden, deshalb schreibe ich Ihnen diese E-Mail.",
+        "Türkçe": "Şirkette telefonla kimseye ulaşamadım, bu yüzden size bu e-postayı yazıyorum."
+      },
+      {
+        "Almanca": "Ich schreibe an dich, weil ich deine Hilfe brauche.",
+        "Türkçe": "Sana yardımına ihtiyacım olduğu için yazıyorum."
+      },
+      {
+        "Almanca": "Ich schreibe Ihnen diesen Brief, weil ich Sie leider informieren möchte, dass ich meinen Vertrag bei Ihnen kündigen werde/möchte.",
+        "Türkçe": "Size bu mektubu yazıyorum, çünkü ne yazık ki sizinle olan sözleşmemi feshedeceğimi bildirmek istiyorum."
+      },
+      {
+        "Almanca": "Ich schreibe Ihnen, weil ich diese Woche nicht in den Unterricht kommen kann.",
+        "Türkçe": "Size yazıyorum, çünkü bu hafta derse gelemeyeceğim."
+      },
+      {
+        "Almanca": "Zuerst sind meine Frau und ich auf der Suche nach einer Tagesmutter, deshalb schreibe ich Ihnen.",
+        "Türkçe": "Öncelikle eşim ve ben bir gündüz bakıcısı arıyoruz, bu yüzden size yazıyorum."
+      },
+      {
+        "Almanca": "Ich wende mich an Sie, weil ich ein paar Fragen habe.",
+        "Türkçe": "Size başvuruyorum, çünkü birkaç sorum var."
+      },
+      {
+        "Almanca": "In der Zeitung habe ich gelesen, dass...",
+        "Türkçe": "Gazetede ... okudum."
+      },
+      {
+        "Almanca": "Ich wende mich an Sie, weil ich gehört habe, dass...",
+        "Türkçe": "Size başvuruyorum, çünkü ... duydum."
+      },
+      {
+        "Almanca": "Ich schreibe Ihnen diesen Brief, weil ich in meiner Tageszeitung Ihre Anzeige gesehen habe, die mich interessiert.",
+        "Türkçe": "Size bu mektubu yazıyorum, çünkü gazetemde ilanınızı gördüm ve ilgimi çekti."
+      },
+      {
+        "Almanca": "Ich möchte dir etwas erzählen.",
+        "Türkçe": "Sana bir şey anlatmak istiyorum."
+      },
+      {
+        "Almanca": "Ich möchte mich entschuldigen.",
+        "Türkçe": "Özür dilemek istiyorum."
+      },
+      {
+        "Almanca": "Leider muss ich Ihnen sagen/schreiben, dass... [es ein Problem in meinem Haus gibt]",
+        "Türkçe": "Ne yazık ki size ... demeliyim/yazmalıyım [evimde bir sorun var]."
+      },
+      {
+        "Almanca": "Ich möchte sagen, dass es ein Problem in meinem Haus gibt.",
+        "Türkçe": "Evimde bir sorun olduğunu söylemek istiyorum."
+      },
+      {
+        "Almanca": "Ich schreibe Ihnen, weil ich ein Problem habe.",
+        "Türkçe": "Size yazıyorum, çünkü bir sorunum var."
+      }
+    ],
+
+    "Yardim_Isteme_Cümleleri": [
+      {
+        "Almanca": "Ich bitte Sie um Hilfe, deshalb schreibe ich Ihnen diese Nachricht.",
+        "Türkçe": "Yardımınızı istiyorum, bu yüzden size bu mesajı yazıyorum."
+      },
+      {
+        "Almanca": "Können Sie mir bitte einen Gefallen tun?",
+        "Türkçe": "Bana bir iyilik yapabilir misiniz?"
+      },
+      {
+        "Almanca": "Kann ich dich um einen Gefallen bitten?",
+        "Türkçe": "Senden bir iyilik isteyebilir miyim?"
+      },
+      {
+        "Almanca": "Ich habe eine Bitte an Sie.",
+        "Türkçe": "Size bir ricam var."
+      },
+      {
+        "Almanca": "Wenn es kein Problem für Sie ist, könnte ich...",
+        "Türkçe": "Sizin için sorun değilse, ben ... yapabilir miyim?"
+      },
+      {
+        "Almanca": "Ich brauche Hilfe, um das Problem zu lösen.",
+        "Türkçe": "Sorunu çözmek için yardıma ihtiyacım var."
+      },
+      {
+        "Almanca": "Ich brauche Ihre Hilfe für ca. 5 Stunden.",
+        "Türkçe": "Yaklaşık 5 saat boyunca yardımınıza ihtiyacım var."
+      },
+      {
+        "Almanca": "Hiermit möchte ich Sie höflichst darum bitten, dass... Bitte sagen Sie mir Bescheid, ob Sie mir helfen können.",
+        "Türkçe": "Bunu yaparak sizden kibar bir şekilde rica ediyorum ... Lütfen bana yardım edip edemeyeceğinizi bildirin."
+      },
+      {
+        "Almanca": "Haben Sie etwas Zeit für mich?",
+        "Türkçe": "Benim için biraz zamanınız var mı?"
+      },
+      {
+        "Almanca": "... wenn es Ihnen keine Mühe macht.",
+        "Türkçe": "... eğer size zahmet olmazsa."
+      }
+    ],
+
+    "Birine_Yardim_Cümleleri": [
+      {
+        "Almanca": "Du hast mir eine E-Mail geschrieben und mich um einen Gefallen gebeten.",
+        "Türkçe": "Bana bir e-posta yazdın ve bir iyilik istedin."
+      },
+      {
+        "Almanca": "Kann ich dir helfen?",
+        "Türkçe": "Sana yardım edebilir miyim?"
+      },
+      {
+        "Almanca": "Ich kann Ihnen helfen.",
+        "Türkçe": "Size yardım edebilirim."
+      },
+      {
+        "Almanca": "Kann ich etwas für Sie tun?",
+        "Türkçe": "Size bir şey yapabilir miyim?"
+      },
+      {
+        "Almanca": "Kann ich Ihnen weiterhelfen?",
+        "Türkçe": "Size daha fazla yardım edebilir miyim?"
+      }
+    ],
+
+    "Durum_Ifade_Etme_Cümleleri": [
+      {
+        "Almanca": "Ich habe in meiner Wohnung ein Problem mit der Heizung.",
+        "Türkçe": "Dairemde ısıtma sistemiyle ilgili bir sorun var."
+      },
+      {
+        "Almanca": "Ich habe die Bücher im Internet bestellt.",
+        "Türkçe": "Kitapları internetten sipariş ettim."
+      },
+      {
+        "Almanca": "Ich habe die Werkzeuge online bestellt.",
+        "Türkçe": "Aletleri çevrimiçi sipariş ettim."
+      },
+      {
+        "Almanca": "Vor zwei Wochen habe ich im Internet einen Fotoapparat bei Ihnen bestellt.",
+        "Türkçe": "İki hafta önce internetten sizden bir fotoğraf makinesi sipariş ettim."
+      },
+      {
+        "Almanca": "Der Fotoapparat hat plötzlich nicht mehr funktioniert.",
+        "Türkçe": "Fotoğraf makinesi aniden çalışmaz oldu."
+      },
+      {
+        "Almanca": "Ich habe noch Garantie und möchte Sie bitten, den Fotoapparat zu reparieren. Wenn eine Reparatur nicht möglich ist, schicken Sie mir als Ersatz einen neuen Fotoapparat.",
+        "Türkçe": "Hala garantim var ve sizden fotoğraf makinesini tamir etmenizi istiyorum. Eğer tamir edilemezse, yerini alması için yeni bir fotoğraf makinesi gönderin."
+      }
+    ],
+
+    "Davet_Cümleleri": [
+      {
+        "Almanca": "Wir werden eine Party geben.",
+        "Türkçe": "Bir parti vereceğiz."
+      },
+      {
+        "Almanca": "Ich möchte eine Party machen.",
+        "Türkçe": "Bir parti düzenlemek istiyorum."
+      },
+      {
+        "Almanca": "Wir feiern unseren Hochzeitstag.",
+        "Türkçe": "Evlenme yıldönümümüzü kutluyoruz."
+      },
+      {
+        "Almanca": "Ich möchte dich zu meinem Geburtstag einladen.",
+        "Türkçe": "Seni doğum günüme davet etmek istiyorum."
+      },
+      {
+        "Almanca": "Ich möchte euch alle zum Geburtstag einladen.",
+        "Türkçe": "Hepinizi doğum günüme davet etmek istiyorum."
+      },
+      {
+        "Almanca": "Gemeinsam mit unseren Freunden wollen wir ... feiern.",
+        "Türkçe": "Arkadaşlarımızla birlikte ... kutlamak istiyoruz."
+      },
+      {
+        "Almanca": "Wir würden uns sehr freuen, wenn du kommen könntest.",
+        "Türkçe": "Gelirsen çok mutlu oluruz."
+      },
+      {
+        "Almanca": "Wir feiern unseren Hochzeitstag / meinen Geburtstag / mein Bestehen der Prüfung.",
+        "Türkçe": "Evlenme yıldönümümüzü / doğum günümü / sınavı geçtiğimi kutluyoruz."
+      },
+      {
+        "Almanca": "Es wäre toll, wenn du kommen könntest.",
+        "Türkçe": "Gelirsen harika olur."
+      },
+      {
+        "Almanca": "Wir würden uns aber über deine Teilnahme sehr freuen.",
+        "Türkçe": "Katılımınızdan dolayı çok mutlu oluruz."
+      },
+      {
+        "Almanca": "Ich feiere meinen Geburtstag am 12. Mai.",
+        "Türkçe": "Doğum günümü 12 Mayıs'ta kutluyorum."
+      },
+      {
+        "Almanca": "Ich organisiere eine Party im Restaurant „Kebaphaus“ in der Königstraße 10.",
+        "Türkçe": "Kral Caddesi 10 numaradaki 'Kebap Evi' restoranında bir parti organize ediyorum."
+      },
+      {
+        "Almanca": "Ich habe mich sehr darüber gefreut.",
+        "Türkçe": "Bundan çok mutlu oldum."
+      }
+    ],
+
+    "Davet_Kabul_Etme": [
+      {
+        "Almanca": "Gerade habe ich Ihre Einladung bekommen und möchte Ihnen damit mitteilen, dass ich mich sehr darüber freue.",
+        "Türkçe": "Davetinizi yeni aldım ve bundan dolayı çok mutlu olduğumu bildirmek istiyorum."
+      },
+      {
+        "Almanca": "Vielen Dank für die Einladung zu eurer Party. Ich komme gern.",
+        "Türkçe": "Partinize davet ettiğiniz için teşekkürler. Memnuniyetle gelirim."
+      },
+      {
+        "Almanca": "Darf ich meine Frau / Kinder / meinen Mann mitbringen?",
+        "Türkçe": "Eşimi / çocuklarımı / kocamı getirebilir miyim?"
+      },
+      {
+        "Almanca": "Was kann ich für dich mitbringen?",
+        "Türkçe": "Sana ne getirebilirim?"
+      },
+      {
+        "Almanca": "Ich kann einen Kuchen backen, wenn du willst.",
+        "Türkçe": "İstersen bir pasta yapabilirim."
+      },
+      {
+        "Almanca": "Ich bedanke mich bei dir für deine Einladung zum 40. Geburtstag.",
+        "Türkçe": "40. doğum günü davetin için teşekkür ederim."
+      }
+    ],
+
+    "Davet_Kabul_Etmeme_Ozür_Dileme": [
+      {
+        "Almanca": "Ich möchte mich bei Ihnen entschuldigen, weil ich nicht zu Ihrer Hochzeit gekommen bin.",
+        "Türkçe": "Düğününüze gelemediğim için sizden özür dilemek istiyorum."
+      },
+      {
+        "Almanca": "Ich entschuldige mich dafür, ich werde am 01.01.2023 nicht zu Ihrer Geburtstagfeier kommen können.",
+        "Türkçe": "Özür dilerim, 01.01.2023 tarihinde doğum günü partinize gelemeyeceğim."
+      },
+      {
+        "Almanca": "Ich entschuldige mich dafür, ich werde am 01.01.2023 nicht zu Ihrer Hochzeit kommen können.",
+        "Türkçe": "Özür dilerim, 01.01.2023 tarihinde düğününüze gelemeyeceğim."
+      },
+      {
+        "Almanca": "Ich wäre gern dabei, aber ich kann leider nicht kommen.",
+        "Türkçe": "Orada olmak isterdim, ama ne yazık ki gelemeyeceğim."
+      },
+      {
+        "Almanca": "Ich habe leider einen anderen Termin.",
+        "Türkçe": "Ne yazık ki başka bir randevum var."
+      },
+      {
+        "Almanca": "Ich warte auf eine Einladung zum Vorstellungsgespräch.",
+        "Türkçe": "Mülakat daveti bekliyorum."
+      },
+      {
+        "Almanca": "Entschuldigung für...",
+        "Türkçe": "... için özür dilerim."
+      },
+      {
+        "Almanca": "Ich bin krank und bitte Sie, dass Sie mich entschuldigen.",
+        "Türkçe": "Hastayım ve sizden beni affetmenizi istiyorum."
+      },
+      {
+        "Almanca": "Ich würde liebend gern, aber ich habe leider keine Zeit.",
+        "Türkçe": "Çok isterdim, ama ne yazık ki zamanım yok."
+      },
+      {
+        "Almanca": "Ich bin immer ziemlich beschäftigt.",
+        "Türkçe": "Her zaman oldukça meşgulüm."
+      },
+      {
+        "Almanca": "Ich mache viele Überstunden.",
+        "Türkçe": "Çok fazla mesai yapıyorum."
+      },
+      {
+        "Almanca": "An diesem Termin bin ich verreist.",
+        "Türkçe": "Bu tarihte seyahatte olacağım."
+      },
+      {
+        "Almanca": "An diesem Termin muss ich arbeiten.",
+        "Türkçe": "Bu tarihte çalışmam gerekiyor."
+      },
+      {
+        "Almanca": "An diesem Termin habe ich einen wichtigen Termin.",
+        "Türkçe": "Bu tarihte önemli bir randevum var."
+      },
+      {
+        "Almanca": "Du weißt, dass meine Mutter krank ist und dass sie meine Hilfe braucht. Ich muss jeden Nachmittag nach der Arbeit um sie kümmern, deshalb kann ich nicht zu deinem Geburtstag kommen.",
+        "Türkçe": "Annemin hasta olduğunu ve yardımima ihtiyacı olduğunu biliyorsun. İşten sonra her öğleden sonra ona bakmam gerekiyor, bu yüzden doğum gününe gelemeyeceğim."
+      }
+    ],
+
+    "Teşekkür_Kalıpları": [
+      {
+        "Almanca": "Vielen Dank für Ihre Antwort.",
+        "Türkçe": "Yanıtınız için teşekkür ederim."
+      },
+      {
+        "Almanca": "Vielen Dank für deinen / Ihren Brief.",
+        "Türkçe": "Mektubunuz / mektubun için teşekkür ederim."
+      },
+      {
+        "Almanca": "Vielen Dank für Ihre freundliche Einladung.",
+        "Türkçe": "Kibar davetiniz için teşekkür ederim."
+      },
+      {
+        "Almanca": "Vielen Dank für Ihre Unterstützung.",
+        "Türkçe": "Desteğiniz için teşekkür ederim."
+      },
+      {
+        "Almanca": "Vielen Dank für Ihr Verständnis.",
+        "Türkçe": "Anlayışınız için teşekkür ederim."
+      },
+      {
+        "Almanca": "Vielen Dank für Ihre Bemühungen / Mühe.",
+        "Türkçe": "Çabalarınız / emeğiniz için teşekkür ederim."
+      },
+      {
+        "Almanca": "Sie waren mir eine große Hilfe.",
+        "Türkçe": "Bana büyük yardımınız dokundu."
+      },
+      {
+        "Almanca": "Vielen Dank für Ihre Hilfe in dieser Angelegenheit.",
+        "Türkçe": "Bu konudaki yardımınız için teşekkür ederim."
+      },
+      {
+        "Almanca": "Ich danke Ihnen im Voraus.",
+        "Türkçe": "Şimdiden teşekkür ederim."
+      },
+      {
+        "Almanca": "Ich kann dir / Ihnen nicht genug danken.",
+        "Türkçe": "Sana / size teşekkür etmekte yetersiz kalıyorum."
+      }
+    ],
+
+    "Gelişme_Cümleleri": [
+      {
+        "Almanca": "Die Party findet am 01. Mai ab 18.00 Uhr statt.",
+        "Türkçe": "Parti 01 Mayıs saat 18:00'da başlayacak."
+      },
+      {
+        "Almanca": "Bitte sagen Sie mir Bescheid bis zum 01. Mai, ob Sie kommen können.",
+        "Türkçe": "Lütfen 01 Mayıs'a kadar geleceğinizi bana bildirin."
+      },
+      {
+        "Almanca": "Sie müssen nichts mitbringen, weil ich schon alles besorgt habe.",
+        "Türkçe": "Hiçbir şey getirmenize gerek yok, çünkü her şeyi ben hallettim."
+      },
+      {
+        "Almanca": "Ich kann z.B. Süßigkeiten mitbringen oder einen Kuchen backen.",
+        "Türkçe": "Örneğin, şekerleme getirebilirim veya bir pasta yapabilirim."
+      }
+    ],
+
+    "Şikayet": [
+      {
+        "Almanca": "Hiermit möchte ich mich über Ihr ... beschweren.",
+        "Türkçe": "Bunu yaparak ... hakkında şikayette bulunmak istiyorum."
+      },
+      {
+        "Almanca": "Hiermit möchte ich mich über Ihre Wohnung beschweren.",
+        "Türkçe": "Bunu yaparak daireniz hakkında şikayette bulunmak istiyorum."
+      },
+      {
+        "Almanca": "Leider bin ich sehr unzufrieden mit Ihrer Wohnung.",
+        "Türkçe": "Ne yazık ki dairenizden çok memnun değilim."
+      },
+      {
+        "Almanca": "So können wir nicht weitermachen.",
+        "Türkçe": "Bu şekilde devam edemeyiz."
+      },
+      {
+        "Almanca": "Daher bitte ich Sie um die umgehende Erstattung von 30% der Gebühr.",
+        "Türkçe": "Bu nedenle, ücretin %30'unun derhal iadesini talep ediyorum."
+      },
+      {
+        "Almanca": "Bitte überweisen Sie die Gebühr auf mein Konto mit der Nummer: IBAN DE... bei der Sparkasse.",
+        "Türkçe": "Lütfen ücreti IBAN DE... numaralı Sparkasse hesabıma havale edin."
+      },
+      {
+        "Almanca": "Über eine baldige und positive Antwort von Ihnen würde ich mich freuen.",
+        "Türkçe": "Sizden yakında ve olumlu bir yanıt almak beni mutlu edecek."
+      },
+      {
+        "Almanca": "Ich werde die folgenden Punkte erledigen.",
+        "Türkçe": "Aşağıdaki maddeleri halledeceğim."
+      },
+      {
+        "Almanca": "Mach dir keine Sorgen. Ich werde die folgenden Punkte erledigen.",
+        "Türkçe": "Endişelenme. Aşağıdaki maddeleri halledeceğim."
+      },
+      {
+        "Almanca": "Wir haben noch Probleme zu lösen.",
+        "Türkçe": "Çözülmesi gereken sorunlarımız var."
+      }
+    ],
+
+    "Görev_Hatırlatma": [
+      {
+        "Almanca": "Es gibt drei Regeln, die der Vermieter beachten sollte. Diese sind:……",
+        "Türkçe": "Ev sahibinin uyması gereken üç kural var. Bunlar:……"
+      },
+      {
+        "Almanca": "Es gibt zwei Regeln, die der Chef beachten sollte. Diese sind:……",
+        "Türkçe": "Patronun uyması gereken iki kural var. Bunlar:……"
+      },
+      {
+        "Almanca": "Es gibt Rechte, die ein Mieter haben muss. Diese sind:",
+        "Türkçe": "Bir kiracının sahip olması gereken haklar var. Bunlar:"
+      },
+      {
+        "Almanca": "Was denken Sie darüber?",
+        "Türkçe": "Bunlar hakkında ne düşünüyorsunuz?"
+      },
+      {
+        "Almanca": "Was ist Ihre Meinung / Ansicht in dieser Angelegenheit?",
+        "Türkçe": "Bu konudaki görüşünüz / fikriniz nedir?"
+      },
+      {
+        "Almanca": "Was ist Ihr Standpunkt dazu?",
+        "Türkçe": "Buna ilişkin duruşunuz nedir?"
+      },
+      {
+        "Almanca": "Wie sehen Sie diese Sache?",
+        "Türkçe": "Bu duruma nasıl bakıyorsunuz?"
+      }
+    ],
+
+    "Garanti": [
+      {
+        "Almanca": "Ich habe noch mindestens für 18 Monate Garantie, weil die Waschmaschine erst 6 Monate alt ist.",
+        "Türkçe": "Çamaşır makinesi henüz 6 aylık olduğu için en az 18 ay daha garantim var."
+      },
+      {
+        "Almanca": "Das bedeutet, Sie können mir helfen und das Problem lösen.",
+        "Türkçe": "Bu, bana yardım edebileceğiniz ve sorunu çözebileceğiniz anlamına gelir."
+      },
+      {
+        "Almanca": "Ich möchte auch wissen, ob die Reparatur etwas kostet. Ich glaube nicht, weil ich immer noch mehr als 1 Jahr Garantie habe.",
+        "Türkçe": "Tamirin bir maliyeti olup olmadığını da bilmek istiyorum. Sanmıyorum, çünkü hala 1 yıldan fazla garantim var."
+      },
+      {
+        "Almanca": "Ich habe noch Garantie und möchte Sie bitten, den Fotoapparat zu reparieren.",
+        "Türkçe": "Hala garantim var ve sizden fotoğraf makinesini tamir etmenizi istiyorum."
+      },
+      {
+        "Almanca": "Wenn eine Reparatur nicht möglich ist, schicken Sie mir als Ersatz einen neuen Fotoapparat.",
+        "Türkçe": "Eğer tamir edilemezse, yerini alması için yeni bir fotoğraf makinesi gönderin."
+      }
+    ],
+
+    "Bilgi_İsteme": [
+      {
+        "Almanca": "Ich würde gern wissen,……",
+        "Türkçe": "Bilmek isterdim,……"
+      },
+      {
+        "Almanca": "Kannst du mir bitte auch sagen, ……",
+        "Türkçe": "Bana ... hakkında da bilgi verebilir misin?"
+      },
+      {
+        "Almanca": "Ich habe ein paar Fragen an dich / Sie.",
+        "Türkçe": "Sana / size birkaç sorum var."
+      },
+      {
+        "Almanca": "Bitte informieren Sie mich so bald wie möglich.",
+        "Türkçe": "Lütfen beni mümkün olduğunca çabuk bilgilendirin."
+      },
+      {
+        "Almanca": "Ich möchte wissen, was Sie über mein Angebot denken.",
+        "Türkçe": "Teklifim hakkında ne düşündüğünüzü bilmek istiyorum."
+      },
+      {
+        "Almanca": "Ich würde/möchte gerne wissen, ob/dass/W-Frage….",
+        "Türkçe": "... olup olmadığını / nasıl olduğunu bilmek isterdim."
+      },
+      {
+        "Almanca": "Bitte melden Sie mir Bescheid, ob Sie kommen können.",
+        "Türkçe": "Lütfen geleceğinizi bana bildirin."
+      },
+      {
+        "Almanca": "Bitte sagen Sie mir bald Bescheid, ob Sie kommen können.",
+        "Türkçe": "Lütfen geleceğinizi bana çabuk bildirin."
+      },
+      {
+        "Almanca": "Ich würde gern wissen, ob Sie diesem Problem besorgen sind.",
+        "Türkçe": "Bu sorunla ilgilenip ilgilenmediğinizi bilmek isterdim."
+      },
+      {
+        "Almanca": "Wir würden uns sehr freuen, wenn Sie uns ausführlichere Informationen über …… senden könnten.",
+        "Türkçe": "... hakkında daha detaylı bilgi gönderebilirseniz çok mutlu oluruz."
+      },
+      {
+        "Almanca": "Ich würde gern wissen, welche Unterlagen ich zum Termin mitbringen soll.",
+        "Türkçe": "Randevuya hangi belgeleri getirmem gerektiğini bilmek isterdim."
+      },
+      {
+        "Almanca": "Bitte senden Sie mir alle Informationen per E-Mail.",
+        "Türkçe": "Lütfen tüm bilgileri e-posta ile gönderin."
+      },
+      {
+        "Almanca": "Schicken Sie mir die Datei per E-Mail.",
+        "Türkçe": "Dosyayı e-posta ile gönderin."
+      },
+      {
+        "Almanca": "Ich brauche eine Auskunft bezüglich….",
+        "Türkçe": "... hakkında bilgi almak istiyorum."
+      },
+      {
+        "Almanca": "Ich brauche eine Auskunft bezüglich der Preise.",
+        "Türkçe": "Fiyatlar hakkında bilgi almak istiyorum."
+      },
+      {
+        "Almanca": "Ich brauche Informationen über Preise.",
+        "Türkçe": "Fiyatlar hakkında bilgiye ihtiyacım var."
+      }
+    ],
+
+    "Hızlı_Çözüm": [
+      {
+        "Almanca": "Ich wäre Ihnen äußerst dankbar, wenn Sie diese Angelegenheit so schnell wie möglich prüfen könnten.",
+        "Türkçe": "Bu konuyu mümkün olduğunca çabuk inceleyebilirseniz size çok minnettar kalırım."
+      },
+      {
+        "Almanca": "Bitte sagen Sie mir Bescheid, ob Sie mir helfen können.",
+        "Türkçe": "Lütfen bana yardım edip edemeyeceğinizi bildirin."
+      },
+      {
+        "Almanca": "Wenn Sie keine Zeit haben, muss ich schnell eine andere Person fragen.",
+        "Türkçe": "Zamanınız yoksa, başka birini çabuk sormam gerekecek."
+      }
+    ],
+
+    "Bilgi_Verme": [
+      {
+        "Almanca": "Ich freue mich, dir zu berichten, dass …",
+        "Türkçe": "Sana ... olduğunu bildirmekten mutluluk duyuyorum."
+      },
+      {
+        "Almanca": "Leider muss ich dir berichten, dass….",
+        "Türkçe": "Ne yazık ki sana ... olduğunu bildirmek zorundayım."
+      }
+    ],
+
+    "Tebrik": [
+      {
+        "Almanca": "Herzlichen Glückwunsch zu...",
+        "Türkçe": "... için tebrikler."
+      },
+      {
+        "Almanca": "Ich wünsche dir viel Erfolg bei ...",
+        "Türkçe": "...de başarılar diliyorum."
+      }
+    ],
+
+    "Tamir_Tamirci": [
+      {
+        "Almanca": "Ich habe einen Vorschlag: Könnten Sie bitte einen Techniker / Handwerker zu mir schicken?",
+        "Türkçe": "Bir önerim var: Bana bir teknisyen / ustayı gönderebilir misiniz?"
+      },
+      {
+        "Almanca": "Jemand / Eine Person muss meinen Anschluss kontrollieren / überprüfen / reparieren.",
+        "Türkçe": "Birisi / bir kişi bağlantımı kontrol etmelidir / incelemelidir / tamir etmelidir."
+      },
+      {
+        "Almanca": "Ich bitte Sie, dass Sie meine Waschmaschine reparieren.",
+        "Türkçe": "Çamaşır makinemi tamir etmenizi istiyorum."
+      },
+      {
+        "Almanca": "Könnten Sie dafür bitte einen Handwerker zu mir nach Hause schicken?",
+        "Türkçe": "Bunun için lütfen evime bir usta gönderebilir misiniz?"
+      },
+      {
+        "Almanca": "Wenn der Handwerker die Waschmaschine nicht reparieren kann, würde ich gern eine neue bekommen.",
+        "Türkçe": "Eğer usta çamaşır makinesini tamir edemezse, yeni bir tane almak isterim."
+      }
+    ],
+
+    "Yeni_Ürün_veya_Para_İsteme": [
+      {
+        "Almanca": "Ich bitte Sie, mir eine neue Maschine zu senden oder das Geld, das ich bezahlt habe, auf mein Konto zu überweisen.",
+        "Türkçe": "Bana yeni bir makine göndermenizi veya ödediğim parayı hesabıma iade etmenizi istiyorum."
+      },
+      {
+        "Almanca": "Ich würde gerne wissen, Könnten Sie den Fernseher reparieren lassen oder einen neuen schicken?",
+        "Türkçe": "Televizyonu tamir ettirebilir misiniz yoksa yeni bir tane gönderebilir misiniz?"
+      }
+    ],
+
+    "Yardımcı_Olunmazsa": [
+      {
+        "Almanca": "Bitte geben/machen Sie mir eine Lösung. Wenn Sie mir nicht helfen können, werde ich den Vertrag leider kündigen.",
+        "Türkçe": "Lütfen bana bir çözüm sunun. Eğer bana yardım edemezseniz, ne yazık ki sözleşmeyi feshedeceğim."
+      },
+      {
+        "Almanca": "Ich bitte Sie, die gekaufte Ware so schnell wie möglich zu wechseln. Wenn die Maschine bis Freitag nicht gewechselt wird, melde ich den Fall bei der Verbraucherzentrale.",
+        "Türkçe": "Satın alınan malı mümkün olduğunca çabuk değiştirmenizi istiyorum. Eğer makine Cuma gününe kadar değiştirilmezse, durumu Tüketici Merkezine bildireceğim."
+      },
+      {
+        "Almanca": "Ich freue mich auf eine positive Antwort von Ihnen. Wenn Sie mir nicht antworten, werde ich mich bei der Verbraucherzentrale beschweren.",
+        "Türkçe": "Sizden olumlu bir yanıt almayı umuyorum. Eğer yanıt vermezseniz, Tüketici Merkezine şikayette bulunacağım."
+      }
+    ],
+
+    "Feshetme_Teyit_Etme": [
+      {
+        "Almanca": "Ich möchte meinen Vertrag zum nächsten möglichen Termin kündigen.",
+        "Türkçe": "Sözleşmemi mümkün olan en yakın tarihte feshetmek istiyorum."
+      },
+      {
+        "Almanca": "Bitte senden Sie mir eine schriftliche Kündigungsbestätigung.",
+        "Türkçe": "Lütfen bana yazılı bir fesih onayı gönderin."
+      },
+      {
+        "Almanca": "Bitte senden Sie mir eine Bestätigung. Das ist wichtig, damit ich sicher bin, dass alles in Ordnung ist.",
+        "Türkçe": "Lütfen bana bir onay gönderin. Bu, her şeyin düzgün olduğunu bilmem için önemli."
+      }
+    ],
+
+    "İrtibat": [
+      {
+        "Almanca": "Bitte kontaktieren Sie mich. Meine Telefonnummer ist...",
+        "Türkçe": "Lütfen benimle iletişime geçin. Telefon numaram ..."
+      },
+      {
+        "Almanca": "Die Fragen können Sie mich immer erreichen. Meine Telefonnummer ist 12344.",
+        "Türkçe": "Sorularınız için her zaman benimle iletişime geçebilirsiniz. Telefon numaram 12344."
+      },
+      {
+        "Almanca": "Sie können mich direkt anrufen. Ich denke, das ist am einfachsten / besten. Meine Telefonnummer lautet 12344.",
+        "Türkçe": "Beni doğrudan arayabilirsiniz. Bence bu en kolay / en iyi yol. Telefon numaram 12344."
+      },
+      {
+        "Almanca": "Sie können mich täglich ab 18 Uhr abends erreichen, weil ich arbeite.",
+        "Türkçe": "Çalıştığım için her gün akşam 18:00'dan sonra benimle iletişime geçebilirsiniz."
+      },
+      {
+        "Almanca": "Sie erreichen uns von Montag bis Freitag zwischen 08.30 und 18.00 Uhr unter folgender Nummer...12345.",
+        "Türkçe": "Pazartesiden Cumaya 08:30 ile 18:00 arasında aşağıdaki numaradan bize ulaşabilirsiniz...12345."
+      },
+      {
+        "Almanca": "Am Wochenende bin ich jederzeit erreichbar. Ich habe aber eine neue Nummer. Sie lautet 12344.",
+        "Türkçe": "Hafta sonları her zaman ulaşılabilirim. Ancak yeni bir numaram var. Numara 12344."
+      },
+      {
+        "Almanca": "Sie können mich jederzeit per E-Mail erreichen.",
+        "Türkçe": "Beni her zaman e-posta ile ulaşabilirsiniz."
+      },
+      {
+        "Almanca": "Sie können mich jederzeit unter dieser Nummer 0123444 erreichen.",
+        "Türkçe": "Beni her zaman bu numaradan (0123444) ulaşabilirsiniz."
+      },
+      {
+        "Almanca": "Wenn Sie noch Fragen haben, können Sie mich anrufen.",
+        "Türkçe": "Eğer hala sorularınız varsa, beni arayabilirsiniz."
+      },
+      {
+        "Almanca": "Falls Sie noch Fragen haben, können Sie sich bei mir melden.",
+        "Türkçe": "Eğer hala sorularınız varsa, benimle iletişime geçebilirsiniz."
+      },
+      {
+        "Almanca": "Schreiben Sie mir bitte schnell oder rufen Sie mich an.",
+        "Türkçe": "Lütfen bana çabuk yazın veya beni arayın."
+      },
+      {
+        "Almanca": "Ich bin in der Woche ab 16 Uhr erreichbar und am Wochenende jederzeit.",
+        "Türkçe": "Hafta içi 16:00'dan sonra ve hafta sonları her zaman ulaşılabilirim."
+      },
+      {
+        "Almanca": "Zum Schluss noch einige Fragen: Wie komme ich am besten zu euch.",
+        "Türkçe": "Son olarak birkaç soru: Size en iyi nasıl ulaşabilirim."
+      },
+      {
+        "Almanca": "Sie können mich unter der Mobilnummer 011111 oder unter meiner verwendeten E-Mail-Adresse erreichen.",
+        "Türkçe": "Beni 011111 numaralı cep telefonumdan veya kullandığım e-posta adresimden ulaşabilirsiniz."
+      },
+      {
+        "Almanca": "Ich schreibe dir meine Nummer / E-Mail für alle Fälle.",
+        "Türkçe": "Her ihtimale karşı numaramı / e-postamı yazıyorum."
+      },
+      {
+        "Almanca": "Meine Frau ist jeden Nachmittag zu Hause. Sie können einfach anrufen und kommen. Oder Sie rufen mich an, meine Handynummer ist 01234.",
+        "Türkçe": "Eşim her öğleden sonra evdedir. Basitçe arayabilir ve gelebilirsiniz. Veya beni arayabilirsiniz, cep telefonum numaram 01234."
+      },
+      {
+        "Almanca": "Meine E-Mail-Adresse lautet: 0112121.",
+        "Türkçe": "E-posta adresim: 0112121."
+      }
+    ],
+
+    "Hastalık": [
+      {
+        "Almanca": "Mein Sohn ist krank und kann deswegen diese Woche die Schule nicht mehr besuchen.",
+        "Türkçe": "Oğlum hasta ve bu yüzden bu hafta okula gidemiyor."
+      },
+      {
+        "Almanca": "Hiermit teile ich Ihnen mit, dass mein Sohn Ali aus gesundheitlichen Gründen diese Woche nicht in die Schule kommen kann. Leider ist er krank geworden.",
+        "Türkçe": "Bunu yaparak, oğlum Ali'nin sağlık nedenleriyle bu hafta okula gelemeyeceğini bildirmek istiyorum. Ne yazık ki hasta oldu."
+      },
+      {
+        "Almanca": "Gestern waren wir beim Arzt. Er hat Erkältung und hohes Fieber, darum muss er mindestens diese Woche im Bett bleiben, wie der Arzt sagte.",
+        "Türkçe": "Dün doktorda idik. Soğuk algınlığı ve yüksek ateşi var, bu yüzden doktorun dediği gibi bu hafta en azından yatakta kalmalı."
+      },
+      {
+        "Almanca": "Wahrscheinlich kann er erst am Montag wieder in die Schule kommen.",
+        "Türkçe": "Muhtemelen ancak Pazartesi günü okula dönebilir."
+      },
+      {
+        "Almanca": "Ich hoffe, dass sie/er in drei Tagen wieder zur Schule zurückkommen kann.",
+        "Türkçe": "Umarım üç gün içinde okula dönebilir."
+      },
+      {
+        "Almanca": "Ich habe Erkältung. Der Arzt hat mich bis Ende der Woche krankgeschrieben.",
+        "Türkçe": "Soğuk algınlığım var. Doktor beni hafta sonuna kadar rapor etti."
+      },
+      {
+        "Almanca": "Ich habe gehört, du hast eine Erkältung.",
+        "Türkçe": "Soğuk algınlığın olduğunu duydum."
+      },
+      {
+        "Almanca": "Ich habe gehört, dass du eine Erkältung hast.",
+        "Türkçe": "Soğuk algınlığın olduğunu duydum."
+      },
+      {
+        "Almanca": "Im Anhang finden Sie die Krankenschreibung vom Arzt.",
+        "Türkçe": "Ekte doktorun raporunu bulabilirsiniz."
+      },
+      {
+        "Almanca": "Ich muss mindestens fünfzehn Tage zu Hause bleiben.",
+        "Türkçe": "En az on beş gün evde kalmalıyım."
+      },
+      {
+        "Almanca": "Könnten Sie uns/wir die Hausaufgaben per E-Mail senden?",
+        "Türkçe": "Bize/ev ödevlerini e-posta ile gönderebilir misiniz?"
+      },
+      {
+        "Almanca": "Mein Arzt hat mich für zwei Wochen krankgeschrieben, aber ich fühle mich schon viel besser.",
+        "Türkçe": "Doktor beni iki hafta boyunca rapor etti, ama kendimi çok daha iyi hissediyorum."
+      }
+    ],
+
+    "Talep": [
+      {
+        "Almanca": "Würdest du so nett und könntest ein paar meiner Aufgaben übernehmen?",
+        "Türkçe": "Kibar olabilir misin ve birkaç görevimi üstlenebilir misin?"
+      },
+      {
+        "Almanca": "Zuerst sollte Büromaterial bestellt werden.",
+        "Türkçe": "Öncelikle ofis malzemeleri sipariş edilmeli."
+      },
+      {
+        "Almanca": "Der nächste wichtige Punkt ist: Die Rechnungen müssen erledigt werden.",
+        "Türkçe": "Bir sonraki önemli nokta: Faturalar halledilmeli."
+      },
+      {
+        "Almanca": "Es wäre toll, wenn du bitte auch die Pflanze auf dem Schreibtisch gießen könntest.",
+        "Türkçe": "Harika olurdu eğer masa üzerindeki bitkiyi de sulayabilirsen."
+      }
+    ],
+
+    "Termin": [
+      {
+        "Almanca": "Können Sie mir einen Termin dafür geben?",
+        "Türkçe": "Bana bunun için bir randevu verebilir misiniz?"
+      },
+      {
+        "Almanca": "Wann würde es Ihnen passen?",
+        "Türkçe": "Sizin için ne zaman uygun olur?"
+      },
+      {
+        "Almanca": "Könnten Sie mir bitte sagen, wann Sie mir einen Termin vereinbaren könnten?",
+        "Türkçe": "Bana ne zaman randevu verebileceğinizi söyleyebilir misiniz?"
+      },
+      {
+        "Almanca": "Ich würde gern zu dir zum Besuch kommen, deshalb möchte ich wissen, ob du am Samstag Nachmittag Zeit hast.",
+        "Türkçe": "Seni ziyarete gelmek isterdim, bu yüzden Cumartesi öğleden sonra zamanın olup olmadığını bilmek istiyorum."
+      },
+      {
+        "Almanca": "Könnten wir bitte einen Termin vereinbaren?",
+        "Türkçe": "Bir randevu ayarlayabilir miyiz?"
+      },
+      {
+        "Almanca": "Die beste Zeit ist für mich zwischen 12 Uhr und 18 Uhr, egal welcher Wochentag.",
+        "Türkçe": "Benim için en iyi zaman 12:00 ile 18:00 arasında, haftanın hangi günü olursa olsun."
+      },
+      {
+        "Almanca": "Ich hoffe, dass Sie mir so schnell wie möglich antworten.",
+        "Türkçe": "Umarım bana mümkün olduğunca çabuk yanıt verirsiniz."
+      },
+      {
+        "Almanca": "Ich bin nächste Woche in Stuttgart und wollte fragen, ob wir uns treffen könnten.",
+        "Türkçe": "Gelecek hafta Stuttgart'ta olacağım ve buluşup buluşamayacağımızı sormak istiyorum."
+      },
+      {
+        "Almanca": "Es tut mir leid, dass ich den Termin absagen muss, weil mein Vater im Krankenhaus ist.",
+        "Türkçe": "Babam hastanede olduğu için randevuyu iptal etmek zorundayım, özür dilerim."
+      },
+      {
+        "Almanca": "Es wäre sehr nett von Ihnen, wenn Sie mir einen neuen Termin ausmachen würden.",
+        "Türkçe": "Bana yeni bir randevu ayarlarsanız çok kibar olursunuz."
+      },
+      {
+        "Almanca": "Ab 01.01.2023 habe ich immer Zeit und werde Ihnen zur Verfügung stehen.",
+        "Türkçe": "01.01.2023 tarihinden itibaren her zaman zamanım olacak ve hizmetinizde olacağım."
+      }
+    ],
+
+    "Ödeme": [
+      {
+        "Almanca": "Wie soll ich für ... bezahlen?",
+        "Türkçe": "... için nasıl ödeme yapmalıyım?"
+      },
+      {
+        "Almanca": "Wie soll ich für die Vermietung bezahlen? Ich habe eine Kreditkarte / ein Konto und könnte das Geld online überweisen. Bitte sagen Sie mir Bescheid.",
+        "Türkçe": "Kiralama için nasıl ödeme yapmalıyım? Kredi kartım / hesabım var ve parayı çevrimiçi olarak gönderebilirim. Lütfen bana bildirin."
+      },
+      {
+        "Almanca": "Wenn Sie möchten, komme ich zu Ihrem Geschäft und bezahle bar.",
+        "Türkçe": "İsterseniz, mağazanıza gelip nakit ödeme yapabilirim."
+      },
+      {
+        "Almanca": "Könnten Sie uns bitte sagen, wie viel Sie für die Stunde berechnen?",
+        "Türkçe": "Bize saat başına ne kadar ücret aldığınızı söyleyebilir misiniz?"
+      }
+    ],
+
+    "Süre": [
+      {
+        "Almanca": "Ich weiß nicht genau, wie lange alles dauert.",
+        "Türkçe": "Her şeyin ne kadar süreceğini tam olarak bilmiyorum."
+      },
+      {
+        "Almanca": "Könnten Sie mir bitte sagen, wie lange der Kurs (insgesamt) dauert?",
+        "Türkçe": "Kursun (toplamda) ne kadar süreceğini bana söyleyebilir misiniz?"
+      }
+    ],
+
+    "Cevap_Bekleme": [
+      {
+        "Almanca": "Ich würde mich freuen, bald von Ihnen zu hören.",
+        "Türkçe": "Sizden yakında haber almak beni mutlu edecek."
+      },
+      {
+        "Almanca": "Schreib mir bitte bald zurück.",
+        "Türkçe": "Lütfen bana yakında geri yaz."
+      },
+      {
+        "Almanca": "Ich freue mich auf Ihre Antwort.",
+        "Türkçe": "Yanıtınızı bekliyorum."
+      },
+      {
+        "Almanca": "Ich warte auf eine Einladung zum Vorstellungsgespräch.",
+        "Türkçe": "Mülakat daveti bekliyorum."
+      },
+      {
+        "Almanca": "Könnten Sie mir bitte so schnell wie möglich eine Information geben?",
+        "Türkçe": "Bana mümkün olduğunca çabuk bilgi verebilir misiniz?"
+      },
+      {
+        "Almanca": "Ich warte auf Ihre positive Antwort.",
+        "Türkçe": "Olumlu yanıtınızı bekliyorum."
+      },
+      {
+        "Almanca": "Ich würde gern wissen, ob der Schreiben bezahlt wird.",
+        "Türkçe": "Yazının ödenip ödenmediğini bilmek isterdim."
+      },
+      {
+        "Almanca": "Bevor ich komme, möchte ich ein paar Fragen stellen: Was wünscht du dir als Geschenk?",
+        "Türkçe": "Gelmeden önce birkaç soru sormak istiyorum: Hediye olarak ne istiyorsun?"
+      },
+      {
+        "Almanca": "Es wäre sehr nett von Ihnen, wenn Sie mir eine baldige Antwort schicken könnten.",
+        "Türkçe": "Bana yakında bir yanıt gönderebilirseniz çok kibar olursunuz."
+      },
+      {
+        "Almanca": "Bitte sagen Sie mir Bescheid, ob Sie mir helfen können.",
+        "Türkçe": "Lütfen bana yardım edip edemeyeceğinizi bildirin."
+      }
+    ],
+
+    "Hediye": [
+      {
+        "Almanca": "Ich möchte euch gern etwas schenken. Habt ihr schon eine Uhr für die Küche?",
+        "Türkçe": "Size bir şey hediye etmek istiyorum. Mutfak için bir saatiniz var mı?"
+      },
+      {
+        "Almanca": "Meiner Meinung nach ist es sehr wichtig, jemanden ein Geschenk zu geben, damit man jemanden glücklich macht.",
+        "Türkçe": "Bence birine hediye vermek, birini mutlu etmek için çok önemli."
+      }
+    ],
+
+    "Soru_Sorma": [
+      {
+        "Almanca": "Wenn Sie mir erlauben, möchte ich Ihnen einige Fragen stellen.",
+        "Türkçe": "İzin verirsenz, size birkaç soru sormak istiyorum."
+      },
+      {
+        "Almanca": "Ich möchte noch ein paar Fragen: Wo findet Ihr Unterricht statt?",
+        "Türkçe": "Birkaç sorum daha var: Dersiniz nerede yapılıyor?"
+      },
+      {
+        "Almanca": "Ich möchte wissen, wie viel der Unterricht kostet.",
+        "Türkçe": "Dersin ne kadar tuttuğunu bilmek istiyorum."
+      },
+      {
+        "Almanca": "Könnten Sie mir bitte sagen, wann der Unterricht beginnt?",
+        "Türkçe": "Dersin ne zaman başlayacağını bana söyleyebilir misiniz?"
+      },
+      {
+        "Almanca": "Die wichtigste Frage ist, wie viel das pro Stunde kostet.",
+        "Türkçe": "En önemli soru, saat başına ne kadar tuttuğu."
+      },
+      {
+        "Almanca": "Ich möchte gern einen Computerkurs machen, aber ich habe noch ein Paar Fragen.",
+        "Türkçe": "Bilgisayar kursuna katılmak istiyorum, ama hala birkaç sorum var."
+      },
+      {
+        "Almanca": "An welchen Tagen ist der Kurs und um wie viel Uhr? Und wie viel kostet der Kurs?",
+        "Türkçe": "Kurs hangi günler ve saat kaçta? Ve kurs ne kadar tutuyor?"
+      },
+      {
+        "Almanca": "Hätten Sie etwas dagegen, wenn ich meine Frau mitbringe?",
+        "Türkçe": "Eşimi getirsem sakıncası olur mu?"
+      },
+      {
+        "Almanca": "Wenn Sie keine Zeit haben, muss ich schnell eine andere Person fragen.",
+        "Türkçe": "Zamanınız yoksa, başka birini çabuk sormam gerekecek."
+      }
+    ],
+
+    "Genel_Cümleler": [
+      {
+        "Almanca": "Alles ist gut geklärt.",
+        "Türkçe": "Her şey açıklığa kavuştu."
+      },
+      {
+        "Almanca": "Das würde mich sehr freuen.",
+        "Türkçe": "Bu beni çok mutlu edecek."
+      },
+      {
+        "Almanca": "Ich weiß das.",
+        "Türkçe": "Bunu biliyorum."
+      },
+      {
+        "Almanca": "Das wusste ich nicht.",
+        "Türkçe": "Bunu bilmiyordum."
+      },
+      {
+        "Almanca": "So etwas verärgert mich sehr.",
+        "Türkçe": "Böyle şeyler beni çok sinirlendirir."
+      },
+      {
+        "Almanca": "Ich bin mir nicht ganz sicher, ob...",
+        "Türkçe": "... olup olmadığından tam emin değilim."
+      },
+      {
+        "Almanca": "Wenn Sie keine Lust mehr haben, können Sie auch gerne Kinderfilme zeigen.",
+        "Türkçe": "Eğer artık isteğiniz kalmadıysa, çocuk filmleri de gösterebilirsiniz."
+      },
+      {
+        "Almanca": "Sie können mir etwas malen, weil sie das gerne macht.",
+        "Türkçe": "Bana bir şey çizebilirsiniz, çünkü bunu yapmayı seviyor."
+      }
+    ],
+
+    "Son_Cümleler": [
+      {
+        "Almanca": "Für Ihre Hilfe im Voraus vielen Dank.",
+        "Türkçe": "Yardımınız için şimdiden çok teşekkür ederim."
+      },
+      {
+        "Almanca": "Ich hoffe, dass Sie mir helfen können.",
+        "Türkçe": "Umarım bana yardım edebilirsiniz."
+      },
+      {
+        "Almanca": "Vielen Dank für Ihre Unterstützung.",
+        "Türkçe": "Desteğiniz için teşekkür ederim."
+      },
+      {
+        "Almanca": "Vielen Dank für Ihr Verständnis.",
+        "Türkçe": "Anlayışınız için teşekkür ederim."
+      },
+      {
+        "Almanca": "Ich bedanke mich bei Ihnen für die Hilfe.",
+        "Türkçe": "Yardımınız için teşekkür ederim."
+      },
+      {
+        "Almanca": "Ich danke Ihnen im Voraus und hoffe, dass Sie mir helfen können.",
+        "Türkçe": "Şimdiden teşekkür ederim ve umarım bana yardım edebilirsiniz."
+      },
+      {
+        "Almanca": "Vielen Dank für Ihre Bemühungen / Mühe.",
+        "Türkçe": "Çabalarınız / emeğiniz için teşekkür ederim."
+      },
+      {
+        "Almanca": "Ich hoffe, dass Sie mir helfen können und Sie so bald wie möglich diese Probleme lösen.",
+        "Türkçe": "Umarım bana yardım edebilirsiniz ve bu sorunları mümkün olduğunca çabuk çözersiniz."
+      },
+      {
+        "Almanca": "Schreib mir bitte zurück, darauf würde ich mich sehr freuen. Herzliche Grüße.",
+        "Türkçe": "Lütfen bana geri yazın, bundan çok mutlu olacağım. Sevgiler."
+      },
+      {
+        "Almanca": "Auf eine baldige Antwort würde ich mich sehr freuen.",
+        "Türkçe": "Yakında bir yanıt almak beni çok mutlu edecek."
+      },
+      {
+        "Almanca": "Auf eine positive Antwort würde ich mich sehr freuen.",
+        "Türkçe": "Olumlu bir yanıt almak beni çok mutlu edecek."
+      },
+      {
+        "Almanca": "Ich würde mich freuen, wenn Sie mir bald möglichst schreiben.",
+        "Türkçe": "Bana mümkün olduğunca çabuk yazarsanız mutlu olacağım."
+      },
+      {
+        "Almanca": "Ich warte auf Ihre positive Antwort.",
+        "Türkçe": "Olumlu yanıtınızı bekliyorum."
+      },
+      {
+        "Almanca": "Ich freue mich darauf, Sie bald wieder zu sehen.",
+        "Türkçe": "Sizi yakında tekrar görmeyi dört gözle bekliyorum."
+      },
+      {
+        "Almanca": "Grüßen Sie Ihre Frau Ayşe von mir.",
+        "Türkçe": "Eşiniz Ayşe'ye benim selamımı söyleyin."
+      },
+      {
+        "Almanca": "Wir bleiben in Kontakt.",
+        "Türkçe": "İletişimde kalalım."
+      },
+      {
+        "Almanca": "Wenn du irgendwas brauchst, bitte sag es mir.",
+        "Türkçe": "Herhangi bir şeye ihtiyacın olursa, lütfen bana söyle."
+      }
+    ],
+
+    "Kapanış_Cümleleri": [
+      {
+        "Almanca": "Ich hoffe, dass Sie bald wieder gesund werden und zu uns zurückkommen können.",
+        "Türkçe": "Umarım yakında tekrar sağlığınıza kavuşur ve bize dönebilirsiniz."
+      },
+      {
+        "Almanca": "Ich wünsche dir alles Gute.",
+        "Türkçe": "Sana her şeyin gönlünce olmasını dilerim."
+      },
+      {
+        "Almanca": "Danke noch einmal, dass du dich um…….. kümmerst.",
+        "Türkçe": "... ile ilgilendiğin için tekrar teşekkür ederim."
+      },
+      {
+        "Almanca": "Ich wünsche Ihnen / dir noch ein schönes Wochenende.",
+        "Türkçe": "Sana / size iyi bir hafta sonu dilerim."
+      },
+      {
+        "Almanca": "Ich wünsche dir / Ihnen viel Erfolg / Spaß.",
+        "Türkçe": "Sana / size başarılar / eğlence dilerim."
+      },
+      {
+        "Almanca": "Alles Gute zum Geburtstag.",
+        "Türkçe": "Doğum günün kutlu olsun."
+      }
+    ]
+  }
+}

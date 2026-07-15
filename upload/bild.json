@@ -1,0 +1,135 @@
+{
+  "Bildbeschreibung_kalıpları": {
+    "Not": "Resim metin ile ilgili degildir.",
+    "Temel_Gözlemler": [
+      {
+        "Almanca": "Auf dem Bild sehe ich eine Frau/einen Mann.",
+        "Türkçe": "Resimde bir kadın/bir adam görüyorum."
+      },
+      {
+        "Almanca": "Ich denke, dass das Foto Sport/Einkaufen/Freizeit thematisiert.",
+        "Türkçe": "Bence fotoğraf spor/alışveriş/boş zaman gibi bir konuyu ele alıyor."
+      }
+    ],
+    "Kişisel_Bağlantılar": [
+      {
+        "Almanca": "Das Foto erinnert mich an meinen Sohn/meine Tochter, weil er/sie jeden Tag Fahrrad fährt.",
+        "Türkçe": "Bu fotoğraf bana oğlumu/kızımı hatırlatıyor, çünkü o her gün bisiklet sürüyor."
+      }
+    ],
+    "Kültürel_Karşılaştırmalar": [
+      {
+        "Almanca": "In meinem Heimatland ist das ganz anders.",
+        "Türkçe": "Benim ülkemde bu durum tamamen farklı."
+      },
+      {
+        "Almanca": "Ich finde, dass in Deutschland mehr Menschen Fahrrad fahren als in der Türkei.",
+        "Türkçe": "Bence Almanya'da Türkiye'ye göre daha fazla insan bisiklet sürüyor."
+      },
+      {
+        "Almanca": "Ich finde, dass in Deutschland das Gesundheitssystem besser ist als in der Türkei.",
+        "Türkçe": "Bence Almanya'da sağlık sistemi Türkiye'ye göre daha iyi."
+      },
+      {
+        "Almanca": "Ich finde, dass es in Deutschland mehr Altenheime gibt als in der Türkei.",
+        "Türkçe": "Bence Almanya'da Türkiye'ye göre daha fazla huzurevi var."
+      }
+    ],
+    "Mekan_Bilgileri": [
+      {
+        "Almanca": "Das Foto wurde drinnen aufgenommen und zeigt eine Situation im Büro/im Zimmer/in der Küche.",
+        "Türkçe": "Fotoğraf içeride çekilmiş ve bir ofis/oda/mutfak sahnesini gösteriyor."
+      },
+      {
+        "Almanca": "Das Foto wurde draußen aufgenommen und zeigt eine Situation im Park/an der Haltestelle/auf der Straße.",
+        "Türkçe": "Fotoğraf dışarıda çekilmiş ve bir park/durak/sokak sahnesini gösteriyor."
+      }
+    ],
+    "Mevsim_Bilgileri": [
+      {
+        "Almanca": "Ich denke, dass es Sommer ist, weil sie Sommerkleidung tragen.",
+        "Türkçe": "Bence yaz, çünkü yazlık kıyafetler giyiyorlar."
+      },
+      {
+        "Almanca": "Ich denke, dass es Winter ist, weil er/sie Winterkleidung trägt.",
+        "Türkçe": "Bence kış, çünkü o kışlık kıyafetler giyiyor."
+      }
+    ],
+    "Duygu_Durumları": [
+      {
+        "Almanca": "Sie sehen nicht nur glücklich, sondern auch zufrieden aus.",
+        "Türkçe": "Sadece mutlu değil, aynı zamanda memnun görünüyorlar."
+      },
+      {
+        "Almanca": "Sie sehen nicht nur müde, sondern auch gestresst aus.",
+        "Türkçe": "Sadece yorgun değil, aynı zamanda stresli görünüyorlar."
+      }
+    ],
+    "Arka_Plan_Bilgileri": [
+      {
+        "Almanca": "Im Hintergrund sehe ich viele Bäume/zwei Gebäude/drei Häuser.",
+        "Türkçe": "Arka planda birçok ağaç/iki bina/üç ev görüyorum."
+      }
+    ],
+    "Fotoğraf_Değerlendirmeleri": [
+      {
+        "Almanca": "Dieses Foto gefällt mir, weil ich Sport/Fahrrad fahren/Müll trennen mag.",
+        "Türkçe": "Bu fotoğrafı beğeniyorum, çünkü spor yapmayı/bisiklet sürmeyi/çöp ayırmayı seviyorum."
+      },
+      {
+        "Almanca": "Dieses Foto gefällt mir nicht, weil es mich traurig macht.",
+        "Türkçe": "Bu fotoğrafı beğenmiyorum, çünkü beni üzüyor."
+      }
+    ],
+    "Yaş_Tahminleri": [
+      {
+        "Almanca": "Ich denke, dass die Frau ungefähr 30 Jahre alt ist.",
+        "Türkçe": "Bence kadın yaklaşık 30 yaşında."
+      },
+      {
+        "Almanca": "Ich denke, dass der Mann ungefähr 35 Jahre alt ist.",
+        "Türkçe": "Bence adam yaklaşık 35 yaşında."
+      },
+      {
+        "Almanca": "Ich denke, dass sie ungefähr 40 Jahre alt sind.",
+        "Türkçe": "Bence onlar yaklaşık 40 yaşında."
+      }
+    ],
+    "Atmosfer_Bilgileri": [
+      {
+        "Almanca": "Die Atmosphäre wirkt ruhig/freundlich/fröhlich.",
+        "Türkçe": "Atmosfer sakin/dostane/neşe dolu görünüyor."
+      }
+    ],
+    "Zaman_Bilgileri": [
+      {
+        "Almanca": "Wahrscheinlich ist das Foto mittags/vormittags/abends aufgenommen worden.",
+        "Türkçe": "Fotoğraf muhtemelen öğle vakti/sabah/akşam çekilmiş."
+      }
+    ],
+    "Önemli_Konular": [
+      {
+        "Almanca": "Meiner Meinung nach ist dieses Thema sehr wichtig, weil Sport/Fahrradfahren/Helfen die Menschen vom Stress befreien kann.",
+        "Türkçe": "Bence bu konu çok önemli, çünkü spor/bisiklet sürmek/yardım etmek insanları stresten kurtarabilir."
+      },
+      {
+        "Almanca": "Meiner Meinung nach ist dieses Thema sehr wichtig, weil Krankheit die Menschen stressen kann.",
+        "Türkçe": "Bence bu konu çok önemli, çünkü hastalık insanları strese sokabilir."
+      }
+    ],
+    "Hava_Durumu_Tahminleri": [
+      {
+        "Almanca": "Es scheint, dass das Wetter schlechter wird, weil der Himmel ganz grau ist.",
+        "Türkçe": "Hava kötüleşiyor gibi görünüyor, çünkü gökyüzü tamamen gri."
+      },
+      {
+        "Almanca": "Es scheint, dass das Wetter besser wird, weil die Sonne scheint.",
+        "Türkçe": "Hava iyileşiyor gibi görünüyor, çünkü güneş parlıyor."
+      },
+      {
+        "Almanca": "Es scheint, dass das Wetter schlechter wird, weil es im Himmel viele Wolken gibt.",
+        "Türkçe": "Hava kötüleşiyor gibi görünüyor, çünkü gökyüzünde çok bulut var."
+      }
+    ]
+  }
+}
