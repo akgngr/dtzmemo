@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Zhipu BigModel API — same key works for GLM-4.5-Air (chat) and GLM-ASR-2512 (transcription)
-const ZHIPU_API_KEY = '51d6b2bb24364d4c9f44912ebd64cd86.z122Ar2NXutBAB4L';
+// Dev-only default key — used when no key is provided in the request body.
+// In production, the client must send the user's own key.
+const DEV_ZHIPU_API_KEY = '51d6b2bb24364d4c9f44912ebd64cd86.z122Ar2NXutBAB4L';
 const ZHIPU_TRANSCRIPTION_URL =
   'https://open.bigmodel.cn/api/paas/v4/audio/transcriptions';
 
@@ -20,6 +21,7 @@ interface JsonBody {
   language?: string;
   prompt?: string;
   hotwords?: string[];
+  zhipuKey?: string;
 }
 
 export async function POST(req: NextRequest) {
@@ -32,6 +34,9 @@ export async function POST(req: NextRequest) {
 
     const contentType = req.headers.get('content-type') || '';
 
+    // Zhipu key from client (extracted early, before consuming the body)
+    let clientZhipuKey = '';
+
     if (contentType.includes('application/json')) {
       // JSON path: client converts to WAV base64 and posts JSON.
       // This is the preferred path because Zhipu's `file_base64` field only works
@@ -41,6 +46,7 @@ export async function POST(req: NextRequest) {
       language = body.language || 'de';
       prompt = body.prompt || '';
       hotwords = Array.isArray(body.hotwords) ? body.hotwords : [];
+      clientZhipuKey = body.zhipuKey || '';
     } else {
       // Legacy multipart path: client posts raw blob as `file`.
       // Zhipu will REJECT webm/opus — client must convert to WAV first.
@@ -61,6 +67,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Audio is required' }, { status: 400 });
     }
 
+    // Resolve API key: client-provided > dev default > error
+    const apiKey = clientZhipuKey || (process.env.NODE_ENV !== 'production' ? DEV_ZHIPU_API_KEY : '');
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: 'Zhipu API anahtarı gerekli. Lütfen Ayarlar sayfasından API anahtarınızı girin.' },
+        { status: 400 }
+      );
+    }
+
     // Build the request to Zhipu. We have two paths:
     //   1. JSON body with file_base64 (preferred — works reliably)
     //   2. Multipart with `file` binary upload (legacy fallback)
@@ -79,7 +94,7 @@ export async function POST(req: NextRequest) {
       response = await fetch(ZHIPU_TRANSCRIPTION_URL, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${ZHIPU_API_KEY}`,
+          Authorization: `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(jsonBody),
@@ -100,7 +115,7 @@ export async function POST(req: NextRequest) {
       response = await fetch(ZHIPU_TRANSCRIPTION_URL, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${ZHIPU_API_KEY}`,
+          Authorization: `Bearer ${apiKey}`,
         },
         body: forward,
       });

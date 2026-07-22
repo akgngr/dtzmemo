@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { useAppStore } from '@/lib/store';
 
 type TTSStatus = 'idle' | 'loading' | 'playing' | 'error';
 
@@ -303,10 +304,19 @@ export function useTTS(opts: UseTTSOptions = {}): UseTTSReturn {
       let url = phraseKey ? audioUrlCache.get(phraseKey) : audioUrlCache.get(cacheKey);
 
       if (!url) {
+        // Read API keys from store at call time (not at hook init)
+        const { elevenLabsKey, googleTtsKey } = useAppStore.getState().apiKeys;
+
         const response = await fetch('/api/tts', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text, voiceId, googleVoice }),
+          body: JSON.stringify({
+            text,
+            voiceId,
+            googleVoice,
+            elevenLabsKey: elevenLabsKey || undefined,
+            googleTtsKey: googleTtsKey || undefined,
+          }),
         });
 
         if (!response.ok) {

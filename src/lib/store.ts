@@ -24,6 +24,12 @@ interface ExerciseHistoryEntry {
   categories: string[];
 }
 
+interface ApiKeys {
+  zhipuKey: string;
+  elevenLabsKey: string;
+  googleTtsKey: string;
+}
+
 interface SpeechUsage {
   // YYYY-MM format — when the current billing cycle started
   month: string;
@@ -87,7 +93,13 @@ interface AppState {
   // Days until next reset (1st of next month)
   daysUntilSpeechReset: () => number;
 
-  // Clear all data
+  // ===== API Keys =====
+  apiKeys: ApiKeys;
+  setApiKey: (key: keyof ApiKeys, value: string) => void;
+  setApiKeys: (keys: Partial<ApiKeys>) => void;
+  clearApiKeys: () => void;
+
+  // Clear all data (preserves API keys)
   clearAllData: () => void;
 }
 
@@ -320,6 +332,28 @@ export const useAppStore = create<AppState>()(
         return Math.max(0, Math.ceil(diffMs / msPerDay));
       },
 
+      // ===== API Keys =====
+      apiKeys: {
+        zhipuKey: '',
+        elevenLabsKey: '',
+        googleTtsKey: '',
+      },
+
+      setApiKey: (key, value) =>
+        set((state) => ({
+          apiKeys: { ...state.apiKeys, [key]: value },
+        })),
+
+      setApiKeys: (keys) =>
+        set((state) => ({
+          apiKeys: { ...state.apiKeys, ...keys },
+        })),
+
+      clearApiKeys: () =>
+        set({
+          apiKeys: { zhipuKey: '', elevenLabsKey: '', googleTtsKey: '' },
+        }),
+
       clearAllData: () =>
         set({
           selectedCategories: [],
@@ -337,11 +371,12 @@ export const useAppStore = create<AppState>()(
             count: 0,
             monthlyLimit: DEFAULT_SPEECH_MONTHLY_LIMIT,
           },
+          // NOTE: apiKeys are NOT cleared — they are user credentials
         }),
     }),
     {
       name: "deutsch-memo-storage",
-      version: 3,
+      version: 4,
       migrate: (persistedState: any, version: number) => {
         if (version === 0 || version === 1) {
           // Migrate from selectedCategory (string|null) to selectedCategories (string[])
@@ -363,6 +398,13 @@ export const useAppStore = create<AppState>()(
               count: 0,
               monthlyLimit: 300,
             },
+          };
+        }
+        if (version === 3) {
+          // Add apiKeys
+          return {
+            ...persistedState,
+            apiKeys: { zhipuKey: '', elevenLabsKey: '', googleTtsKey: '' },
           };
         }
         return persistedState;

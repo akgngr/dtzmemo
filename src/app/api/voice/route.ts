@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Zhipu BigModel — GLM-4-Voice (end-to-end voice model)
-const ZHIPU_API_KEY = '51d6b2bb24364d4c9f44912ebd64cd86.z122Ar2NXutBAB4L';
+// Dev-only default key — used when no key is provided in the request body.
+// In production, the client must send the user's own key.
+const DEV_ZHIPU_API_KEY = '51d6b2bb24364d4c9f44912ebd64cd86.z122Ar2NXutBAB4L';
 const ZHIPU_CHAT_URL = 'https://open.bigmodel.cn/api/paas/v4/chat/completions';
 
 const VOICE_MODEL = 'glm-4-voice';
@@ -26,6 +27,8 @@ interface VoiceRequestBody {
   // Optional: turn number, so we can ask the model to wrap up after N turns
   turnIndex?: number;
   maxTurns?: number;
+  // Optional: Zhipu API key from client (dev fallback if not provided)
+  zhipuKey?: string;
 }
 
 // GLM-4-Voice requires user message content to be an array of typed parts.
@@ -91,12 +94,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'scenarioLabel is required' }, { status: 400 });
     }
 
+    // Resolve API key: client-provided > dev default > error
+    const apiKey = body.zhipuKey || (process.env.NODE_ENV !== 'production' ? DEV_ZHIPU_API_KEY : '');
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: 'Zhipu API anahtarı gerekli. Lütfen Ayarlar sayfasından API anahtarınızı girin.' },
+        { status: 400 }
+      );
+    }
+
     const messages = buildMessages(body);
 
     const response = await fetch(ZHIPU_CHAT_URL, {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${ZHIPU_API_KEY}`,
+        Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

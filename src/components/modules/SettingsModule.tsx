@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { Shield, Trash2, Sparkles, AlertTriangle, Mic, Volume2, Calendar, Settings2 } from 'lucide-react';
+import { Shield, Trash2, Sparkles, AlertTriangle, Mic, Volume2, Calendar, Settings2, Key, Eye, EyeOff, CheckCircle2, Info } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -22,6 +22,117 @@ function formatMonth(monthStr: string): string {
   return `${MONTH_NAMES_TR[m - 1]} ${y}`;
 }
 
+// ===== API Key input field component =====
+function ApiKeyField({
+  label,
+  description,
+  placeholder,
+  value,
+  onChange,
+  testUrl,
+  testMethod = 'POST',
+  testBody,
+  testKeyField,
+  successHint,
+}: {
+  label: string;
+  description: string;
+  placeholder: string;
+  value: string;
+  onChange: (v: string) => void;
+  testUrl: string;
+  testMethod?: string;
+  testBody?: Record<string, unknown>;
+  testKeyField?: string;
+  successHint?: string;
+}) {
+  const [visible, setVisible] = useState(false);
+  const [testing, setTesting] = useState(false);
+  const [testResult, setTestResult] = useState<'idle' | 'success' | 'error'>('idle');
+
+  const handleTest = useCallback(async () => {
+    if (!value.trim()) return;
+    setTesting(true);
+    setTestResult('idle');
+    try {
+      const body = testBody ? { ...testBody } : {};
+      if (testKeyField) {
+        body[testKeyField] = value.trim();
+      }
+      const res = await fetch(testUrl, {
+        method: testMethod,
+        headers: { 'Content-Type': 'application/json' },
+        body: Object.keys(body).length > 0 ? JSON.stringify(body) : undefined,
+      });
+      // We expect an error about missing fields — a 400 (not 401/403) means the key is valid
+      if (res.status === 401 || res.status === 403) {
+        setTestResult('error');
+      } else {
+        setTestResult('success');
+      }
+    } catch {
+      setTestResult('error');
+    } finally {
+      setTesting(false);
+    }
+  }, [value, testUrl, testMethod, testBody, testKeyField]);
+
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <label className="text-sm font-medium text-foreground">{label}</label>
+        {value.trim() ? (
+          <Badge variant="outline" className="border-emerald-200 text-emerald-700 bg-emerald-50 text-[10px]">
+            <CheckCircle2 className="mr-1 h-3 w-3" /> Kayıtlı
+          </Badge>
+        ) : (
+          <Badge variant="outline" className="border-gray-200 text-gray-500 text-[10px]">
+            Girilmedi
+          </Badge>
+        )}
+      </div>
+      <p className="text-xs text-muted-foreground">{description}</p>
+      <div className="flex items-center gap-2">
+        <div className="relative flex-1">
+          <input
+            type={visible ? 'text' : 'password'}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            className="w-full h-10 rounded-md border border-gray-200 px-3 pr-10 text-sm font-mono focus:border-emerald-400 focus:outline-none"
+            placeholder={placeholder}
+            autoComplete="off"
+          />
+          <button
+            type="button"
+            onClick={() => setVisible(!visible)}
+            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+          >
+            {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          </button>
+        </div>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={handleTest}
+          disabled={testing || !value.trim()}
+          className="shrink-0"
+        >
+          {testing ? 'Test...' : 'Test Et'}
+        </Button>
+      </div>
+      {testResult === 'success' && (
+        <p className="text-xs text-emerald-600 flex items-center gap-1">
+          <CheckCircle2 className="h-3 w-3" />
+          {successHint || 'API anahtarı geçerli.'}
+        </p>
+      )}
+      {testResult === 'error' && (
+        <p className="text-xs text-red-600">API anahtarı geçersiz veya erişim reddedildi. Lütfen kontrol edin.</p>
+      )}
+    </div>
+  );
+}
+
 export function SettingsModule() {
   const clearAllData = useAppStore((s) => s.clearAllData);
   const speechUsage = useAppStore((s) => s.speechUsage);
@@ -29,6 +140,10 @@ export function SettingsModule() {
   const hasSpeechQuota = useAppStore((s) => s.hasSpeechQuota);
   const remainingSpeechQuota = useAppStore((s) => s.remainingSpeechQuota);
   const daysUntilSpeechReset = useAppStore((s) => s.daysUntilSpeechReset);
+
+  // API Keys
+  const apiKeys = useAppStore((s) => s.apiKeys);
+  const setApiKey = useAppStore((s) => s.setApiKey);
 
   const [showConfirm, setShowConfirm] = useState(false);
   const [limitInput, setLimitInput] = useState<string>(String(speechUsage.monthlyLimit));
@@ -64,6 +179,119 @@ export function SettingsModule() {
 
   return (
     <div className="space-y-6">
+      {/* ===== API Keys Card ===== */}
+      <Card className="border-0 shadow-sm">
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Key className="h-4 w-4 text-emerald-600" />
+            API Anahtarları
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-5">
+          <div className="rounded-lg bg-blue-50 p-4">
+            <div className="flex items-start gap-3">
+              <Info className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
+              <div className="text-sm text-blue-800">
+                <p className="font-medium mb-1">API anahtarları gerekli mi?</p>
+                <p>
+                  Geliştirme ortamında varsayılan anahtarlar kullanılır. Production&apos;da
+                  kendi API anahtarlarınızı girmeniz gerekir. Anahtarlar yalnızca
+                  tarayıcınızda localStorage&apos;da saklanır, sunucuya kaydedilmez.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <Separator />
+
+          <div className="space-y-5">
+            <ApiKeyField
+              label="Zhipu BigModel API Anahtarı"
+              description="GLM-4.5-Air (sohbet), GLM-4-Voice (sesli konuşma) ve GLM-ASR (ses tanıma) için kullanılır. open.bigmodel.cn adresinden alabilirsiniz."
+              placeholder="51d6b2bb...z122Ar2NX"
+              value={apiKeys.zhipuKey}
+              onChange={(v) => setApiKey('zhipuKey', v)}
+              testUrl="/api/chat"
+              testBody={{ messages: [], systemPrompt: 'test' } as Record<string, unknown>}
+              testKeyField="zhipuKey"
+              successHint="Zhipu API anahtarı geçerli (sohbet ve sesli konuşma çalışacak)."
+            />
+
+            <Separator />
+
+            <ApiKeyField
+              label="ElevenLabs API Anahtarı"
+              description="Yüksek kaliteli Almanca seslendirme (TTS) için kullanılır. elevenlabs.io adresinden alabilirsiniz. Boş bırakılırsa Google Cloud TTS kullanılır."
+              placeholder="sk_6c2fb452...ea43fc99"
+              value={apiKeys.elevenLabsKey}
+              onChange={(v) => setApiKey('elevenLabsKey', v)}
+              testUrl="/api/tts"
+              testBody={{ text: 'Hallo' } as Record<string, unknown>}
+              testKeyField="elevenLabsKey"
+              successHint="ElevenLabs API anahtarı geçerli."
+            />
+
+            <Separator />
+
+            <ApiKeyField
+              label="Google Cloud TTS API Anahtarı"
+              description="Almanca seslendirme için yedek TTS sağlayıcısı. ElevenLabs yoksa veya başarısız olursa kullanılır. Google Cloud Console&apos;dan alabilirsiniz."
+              placeholder="AIzaSyDIy8..."
+              value={apiKeys.googleTtsKey}
+              onChange={(v) => setApiKey('googleTtsKey', v)}
+              testUrl="/api/tts"
+              testBody={{ text: 'Guten Tag' } as Record<string, unknown>}
+              testKeyField="googleTtsKey"
+              successHint="Google Cloud TTS API anahtarı geçerli."
+            />
+          </div>
+
+          {/* Provider fallback info */}
+          <Separator />
+          <div className="space-y-2">
+            <span className="text-xs font-semibold uppercase text-muted-foreground">TTS Sağlayıcı Sırası</span>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2">
+                <div className="flex items-center gap-2">
+                  <Volume2 className="h-4 w-4 text-slate-600" />
+                  <div>
+                    <p className="text-sm font-medium">ElevenLabs</p>
+                    <p className="text-xs text-muted-foreground">Birinci tercih · en yüksek kalite</p>
+                  </div>
+                </div>
+                <Badge variant="outline" className={apiKeys.elevenLabsKey ? 'border-emerald-200 text-emerald-700 bg-emerald-50' : 'border-gray-200 text-gray-400'}>
+                  {apiKeys.elevenLabsKey ? 'Aktif' : 'Pasif'}
+                </Badge>
+              </div>
+              <div className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2">
+                <div className="flex items-center gap-2">
+                  <Volume2 className="h-4 w-4 text-slate-600" />
+                  <div>
+                    <p className="text-sm font-medium">Google Cloud TTS</p>
+                    <p className="text-xs text-muted-foreground">İkinci tercih · 4M karakter/ay ücretsiz</p>
+                  </div>
+                </div>
+                <Badge variant="outline" className={apiKeys.googleTtsKey ? 'border-emerald-200 text-emerald-700 bg-emerald-50' : 'border-gray-200 text-gray-400'}>
+                  {apiKeys.googleTtsKey ? 'Aktif' : 'Pasif'}
+                </Badge>
+              </div>
+              <div className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2">
+                <div className="flex items-center gap-2">
+                  <Volume2 className="h-4 w-4 text-slate-600" />
+                  <div>
+                    <p className="text-sm font-medium">Google Translate TTS</p>
+                    <p className="text-xs text-muted-foreground">Son çare · ücretsiz, düşük kalite</p>
+                  </div>
+                </div>
+                <Badge variant="outline" className="border-emerald-200 text-emerald-700 bg-emerald-50">
+                  Her zaman aktif
+                </Badge>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* ===== Google Web Speech API Usage Card ===== */}
       <Card className="border-0 shadow-sm">
         <CardHeader className="pb-2">

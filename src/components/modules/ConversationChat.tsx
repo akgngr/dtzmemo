@@ -160,6 +160,8 @@ export function ConversationChat({ topic, onExit }: ConversationChatProps) {
 
       const userTurnIndex = history.filter((m) => m.sender === 'user').length;
 
+      const { zhipuKey } = useAppStore.getState().apiKeys;
+
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -174,6 +176,7 @@ export function ConversationChat({ topic, onExit }: ConversationChatProps) {
           messages: apiMessages,
           temperature: 0.7,
           maxTokens: 400,
+          zhipuKey: zhipuKey || undefined,
         }),
       });
       if (!response.ok) {

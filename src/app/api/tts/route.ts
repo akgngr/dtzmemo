@@ -14,23 +14,13 @@ import crypto from 'crypto';
 // auth/quota errors so we don't burn latency retrying a dead provider
 // for every TTS call.
 
-// ElevenLabs — high-quality commercial TTS (free tier ~10K chars/month)
-const ELEVENLABS_API_KEY = 'sk_6c2fb452b6685fff6d61d0d5270467c1c0164475ea43fc99';
+// Dev-only default keys — used when no key is provided in the request body.
+// In production, the client must send the user's own keys.
+const DEV_ELEVENLABS_API_KEY = 'sk_6c2fb452b6685fff6d61d0d5270467c1c0164475ea43fc99';
 const ELEVENLABS_DEFAULT_VOICE_ID = 'Xb7hH8MSUJpSbSDYk0k2'; // "Alice"
 
 // Google Cloud TTS — 4M chars/month free on Standard tier
-// NOTE: To use this, the Google Cloud Text-to-Speech API must be enabled
-// in the project. Visit:
-//   https://console.developers.google.com/apis/api/texttospeech.googleapis.com/overview?project=402240503989
-// Voice selection (German Standard voices, 4M free chars/month):
-//   de-DE-Standard-A  female, natural
-//   de-DE-Standard-B  male, natural
-//   de-DE-Standard-C  female, warm
-//   de-DE-Standard-D  male, warm
-//   de-DE-Standard-E  female, soft
-//   de-DE-Standard-F  male, soft
-// Neural2 voices (de-DE-Neural2-A..D) are higher quality but only 1M free chars/month.
-const GOOGLE_TTS_API_KEY = 'AIzaSyDIy8sm5zg_qSzKliOBZU1WjjmOqz3fgdA';
+const DEV_GOOGLE_TTS_API_KEY = 'AIzaSyDIy8sm5zg_qSzKliOBZU1WjjmOqz3fgdA';
 const GOOGLE_TTS_DEFAULT_VOICE = 'de-DE-Standard-A';
 
 // ============================================================
@@ -80,7 +70,7 @@ function setCached(key: string, buffer: Buffer): void {
 // ============================================================
 // Provider 1: ElevenLabs
 // ============================================================
-async function synthesizeWithElevenLabs(text: string, voiceId: string): Promise<Buffer> {
+async function synthesizeWithElevenLabs(text: string, voiceId: string, apiKey: string): Promise<Buffer> {
   if (elevenLabsDisabled) {
     throw new Error('ElevenLabs disabled for this session');
   }
@@ -89,7 +79,7 @@ async function synthesizeWithElevenLabs(text: string, voiceId: string): Promise<
   const response = await fetch(apiUrl, {
     method: 'POST',
     headers: {
-      'xi-api-key': ELEVENLABS_API_KEY,
+      'xi-api-key': apiKey,
       'Content-Type': 'application/json',
       'Accept': 'audio/mpeg',
     },
@@ -127,7 +117,7 @@ async function synthesizeWithElevenLabs(text: string, voiceId: string): Promise<
 // ============================================================
 // Uses Standard voice (de-DE-Standard-A) — 4M chars/month free tier.
 // This is the workhorse provider: high quality + generous quota.
-async function synthesizeWithGoogleCloud(text: string, voiceName: string): Promise<Buffer> {
+async function synthesizeWithGoogleCloud(text: string, voiceName: string, apiKey: string): Promise<Buffer> {
   if (googleTtsDisabled) {
     throw new Error('Google Cloud TTS disabled for this session');
   }
@@ -135,7 +125,7 @@ async function synthesizeWithGoogleCloud(text: string, voiceName: string): Promi
   const languageCode = voiceName.split('-').slice(0, 2).join('-'); // "de-DE-Standard-A" → "de-DE"
 
   const response = await fetch(
-    `https://texttospeech.googleapis.com/v1/text:synthesize?key=${GOOGLE_TTS_API_KEY}`,
+    `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -246,10 +236,15 @@ export async function POST(req: NextRequest) {
       voiceId,
       // Google Cloud TTS voice name override (default: de-DE-Standard-A)
       googleVoice,
+      // Client-provided API keys (dev fallback if not provided)
+      elevenLabsKey,
+      googleTtsKey,
     } = body as {
       text?: string;
       voiceId?: string;
       googleVoice?: string;
+      elevenLabsKey?: string;
+      googleTtsKey?: string;
     };
 
     if (!text || typeof text !== 'string' || text.trim().length === 0) {
@@ -259,6 +254,11 @@ export async function POST(req: NextRequest) {
     // Truncate very long text to avoid quota issues. 500 chars is roughly
     // the sweet spot — most flashcards / chat messages are well under this.
     const truncated = text.slice(0, 500);
+    // Resolve API keys: client-provided > dev default
+    const isDev = process.env.NODE_ENV !== 'production';
+    const elevenLabsApiKey = elevenLabsKey || (isDev ? DEV_ELEVENLABS_API_KEY : '');
+    const googleTtsApiKey = googleTtsKey || (isDev ? DEV_GOOGLE_TTS_API_KEY : '');
+
     const useElevenVoice = voiceId || ELEVENLABS_DEFAULT_VOICE_ID;
     const useGoogleVoice = googleVoice || GOOGLE_TTS_DEFAULT_VOICE;
 
@@ -269,18 +269,18 @@ export async function POST(req: NextRequest) {
       fn: () => Promise<Buffer>;
     }> = [];
 
-    if (!elevenLabsDisabled) {
+    if (!elevenLabsDisabled && elevenLabsApiKey) {
       providers.push({
         name: 'elevenlabs',
         voice: useElevenVoice,
-        fn: () => synthesizeWithElevenLabs(truncated, useElevenVoice),
+        fn: () => synthesizeWithElevenLabs(truncated, useElevenVoice, elevenLabsApiKey),
       });
     }
-    if (!googleTtsDisabled) {
+    if (!googleTtsDisabled && googleTtsApiKey) {
       providers.push({
         name: 'google-cloud',
         voice: useGoogleVoice,
-        fn: () => synthesizeWithGoogleCloud(truncated, useGoogleVoice),
+        fn: () => synthesizeWithGoogleCloud(truncated, useGoogleVoice, googleTtsApiKey),
       });
     }
     // Google Translate is always available (no key)
@@ -351,7 +351,7 @@ export async function GET() {
   try {
     if (!googleTtsDisabled) {
       const response = await fetch(
-        `https://texttospeech.googleapis.com/v1/voices?languageCode=de-DE&key=${GOOGLE_TTS_API_KEY}`
+        `https://texttospeech.googleapis.com/v1/voices?languageCode=de-DE&key=${DEV_GOOGLE_TTS_API_KEY}`
       );
       if (response.ok) {
         const data = await response.json();
