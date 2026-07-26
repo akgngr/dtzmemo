@@ -46,6 +46,7 @@ import {
   CircleHelp,
   Award,
   FolderPlus,
+  BookOpenText,
 } from 'lucide-react';
 import { categories } from '@/lib/german-data';
 
@@ -125,6 +126,7 @@ export const navItems = [
   { id: 'competition', label: 'Yarışma', icon: Timer },
   { id: 'spaced-repetition', label: 'Tekrar', icon: RotateCcw },
   { id: 'listening', label: 'Dinleme', icon: Headphones },
+  { id: 'reading', label: 'Okuma', icon: BookOpenText },
   { id: 'quiz', label: 'Quiz', icon: CircleHelp },
   { id: 'achievements', label: 'Başarımlar', icon: Award },
   { id: 'statistics', label: 'İstatistik', icon: BarChart3 },
