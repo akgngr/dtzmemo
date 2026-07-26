@@ -8,7 +8,6 @@ import { useAppStore } from '@/lib/store';
 import { navItems } from '@/lib/constants';
 
 // Layout
-import { AppSidebar } from '@/components/layout/AppSidebar';
 import { AppTabs } from '@/components/layout/AppTabs';
 
 // Modules
@@ -59,57 +58,48 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-50">
-      <div className="flex flex-1">
-        {/* Sidebar - Desktop */}
-        <AppSidebar />
+      {/* Unified Header with Grid Menu */}
+      <AppTabs />
 
-        {/* Main Content */}
-        <main className="flex-1 overflow-auto">
-          {/* Mobile Header + Bottom Tabs */}
-          <AppTabs />
-
-          {/* Content Area */}
-          <div className="p-4 md:p-6 lg:p-8 max-w-4xl mx-auto">
-            {/* Module title - Desktop */}
-            <div className="mb-6 hidden md:flex md:items-center md:justify-between">
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">
-                  {navItems.find((n) => n.id === activeModule)?.label || 'Ana Sayfa'}
-                </h1>
-                {selectedCategories.length > 0 && (
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    Kategori:{' '}
-                    <span className="inline-flex flex-wrap gap-1">
-                      {selectedCategories.map((catId) => (
-                        <Badge
-                          key={catId}
-                          variant="secondary"
-                          className="cursor-pointer text-xs"
-                          onClick={() => useAppStore.getState().toggleCategory(catId)}
-                        >
-                          {categories.find((c) => c.id === catId)?.nameTr} ✕
-                        </Badge>
-                      ))}
-                    </span>
-                  </p>
-                )}
-              </div>
+      {/* Main Content */}
+      <main className="flex-1 overflow-auto">
+        <div className="p-4 md:p-6 lg:p-8 max-w-4xl mx-auto">
+          {/* Module title */}
+          <div className="mb-6 flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">
+                {navItems.find((n) => n.id === activeModule)?.label || 'Ana Sayfa'}
+              </h1>
+              {selectedCategories.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-1">
+                  {selectedCategories.map((catId) => (
+                    <Badge
+                      key={catId}
+                      variant="secondary"
+                      className="cursor-pointer text-xs"
+                      onClick={() => useAppStore.getState().toggleCategory(catId)}
+                    >
+                      {categories.find((c) => c.id === catId)?.nameTr} ✕
+                    </Badge>
+                  ))}
+                </div>
+              )}
             </div>
-
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`${activeModule}-${selectedCategories.join(',')}`}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.2 }}
-              >
-                <ActiveComponent />
-              </motion.div>
-            </AnimatePresence>
           </div>
-        </main>
-      </div>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`${activeModule}-${selectedCategories.join(',')}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              <ActiveComponent />
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </main>
     </div>
   );
 }
