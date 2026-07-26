@@ -857,7 +857,7 @@ export function ReadingModule() {
           ))}
         </motion.div>
 
-        {/* Exercise list grouped by level */
+        {/* Exercise list grouped by level */}
         {Array.from(grouped.entries()).map(([level, exercises]) => (
           <motion.div key={level} variants={fadeInUp} className="space-y-3">
             <div className="flex items-center gap-2">
