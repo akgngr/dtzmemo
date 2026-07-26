@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, LayoutGrid, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -12,21 +12,18 @@ import { cn } from '@/lib/utils';
 export function AppTabs() {
   const { activeModule, setActiveModule, selectedCategories, clearCategories } = useAppStore();
   const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
 
-  // Close menu on outside click
+  // Lock body scroll when menu is open
   useEffect(() => {
-    if (!menuOpen) return;
-    const handleClick = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
   }, [menuOpen]);
 
-  // Close menu on Escape
+  // Close on Escape
   useEffect(() => {
     if (!menuOpen) return;
     const handleKey = (e: KeyboardEvent) => {
@@ -41,15 +38,12 @@ export function AppTabs() {
     setMenuOpen(false);
   };
 
-  const activeLabel = navItems.find((n) => n.id === activeModule)?.label || 'Ana Sayfa';
-  const ActiveIcon = navItems.find((n) => n.id === activeModule)?.icon || Sparkles;
-
   return (
     <>
       {/* ── Unified Header ─────────────────────────────────────────── */}
       <header className="sticky top-0 z-40 border-b border-gray-200 bg-white/90 backdrop-blur">
         <div className="flex items-center justify-between px-4 py-3 max-w-6xl mx-auto">
-          {/* Logo + Active Module Name */}
+          {/* Logo */}
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-600 text-white">
               <Sparkles className="h-4 w-4" />
@@ -65,19 +59,11 @@ export function AppTabs() {
             {selectedCategories.length > 0 && (
               <div className="hidden sm:flex items-center gap-1.5">
                 {selectedCategories.length === 1 ? (
-                  <Badge
-                    variant="secondary"
-                    className="cursor-pointer text-xs"
-                    onClick={clearCategories}
-                  >
+                  <Badge variant="secondary" className="cursor-pointer text-xs" onClick={clearCategories}>
                     {categories.find((c) => c.id === selectedCategories[0])?.nameTr} ✕
                   </Badge>
                 ) : (
-                  <Badge
-                    variant="secondary"
-                    className="cursor-pointer text-xs"
-                    onClick={clearCategories}
-                  >
+                  <Badge variant="secondary" className="cursor-pointer text-xs" onClick={clearCategories}>
                     {selectedCategories.length} kategori ✕
                   </Badge>
                 )}
@@ -85,106 +71,112 @@ export function AppTabs() {
             )}
 
             {/* Grid Menu Button */}
-            <div className="relative" ref={menuRef}>
-              <button
-                onClick={() => setMenuOpen(!menuOpen)}
-                className={cn(
-                  'flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-200',
-                  menuOpen
-                    ? 'bg-emerald-600 text-white shadow-md shadow-emerald-200'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800'
-                )}
-                aria-label="Menü"
-              >
-                <LayoutGrid className="h-[18px] w-[18px]" />
-              </button>
-
-              {/* ── Dropdown Menu Panel ────────────────────────────── */}
-              <AnimatePresence>
-                {menuOpen && (
-                  <>
-                    {/* Backdrop */}
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.15 }}
-                      className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
-                      onClick={() => setMenuOpen(false)}
-                    />
-
-                    {/* Panel */}
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.95, y: -8 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.95, y: -8 }}
-                      transition={{ duration: 0.2, ease: 'easeOut' }}
-                      className="absolute right-0 top-full z-50 mt-2 w-[320px] overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl shadow-black/10 sm:w-[380px]"
-                    >
-                      {/* Panel header */}
-                      <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
-                        <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">
-                          Menü
-                        </span>
-                        <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                          <ActiveIcon className="h-3 w-3 text-emerald-600" />
-                          <span>{activeLabel}</span>
-                        </div>
-                      </div>
-
-                      {/* Nav grid */}
-                      <div className="grid grid-cols-4 gap-0.5 p-2 max-h-[70vh] overflow-y-auto">
-                        {navItems.map((item) => {
-                          const isActive = activeModule === item.id;
-                          return (
-                            <button
-                              key={item.id}
-                              onClick={() => handleSelect(item.id)}
-                              className={cn(
-                                'flex flex-col items-center gap-1.5 rounded-xl px-1 py-3 transition-all duration-150',
-                                isActive
-                                  ? 'bg-emerald-50 text-emerald-700'
-                                  : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'
-                              )}
-                            >
-                              <div
-                                className={cn(
-                                  'flex h-9 w-9 items-center justify-center rounded-xl transition-colors',
-                                  isActive
-                                    ? 'bg-emerald-100'
-                                    : 'bg-gray-100 group-hover:bg-gray-200'
-                                )}
-                              >
-                                <item.icon className="h-[18px] w-[18px]" />
-                              </div>
-                              <span className="truncate text-[10px] font-medium leading-tight w-full text-center">
-                                {item.label}
-                              </span>
-                            </button>
-                          );
-                        })}
-                      </div>
-
-                      {/* Mobile category clear (shown only on small screens) */}
-                      {selectedCategories.length > 0 && (
-                        <div className="flex border-t border-gray-100 p-2 sm:hidden">
-                          <button
-                            onClick={() => { clearCategories(); setMenuOpen(false); }}
-                            className="flex w-full items-center justify-center gap-1.5 rounded-xl py-2 text-xs text-red-500 hover:bg-red-50"
-                          >
-                            <X className="h-3 w-3" />
-                            Kategori filtresini temizle ({selectedCategories.length})
-                          </button>
-                        </div>
-                      )}
-                    </motion.div>
-                  </>
-                )}
-              </AnimatePresence>
-            </div>
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className={cn(
+                'flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-200',
+                menuOpen
+                  ? 'bg-emerald-600 text-white shadow-md shadow-emerald-200'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800'
+              )}
+              aria-label="Menü"
+            >
+              <LayoutGrid className="h-[18px] w-[18px]" />
+            </button>
           </div>
         </div>
       </header>
+
+      {/* ── Full-Screen Menu Overlay ──────────────────────────────── */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            key="menu-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 flex flex-col bg-black/40 backdrop-blur-md"
+            onClick={() => setMenuOpen(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 30, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.96 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+              className="mx-auto mt-auto mb-auto flex w-full max-w-lg flex-col rounded-t-3xl bg-white/95 backdrop-blur-xl shadow-2xl sm:mx-auto sm:mt-auto sm:mb-auto sm:rounded-3xl sm:max-h-[85vh]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Drag handle bar */}
+              <div className="flex justify-center pt-3 pb-1">
+                <div className="h-1 w-10 rounded-full bg-gray-300" />
+              </div>
+
+              {/* Menu header */}
+              <div className="flex items-center justify-between px-5 pb-3">
+                <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                  Menü
+                </span>
+                <button
+                  onClick={() => setMenuOpen(false)}
+                  className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 text-gray-500 transition-colors hover:bg-gray-200 hover:text-gray-700"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              </div>
+
+              {/* Nav grid — 4 columns, scrollable if needed */}
+              <div className="grid grid-cols-4 gap-1 overflow-y-auto px-3 pb-4 sm:gap-2 sm:px-4">
+                {navItems.map((item, i) => {
+                  const isActive = activeModule === item.id;
+                  return (
+                    <motion.button
+                      key={item.id}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.02, duration: 0.2 }}
+                      onClick={() => handleSelect(item.id)}
+                      className={cn(
+                        'flex flex-col items-center gap-2 rounded-2xl px-2 py-4 transition-all duration-150',
+                        isActive
+                          ? 'bg-emerald-500 text-white shadow-md shadow-emerald-200'
+                          : 'text-gray-600 hover:bg-white/80 hover:text-gray-900 active:scale-95'
+                      )}
+                    >
+                      <div
+                        className={cn(
+                          'flex h-11 w-11 items-center justify-center rounded-xl transition-colors',
+                          isActive
+                            ? 'bg-white/20'
+                            : 'bg-gray-100'
+                        )}
+                      >
+                        <item.icon className="h-5 w-5" />
+                      </div>
+                      <span className="truncate text-[11px] font-medium leading-tight w-full text-center">
+                        {item.label}
+                      </span>
+                    </motion.button>
+                  );
+                })}
+              </div>
+
+              {/* Mobile category clear */}
+              {selectedCategories.length > 0 && (
+                <div className="border-t border-gray-200/50 px-4 py-3">
+                  <button
+                    onClick={() => { clearCategories(); setMenuOpen(false); }}
+                    className="flex w-full items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-medium text-red-500 transition-colors hover:bg-red-50"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                    Kategori filtresini temizle ({selectedCategories.length})
+                  </button>
+                </div>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
