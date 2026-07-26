@@ -16,18 +16,24 @@ import {
   FileText,
   Newspaper,
   ClipboardList,
+  Plus,
+  Trash2,
+  User,
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { useAppStore } from '@/lib/store';
+import type { CustomReadingExercise, CustomReadingQuestion } from '@/lib/store';
 import { cn } from '@/lib/utils';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
-type Screen = 'topics' | 'read' | 'summary';
+type Screen = 'topics' | 'read' | 'summary' | 'create';
 
 type QuestionType = 'richtig-falsch' | 'multiple-choice';
 
@@ -730,8 +736,15 @@ const staggerContainer = {
 
 // ── Component ────────────────────────────────────────────────────────────────
 
+interface DraftQuestion {
+  text: string;
+  type: 'richtig-falsch' | 'multiple-choice';
+  correctAnswer: string;
+  options: { key: string; text: string }[];
+}
+
 export function ReadingModule() {
-  const { saveExerciseResult } = useAppStore() as any;
+  const { saveExerciseResult, customReadingExercises, addCustomReadingExercise, deleteCustomReadingExercise } = useAppStore() as any;
 
   const [screen, setScreen] = useState<Screen>('topics');
   const [selectedExercise, setSelectedExercise] = useState<ReadingExercise | null>(null);
@@ -739,11 +752,36 @@ export function ReadingModule() {
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [submitted, setSubmitted] = useState(false);
 
+  // ── Create form state
+  const [createForm, setCreateForm] = useState({
+    title: '',
+    titleTr: '',
+    level: 'A1' as 'A1' | 'A2' | 'B1',
+    category: '',
+    text: '',
+  });
+  const [draftQuestions, setDraftQuestions] = useState<DraftQuestion[]>([]);
+  const [newQText, setNewQText] = useState('');
+  const [newQType, setNewQType] = useState<'richtig-falsch' | 'multiple-choice'>('richtig-falsch');
+  const [newQAnswer, setNewQAnswer] = useState('richtig');
+  const [newOptA, setNewOptA] = useState('');
+  const [newOptB, setNewOptB] = useState('');
+  const [newOptC, setNewOptC] = useState('');
+
+  // ── Merge custom exercises with built-in
+  const allExercises = useMemo(() => {
+    const custom: ReadingExercise[] = (customReadingExercises || []).map((c: CustomReadingExercise) => ({
+      ...c,
+      icon: User,
+    }));
+    return [...readingExercises, ...custom];
+  }, [customReadingExercises]);
+
   // ── Filtered exercises by level
   const filteredExercises = useMemo(() => {
-    if (selectedLevel === 'all') return readingExercises;
-    return readingExercises.filter((e) => e.level === selectedLevel);
-  }, [selectedLevel]);
+    if (selectedLevel === 'all') return allExercises;
+    return allExercises.filter((e) => e.level === selectedLevel);
+  }, [selectedLevel, allExercises]);
 
   // ── Group by level for topics screen
   const grouped = useMemo(() => {
@@ -818,6 +856,67 @@ export function ReadingModule() {
     ? selectedExercise.questions.every((q) => answers[q.id])
     : false;
 
+  // ── Create handlers
+  const handleAddQuestion = () => {
+    const text = newQText.trim();
+    if (!text) return;
+    if (newQType === 'multiple-choice') {
+      if (!newOptA.trim() || !newOptB.trim() || !newOptC.trim()) return;
+    }
+    const q: DraftQuestion = {
+      text,
+      type: newQType,
+      correctAnswer: newQAnswer,
+      options: newQType === 'multiple-choice'
+        ? [
+            { key: 'a', text: newOptA.trim() },
+            { key: 'b', text: newOptB.trim() },
+            { key: 'c', text: newOptC.trim() },
+          ]
+        : [],
+    };
+    setDraftQuestions((prev) => [...prev, q]);
+    setNewQText('');
+    setNewOptA('');
+    setNewOptB('');
+    setNewOptC('');
+    setNewQAnswer('richtig');
+  };
+
+  const handleRemoveDraftQuestion = (idx: number) => {
+    setDraftQuestions((prev) => prev.filter((_, i) => i !== idx));
+  };
+
+  const handleSaveExercise = () => {
+    if (!createForm.title.trim() || !createForm.text.trim() || draftQuestions.length === 0) return;
+    const exercise: CustomReadingExercise = {
+      id: `custom-${Date.now()}`,
+      level: createForm.level,
+      title: createForm.title.trim(),
+      titleTr: createForm.titleTr.trim() || createForm.title.trim(),
+      category: createForm.category.trim() || 'Özel',
+      text: createForm.text.trim(),
+      questions: draftQuestions.map((q, i) => ({
+        id: i + 1,
+        text: q.text,
+        type: q.type,
+        correctAnswer: q.correctAnswer,
+        options: q.options.length > 0 ? q.options : undefined,
+      })),
+      createdAt: new Date().toISOString(),
+    };
+    addCustomReadingExercise(exercise);
+    setScreen('topics');
+    setCreateForm({ title: '', titleTr: '', level: 'A1', category: '', text: '' });
+    setDraftQuestions([]);
+  };
+
+  const handleDeleteCustom = (id: string) => {
+    deleteCustomReadingExercise(id);
+  };
+
+  const isCustomExercise = (id: string) => id.startsWith('custom-');
+
   // ── Render: Topics Screen
   if (screen === 'topics') {
     return (
@@ -837,6 +936,17 @@ export function ReadingModule() {
           </div>
           <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/10" />
           <div className="absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-white/10" />
+        </motion.div>
+
+        {/* Add custom exercise button */}
+        <motion.div variants={fadeInUp}>
+          <Button
+            onClick={() => setScreen('create')}
+            className="w-full rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 shadow-sm"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Kendi Metinimi Ekle
+          </Button>
         </motion.div>
 
         {/* Level filter */}
@@ -867,32 +977,50 @@ export function ReadingModule() {
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {exercises.map((ex) => {
                 const Icon = ex.icon;
+                const custom = isCustomExercise(ex.id);
                 return (
                   <motion.div
                     key={ex.id}
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
-                    onClick={() => handleStartExercise(ex)}
                     className="group cursor-pointer"
                   >
                     <Card className="h-full rounded-2xl border-0 shadow-sm transition-shadow hover:shadow-md">
                       <CardContent className="p-4">
                         <div className="flex items-start gap-3">
-                          <div className={cn('flex h-10 w-10 shrink-0 items-center justify-center rounded-xl', LEVEL_CONFIG[level]?.bg)}>
-                            <Icon className={cn('h-5 w-5', LEVEL_CONFIG[level]?.color)} />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <h4 className="text-sm font-semibold text-gray-800 leading-tight">{ex.title}</h4>
-                            <p className="mt-0.5 text-xs text-gray-500 truncate">{ex.titleTr}</p>
-                            <div className="mt-2 flex items-center gap-2 text-[10px] text-gray-400">
-                              <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{ex.category}</Badge>
-                              <span className="flex items-center gap-0.5">
-                                <ClipboardList className="h-3 w-3" />
-                                {ex.questions.length} soru
-                              </span>
+                          <div
+                            onClick={() => handleStartExercise(ex)}
+                            className="flex items-start gap-3 min-w-0 flex-1"
+                          >
+                            <div className={cn('flex h-10 w-10 shrink-0 items-center justify-center rounded-xl', LEVEL_CONFIG[level]?.bg)}>
+                              <Icon className={cn('h-5 w-5', LEVEL_CONFIG[level]?.color)} />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-1.5">
+                                <h4 className="text-sm font-semibold text-gray-800 leading-tight">{ex.title}</h4>
+                                {custom && <Badge className="text-[9px] px-1 py-0 bg-purple-100 text-purple-600">Özel</Badge>}
+                              </div>
+                              <p className="mt-0.5 text-xs text-gray-500 truncate">{ex.titleTr}</p>
+                              <div className="mt-2 flex items-center gap-2 text-[10px] text-gray-400">
+                                <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{ex.category}</Badge>
+                                <span className="flex items-center gap-0.5">
+                                  <ClipboardList className="h-3 w-3" />
+                                  {ex.questions.length} soru
+                                </span>
+                              </div>
                             </div>
                           </div>
-                          <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-gray-300 transition-transform group-hover:translate-x-0.5 group-hover:text-gray-500" />
+                          <div className="flex items-center gap-1">
+                            {custom && (
+                              <button
+                                onClick={(e) => { e.stopPropagation(); handleDeleteCustom(ex.id); }}
+                                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-gray-300 opacity-0 transition-all hover:bg-red-50 hover:text-red-500 group-hover:opacity-100"
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </button>
+                            )}
+                            <ChevronRight className="h-4 w-4 shrink-0 text-gray-300 transition-transform group-hover:translate-x-0.5 group-hover:text-gray-500" />
+                          </div>
                         </div>
                       </CardContent>
                     </Card>
@@ -1117,6 +1245,270 @@ export function ReadingModule() {
             </div>
           </motion.div>
         ) : null}
+      </motion.div>
+    );
+  }
+
+  // ── Render: Create Screen
+  if (screen === 'create') {
+    const canSave = createForm.title.trim() && createForm.text.trim() && draftQuestions.length >= 1;
+
+    return (
+      <motion.div key="create" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} className="space-y-5">
+        {/* Back + title */}
+        <div className="flex items-center justify-between">
+          <Button variant="ghost" size="sm" onClick={() => setScreen('topics')} className="-ml-2 text-gray-600 hover:text-gray-800">
+            <ArrowLeft className="mr-1 h-4 w-4" />
+            Metinler
+          </Button>
+          <Badge className="bg-purple-100 text-purple-700 text-xs font-semibold">Yeni Metin</Badge>
+        </div>
+
+        {/* Header card */}
+        <Card className="rounded-2xl border-0 shadow-sm overflow-hidden">
+          <div className="bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-3 text-white">
+            <h3 className="text-sm font-bold flex items-center gap-2">
+              <Plus className="h-4 w-4" />
+              Kendi Okuma Metnini Oluştur
+            </h3>
+            <p className="mt-1 text-xs text-white/80">Bir Almanca metin yazın, ardından doğru/yanlış veya çoktan seçmeli sorular ekleyin.</p>
+          </div>
+          <CardContent className="p-4 space-y-4">
+            {/* Title fields */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Başlık (Almanca) *</label>
+                <Input
+                  placeholder="z.B. E-Mail: Einladung"
+                  value={createForm.title}
+                  onChange={(e) => setCreateForm((p) => ({ ...p, title: e.target.value }))}
+                  className="rounded-xl h-10"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Başlık (Türkçe)</label>
+                <Input
+                  placeholder="z.B. E-Posta: Davet"
+                  value={createForm.titleTr}
+                  onChange={(e) => setCreateForm((p) => ({ ...p, titleTr: e.target.value }))}
+                  className="rounded-xl h-10"
+                />
+              </div>
+            </div>
+
+            {/* Level + Category */}
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Seviye *</label>
+                <div className="flex gap-1.5">
+                  {(['A1', 'A2', 'B1'] as const).map((l) => (
+                    <button
+                      key={l}
+                      onClick={() => setCreateForm((p) => ({ ...p, level: l }))}
+                      className={cn(
+                        'flex-1 rounded-lg py-2 text-xs font-semibold transition-colors',
+                        createForm.level === l
+                          ? 'bg-indigo-600 text-white'
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      )}
+                    >
+                      {l}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Kategori</label>
+                <Input
+                  placeholder="z.B. İş, Eğitim..."
+                  value={createForm.category}
+                  onChange={(e) => setCreateForm((p) => ({ ...p, category: e.target.value }))}
+                  className="rounded-xl h-10"
+                />
+              </div>
+            </div>
+
+            {/* Text */}
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">Almanca Metin *</label>
+              <Textarea
+                placeholder="Almanca metninizi buraya yazın..."
+                value={createForm.text}
+                onChange={(e) => setCreateForm((p) => ({ ...p, text: e.target.value }))}
+                className="rounded-xl min-h-[160px] text-sm leading-relaxed font-mono"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Add question card */}
+        <Card className="rounded-2xl border-0 shadow-sm">
+          <CardContent className="p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                <ClipboardList className="h-4 w-4 text-purple-500" />
+                Sorular ({draftQuestions.length})
+              </h4>
+              <div className="flex gap-1">
+                <button
+                  onClick={() => setNewQType('richtig-falsch')}
+                  className={cn(
+                    'rounded-lg px-2.5 py-1 text-[11px] font-medium transition-colors',
+                    newQType === 'richtig-falsch' ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                  )}
+                >
+                  Doğru/Yanlış
+                </button>
+                <button
+                  onClick={() => { setNewQType('multiple-choice'); setNewQAnswer('a'); }}
+                  className={cn(
+                    'rounded-lg px-2.5 py-1 text-[11px] font-medium transition-colors',
+                    newQType === 'multiple-choice' ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                  )}
+                >
+                  Çoktan Seçmeli
+                </button>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Question text */}
+            <Input
+              placeholder="Soruyu yazın (Almanca)..."
+              value={newQText}
+              onChange={(e) => setNewQText(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleAddQuestion()}
+              className="rounded-xl h-10"
+            />
+
+            {/* Richtig/Falsch answer selector */}
+            {newQType === 'richtig-falsch' && (
+              <div className="flex gap-2">
+                {(['richtig', 'falsch'] as const).map((opt) => (
+                  <button
+                    key={opt}
+                    onClick={() => setNewQAnswer(opt)}
+                    className={cn(
+                      'flex-1 rounded-xl py-2 text-xs font-medium transition-colors',
+                      newQAnswer === opt
+                        ? opt === 'richtig' ? 'bg-emerald-100 text-emerald-700 ring-2 ring-emerald-300' : 'bg-red-100 text-red-600 ring-2 ring-red-300'
+                        : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
+                    )}
+                  >
+                    {opt === 'richtig' ? 'Richtig (Doğru)' : 'Falsch (Yanlış)'}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Multiple choice options */}
+            {newQType === 'multiple-choice' && (
+              <div className="space-y-2">
+                <p className="text-[11px] text-gray-500">Doğru cevabı seçmek için şıkka tıklayın:</p>
+                {[
+                  { key: 'a', val: newOptA, set: setNewOptA, placeholder: 'A şıkkı...' },
+                  { key: 'b', val: newOptB, set: setNewOptB, placeholder: 'B şıkkı...' },
+                  { key: 'c', val: newOptC, set: setNewOptC, placeholder: 'C şıkkı...' },
+                ].map((opt) => (
+                  <div key={opt.key} className="flex gap-2 items-center">
+                    <button
+                      onClick={() => setNewQAnswer(opt.key)}
+                      className={cn(
+                        'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs font-bold transition-colors',
+                        newQAnswer === opt.key
+                          ? 'bg-indigo-600 text-white'
+                          : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                      )}
+                    >
+                      {opt.key.toUpperCase()}
+                    </button>
+                    <Input
+                      placeholder={opt.placeholder}
+                      value={opt.val}
+                      onChange={(e) => opt.set(e.target.value)}
+                      className="rounded-lg h-9"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Add question button */}
+            <Button
+              onClick={handleAddQuestion}
+              variant="outline"
+              className="w-full rounded-xl border-dashed border-2 border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 text-gray-500 hover:text-indigo-600"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Soruyu Ekle
+            </Button>
+
+            {/* Draft questions list */}
+            <AnimatePresence>
+              {draftQuestions.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  className="space-y-2"
+                >
+                  <Separator />
+                  <p className="text-xs font-medium text-gray-500">Eklenen Sorular:</p>
+                  {draftQuestions.map((q, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 10 }}
+                      className="flex items-start gap-2 rounded-xl bg-gray-50 p-3"
+                    >
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-purple-100 text-[10px] font-bold text-purple-600">
+                        {idx + 1}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs text-gray-700 font-medium">{q.text}</p>
+                        <div className="mt-1 flex items-center gap-2">
+                          <Badge variant="secondary" className="text-[9px] px-1.5 py-0">
+                            {q.type === 'richtig-falsch' ? 'Doğru/Yanlış' : 'Çoktan Seçmeli'}
+                          </Badge>
+                          <span className="text-[10px] text-gray-400">
+                            Cevap: <strong>{q.correctAnswer.toUpperCase()}</strong>
+                          </span>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => handleRemoveDraftQuestion(idx)}
+                        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg text-gray-300 hover:bg-red-50 hover:text-red-500 transition-colors"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </CardContent>
+        </Card>
+
+        {/* Save / Cancel buttons */}
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => setScreen('topics')}
+            className="flex-1 rounded-xl"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            İptal
+          </Button>
+          <Button
+            onClick={handleSaveExercise}
+            disabled={!canSave}
+            className="flex-1 rounded-xl bg-purple-600 hover:bg-purple-700 text-white disabled:opacity-50"
+          >
+            <CheckCircle2 className="mr-2 h-4 w-4" />
+            Kaydet
+          </Button>
+        </div>
       </motion.div>
     );
   }

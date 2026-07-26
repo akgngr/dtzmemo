@@ -44,6 +44,25 @@ export interface CustomWordList {
   category: string;
 }
 
+export interface CustomReadingQuestion {
+  id: number;
+  text: string;
+  type: 'richtig-falsch' | 'multiple-choice';
+  correctAnswer: string;
+  options?: { key: string; text: string }[];
+}
+
+export interface CustomReadingExercise {
+  id: string;
+  level: 'A1' | 'A2' | 'B1';
+  title: string;
+  titleTr: string;
+  category: string;
+  text: string;
+  questions: CustomReadingQuestion[];
+  createdAt: string;
+}
+
 export type TargetLanguage = 'tr' | 'en' | 'fa' | 'ar' | 'fr';
 
 export const LANGUAGE_OPTIONS: { value: TargetLanguage; label: string; flag: string }[] = [
@@ -122,6 +141,11 @@ interface AppState {
   setApiKey: (key: keyof ApiKeys, value: string) => void;
   setApiKeys: (keys: Partial<ApiKeys>) => void;
   clearApiKeys: () => void;
+
+  // ===== Custom Reading Exercises =====
+  customReadingExercises: CustomReadingExercise[];
+  addCustomReadingExercise: (exercise: CustomReadingExercise) => void;
+  deleteCustomReadingExercise: (id: string) => void;
 
   // ===== Custom Word Lists =====
   customWordLists: CustomWordList[];
@@ -392,6 +416,19 @@ export const useAppStore = create<AppState>()(
           apiKeys: { zhipuKey: '', elevenLabsKey: '', googleTtsKey: '' },
         }),
 
+      // ===== Custom Reading Exercises =====
+      customReadingExercises: [],
+
+      addCustomReadingExercise: (exercise) =>
+        set((state) => ({
+          customReadingExercises: [...state.customReadingExercises, exercise],
+        })),
+
+      deleteCustomReadingExercise: (id) =>
+        set((state) => ({
+          customReadingExercises: state.customReadingExercises.filter((e) => e.id !== id),
+        })),
+
       // ===== Custom Word Lists =====
       customWordLists: [],
 
@@ -439,7 +476,7 @@ export const useAppStore = create<AppState>()(
     }),
     {
       name: "deutsch-memo-storage",
-      version: 5,
+      version: 6,
       migrate: (persistedState: any, version: number) => {
         if (version === 0 || version === 1) {
           const oldCategory = persistedState.selectedCategory;
@@ -472,6 +509,13 @@ export const useAppStore = create<AppState>()(
             ...persistedState,
             customWordLists: persistedState.customWordLists || [],
             targetLanguage: persistedState.targetLanguage || 'tr',
+            customReadingExercises: persistedState.customReadingExercises || [],
+          };
+        }
+        if (version === 5) {
+          return {
+            ...persistedState,
+            customReadingExercises: persistedState.customReadingExercises || [],
           };
         }
         return persistedState;

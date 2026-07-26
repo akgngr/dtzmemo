@@ -1,0 +1,1007 @@
+   120→        ],
+   121→      },
+   122→      {
+   123→        id: 6,
+   124→        text: 'Frau Kim hat den Auftrag per Telefon gemacht.',
+   125→        type: 'richtig-falsch',
+   126→        correctAnswer: 'falsch',
+   127→      },
+   128→    ],
+   129→  },
+   130→  {
+   131→    id: 'a1-letter-1',
+   132→    level: 'A1',
+   133→    title: 'Brief: Klassenfest',
+   134→    titleTr: 'Mektup: Sınıf Festivali',
+   135→    category: 'Eğitim',
+   136→    icon: FileText,
+   137→    text: `Liebe Familie Ivanov,
+   138→
+   139→vielleicht hat Ihnen Ihr Sohn Denis schon erzählt, dass wir im nächsten Monat ein Klassenfest planen. Als Klassenlehrerin möchte ich Sie und Ihre Familie ganz herzlich einladen.
+   140→
+   141→Damit es ein schöner Tag wird, brauchen wir die Hilfe von allen Familien. Die Teilnahme ist umsonst, aber alle sollen etwas zu essen oder zu trinken mitbringen. Außerdem brauchen wir Eltern, die Spiele organisieren. Es gibt sogar Preise für die Gewinner.
+   142→
+   143→Können Sie mir bitte mitteilen, ob Sie an dem Fest teilnehmen? Sie können mich täglich zwischen 15 und 19 Uhr telefonisch erreichen oder per E-Mail. Oder Denis kann mir einfach in der Stunde Bescheid sagen.
+   144→
+   145→Mit besten Grüßen
+   146→Silke Trautmann`,
+   147→    questions: [
+   148→      {
+   149→        id: 1,
+   150→        text: 'Frau Trautmann ist die Lehrerin von Denis.',
+   151→        type: 'richtig-falsch',
+   152→        correctAnswer: 'richtig',
+   153→      },
+   154→      {
+   155→        id: 2,
+   156→        text: 'Die Teilnahme am Fest kostet Geld.',
+   157→        type: 'richtig-falsch',
+   158→        correctAnswer: 'falsch',
+   159→      },
+   160→      {
+   161→        id: 3,
+   162→        text: 'Familie Ivanov soll',
+   163→        type: 'multiple-choice',
+   164→        correctAnswer: 'a',
+   165→        options: [
+   166→          { key: 'a', text: 'etwas zu essen oder trinken mitbringen' },
+   167→          { key: 'b', text: 'in der Schule anrufen' },
+   168→          { key: 'c', text: 'für das Fest bezahlen' },
+   169→        ],
+   170→      },
+   171→      {
+   172→        id: 4,
+   173→        text: 'Man kann Frau Trautmann zwischen 8 und 12 Uhr anrufen.',
+   174→        type: 'richtig-falsch',
+   175→        correctAnswer: 'falsch',
+   176→      },
+   177→      {
+   178→        id: 5,
+   179→        text: 'Wie kann Denis der Lehrerin Bescheid sagen?',
+   180→        type: 'multiple-choice',
+   181→        correctAnswer: 'c',
+   182→        options: [
+   183→          { key: 'a', text: 'per Brief' },
+   184→          { key: 'b', text: 'am Abend telefonisch' },
+   185→          { key: 'c', text: 'in der Stunde' },
+   186→        ],
+   187→      },
+   188→      {
+   189→        id: 6,
+   190→        text: 'Es gibt Preise für die Gewinner der Spiele.',
+   191→        type: 'richtig-falsch',
+   192→        correctAnswer: 'richtig',
+   193→      },
+   194→    ],
+   195→  },
+   196→  {
+   197→    id: 'a1-notice-1',
+   198→    level: 'A1',
+   199→    title: 'Aushang: Sportverein',
+   200→    titleTr: 'Duyuru: Spor Kulübü',
+   201→    category: 'Spor & Hobi',
+   202→    icon: Newspaper,
+   203→    text: `SV Grün-Weiß — Mitglieder-Versammlung
+   204→
+   205→Liebe Mitglieder,
+   206→
+   207→am Samstag, den 15. Juni, findet unsere jährliche Mitglieder-Versammlung statt. Wir treffen uns um 18:00 Uhr im Vereinsheim.
+   208→
+   209→Tagesordnung:
+   210→1. Begrüßung und Bericht des Vorstands
+   211→2. Finanzen und Mitgliedsbeiträge
+   212→3. Wahl des neuen Vorstands
+   213→4. Planung des Sommerfestes
+   214→5. Verschiedenes
+   215→
+   216→Bitte bringen Sie Ihren Mitgliedsausweis mit. Gäste sind herzlich willkommen!
+   217→
+   218→Für Getränke ist gesorgt. Wer etwas zum Essen mitbringen möchte, kann das gerne tun.
+   219→
+   220→Wir freuen uns auf euch!
+   221→Der Vorstand`,
+   222→    questions: [
+   223→      {
+   224→        id: 1,
+   225→        text: 'Die Versammlung ist am Sonntag.',
+   226→        type: 'richtig-falsch',
+   227→        correctAnswer: 'falsch',
+   228→      },
+   229→      {
+   230→        id: 2,
+   231→        text: 'Die Versammlung beginnt um 18:00 Uhr.',
+   232→        type: 'richtig-falsch',
+   233→        correctAnswer: 'richtig',
+   234→      },
+   235→      {
+   236→        id: 3,
+   237→        text: 'Was steht nicht auf der Tagesordnung?',
+   238→        type: 'multiple-choice',
+   239→        correctAnswer: 'c',
+   240→        options: [
+   241→          { key: 'a', text: 'Finanzen' },
+   242→          { key: 'b', text: 'Wahl des Vorstands' },
+   243→          { key: 'c', text: 'Trainingzeiten' },
+   244→        ],
+   245→      },
+   246→      {
+   247→        id: 4,
+   248→        text: 'Gäste dürfen nicht zur Versammlung kommen.',
+   249→        type: 'richtig-falsch',
+   250→        correctAnswer: 'falsch',
+   251→      },
+   252→      {
+   253→        id: 5,
+   254→        text: 'Man muss seinen Mitgliedsausweis mitbringen.',
+   255→        type: 'richtig-falsch',
+   256→        correctAnswer: 'richtig',
+   257→      },
+   258→      {
+   259→        id: 6,
+   260→        text: 'Was ist kostenlos?',
+   261→        type: 'multiple-choice',
+   262→        correctAnswer: 'a',
+   263→        options: [
+   264→          { key: 'a', text: 'Getränke' },
+   265→          { key: 'b', text: 'Essen' },
+   266→          { key: 'c', text: 'der Mitgliedsbeitrag' },
+   267→        ],
+   268→      },
+   269→    ],
+   270→  },
+   271→
+   272→  // ══════════════════════ A2 ══════════════════════
+   273→  {
+   274→    id: 'a2-email-1',
+   275→    level: 'A2',
+   276→    title: 'E-Mail: Praktikumsplatz',
+   277→    titleTr: 'E-Posta: Staj Yeri',
+   278→    category: 'İş & Meslek',
+   279→    icon: Mail,
+   280→    text: `Von: personal@techwave.de
+   281→An: Lukas.Schmidt@web.de
+   282→Betreff: Ihr Praktikum bei TechWave
+   283→
+   284→Sehr geehrter Herr Schmidt,
+   285→
+   286→vielen Dank für Ihre Bewerbung und das Gespräch am vergangenen Freitag. Wir waren sehr von Ihrem Profil beeindruckt.
+   287→
+   288→Wir freuen uns, Ihnen ab dem 01. September einen Praktikumsplatz in unserer Marketing-Abteilung anbieten zu können. Das Praktikum dauert drei Monate und umfasst 20 Stunden pro Woche. Die Arbeitszeiten können flexibel gestaltet werden.
+   289→
+   290→Ihr Ansprechpartner wird Frau Dr. Petersen sein. Sie erreicht sie unter der Durchwahl 030-5544-22 oder per E-Mail.
+   291→
+   292→Bitte bestätigen Sie uns bis zum 15. August schriftlich, ob Sie das Praktikum antreten möchten. Bringen Sie am ersten Tag bitte Ihren Personalausweis mit.
+   293→
+   294→Mit freundlichen Grüßen
+   295→Anna Müller
+   296→Personalabteilung`,
+   297→    questions: [
+   298→      {
+   299→        id: 1,
+   300→        text: 'Das Praktikum beginnt im August.',
+   301→        type: 'richtig-falsch',
+   302→        correctAnswer: 'falsch',
+   303→      },
+   304→      {
+   305→        id: 2,
+   306→        text: 'Lukas arbeitet in der Marketing-Abteilung.',
+   307→        type: 'richtig-falsch',
+   308→        correctAnswer: 'richtig',
+   309→      },
+   310→      {
+   311→        id: 3,
+   312→        text: 'Wie lange dauert das Praktikum?',
+   313→        type: 'multiple-choice',
+   314→        correctAnswer: 'b',
+   315→        options: [
+   316→          { key: 'a', text: 'zwei Monate' },
+   317→          { key: 'b', text: 'drei Monate' },
+   318→          { key: 'c', text: 'sechs Monate' },
+   319→        ],
+   320→      },
+   321→      {
+   322→        id: 4,
+   323→        text: 'Lukas muss eine Zusage bis zum 15. August schicken.',
+   324→        type: 'richtig-falsch',
+   325→        correctAnswer: 'richtig',
+   326→      },
+   327→      {
+   328→        id: 5,
+   329→        text: 'Wen muss Lukas am ersten Tag mitbringen?',
+   330→        type: 'multiple-choice',
+   331→        correctAnswer: 'c',
+   332→        options: [
+   333→          { key: 'a', text: 'seinen Lebenslauf' },
+   334→          { key: 'b', text: 'ein Zeugnis' },
+   335→          { key: 'c', text: 'seinen Personalausweis' },
+   336→        ],
+   337→      },
+   338→      {
+   339→        id: 6,
+   340→        text: 'Die Arbeitszeiten sind festgelegt.',
+   341→        type: 'richtig-falsch',
+   342→        correctAnswer: 'falsch',
+   343→      },
+   344→    ],
+   345→  },
+   346→  {
+   347→    id: 'a2-notice-1',
+   348→    level: 'A2',
+   349→    title: 'Aushang: Umzugsfirma',
+   350→    titleTr: 'Duyuru: Taşıma Şirketi',
+   351→    category: 'Günlük Yaşam',
+   352→    icon: Newspaper,
+   353→    text: `SCHNELL & SICHER UMZÜGE
+   354→Ihr zuverlässiger Partner seit 2005!
+   355→
+   356→Haben Sie einen Umzug geplant? Wir helfen Ihnen gerne!
+   357→
+   358→Unser Angebot:
+   359→• Packservice: Wir verpacken Ihre Möbel und Gegenstände fachgerecht.
+   360→• Transport: Wir bringen alles sicher an den neuen Wohnort.
+   361→• Reinigung: Wir reinigen die alte Wohnung nach dem Auszug.
+   362→
+   363→Preise:
+   364→• Studio-Wohnung (ab 30 m²): ab 350 €
+   365→• 2-Zimmer-Wohnung (ab 50 m²): ab 550 €
+   366→• 3-Zimmer-Wohnung (ab 70 m²): ab 750 €
+   367→
+   368→Alle Preise inklusive MwSt. Kurzfristige Termine möglich!
+   369→
+   370→Rufen Sie uns an: 0800-123-4567 (kostenlos)
+   371→oder schreiben Sie uns: info@schnell-umzug.de
+   372→
+   373→Wir beraten Sie gerne kostenlos und unverbindlich!`,
+   374→    questions: [
+   375→      {
+   376→        id: 1,
+   377→        text: 'Die Firma existiert seit 2010.',
+   378→        type: 'richtig-falsch',
+   379→        correctAnswer: 'falsch',
+   380→      },
+   381→      {
+   382→        id: 2,
+   383→        text: 'Die Firma bietet Packservice an.',
+   384→        type: 'richtig-falsch',
+   385→        correctAnswer: 'richtig',
+   386→      },
+   387→      {
+   388→        id: 3,
+   389→        text: 'Was kostet ein Umzug für eine 2-Zimmer-Wohnung mindestens?',
+   390→        type: 'multiple-choice',
+   391→        correctAnswer: 'b',
+   392→        options: [
+   393→          { key: 'a', text: '350 €' },
+   394→          { key: 'b', text: '550 €' },
+   395→          { key: 'c', text: '750 €' },
+   396→        ],
+   397→      },
+   398→      {
+   399→        id: 4,
+   400→        text: 'Man kann die Firma nur per E-Mail kontaktieren.',
+   401→        type: 'richtig-falsch',
+   402→        correctAnswer: 'falsch',
+   403→      },
+   404→      {
+   405→        id: 5,
+   406→        text: 'Die Beratung kostet Geld.',
+   407→        type: 'richtig-falsch',
+   408→        correctAnswer: 'falsch',
+   409→      },
+   410→      {
+   411→        id: 6,
+   412→        text: 'Welcher Service wird NICHT angeboten?',
+   413→        type: 'multiple-choice',
+   414→        correctAnswer: 'c',
+   415→        options: [
+   416→          { key: 'a', text: 'Packservice' },
+   417→          { key: 'b', text: 'Reinigung' },
+   418→          { key: 'c', text: 'Möbelkauf' },
+   419→        ],
+   420→      },
+   421→    ],
+   422→  },
+   423→  {
+   424→    id: 'a2-letter-1',
+   425→    level: 'A2',
+   426→    title: 'Brief: Sprachkurs',
+   427→    titleTr: 'Mektup: Dil Kursu',
+   428→    category: 'Eğitim',
+   429→    icon: FileText,
+   430→    text: `DeutschAkademie Berlin
+   431→Schönhauser Allee 125, 10119 Berlin
+   432→
+   433→Sehr geehrte Frau Yılmaz,
+   434→
+   435→vielen Dank für Ihre Anmeldung zum Deutschkurs B1.
+   436→
+   437→Ihr Kurs beginnt am Montag, den 09. September und findet jeden Montag und Mittwoch von 18:30 bis 20:00 Uhr statt. Der Kursraum befindet sich im 3. Stock, Raum 312.
+   438→
+   439→Bitte bringen Sie zum ersten Unterrichtstag mit:
+   440→– Ihr Kursbuch „Menschen B1.1" (kann auch bei uns gekauft werden, Preis: 18,90 €)
+   441→– Ein Heft und einen Stift
+   442→
+   443→Der Kurs kostet insgesamt 240 € für 8 Wochen. Die Zahlung ist in zwei Raten möglich: 120 € zu Beginn und 120 € nach 4 Wochen.
+   444→
+   445→Bei Fragen wenden Sie sich bitte an unser Büro (Raum 105) oder rufen Sie an: 030-4401-7788.
+   446→
+   447→Wir freuen uns auf Sie!
+   448→
+   449→Ihr Team der DeutschAkademie`,
+   450→    questions: [
+   451→      {
+   452→        id: 1,
+   453→        text: 'Der Kurs ist am Dienstag.',
+   454→        type: 'richtig-falsch',
+   455→        correctAnswer: 'falsch',
+   456→      },
+   457→      {
+   458→        id: 2,
+   459→        text: 'Der Kurs kostet 240 € für 8 Wochen.',
+   460→        type: 'richtig-falsch',
+   461→        correctAnswer: 'richtig',
+   462→      },
+   463→      {
+   464→        id: 3,
+   465→        text: 'Wie oft findet der Kurs pro Woche statt?',
+   466→        type: 'multiple-choice',
+   467→        correctAnswer: 'b',
+   468→        options: [
+   469→          { key: 'a', text: 'einmal' },
+   470→          { key: 'b', text: 'zweimal' },
+   471→          { key: 'c', text: 'dreimal' },
+   472→        ],
+   473→      },
+   474→      {
+   475→        id: 4,
+   476→        text: 'Das Kursbuch ist im Preis enthalten.',
+   477→        type: 'richtig-falsch',
+   478→        correctAnswer: 'falsch',
+   479→      },
+   480→      {
+   481→        id: 5,
+   482→        text: 'Wann muss die zweite Rate bezahlt werden?',
+   483→        type: 'multiple-choice',
+   484→        correctAnswer: 'c',
+   485→        options: [
+   486→          { key: 'a', text: 'nach 2 Wochen' },
+   487→          { key: 'b', text: 'nach 6 Wochen' },
+   488→          { key: 'c', text: 'nach 4 Wochen' },
+   489→        ],
+   490→      },
+   491→      {
+   492→        id: 6,
+   493→        text: 'Der Kursraum ist im Erdgeschoss.',
+   494→        type: 'richtig-falsch',
+   495→        correctAnswer: 'falsch',
+   496→      },
+   497→    ],
+   498→  },
+   499→
+   500→  // ══════════════════════ B1 ══════════════════════
+   501→  {
+   502→    id: 'b1-article-1',
+   503→    level: 'B1',
+   504→    title: 'Artikel: Homeoffice in Deutschland',
+   505→    titleTr: 'Makale: Almanya\'da Evden Çalışma',
+   506→    category: 'Toplum',
+   507→    icon: Newspaper,
+   508→    text: `Homeoffice in Deutschland: Eine neue Arbeitskultur
+   509→
+   510→Seit der Corona-Pandemie hat sich die Arbeitswelt in Deutschland stark verändert. Im Jahr 2023 arbeiteten rund 38 Prozent der Beschäftigten mindestens teilweise von zu Hause aus — vor der Pandemie waren es nur etwa 12 Prozent.
+   511→
+   512→Viele Arbeitnehmer schätzen die Flexibilität: Kein Pendeln, mehr Zeit für die Familie und eine bessere Vereinbarkeit von Beruf und Privatleben. Besonders bei Eltern mit kleinen Kindern ist Homeoffice sehr beliebt.
+   513→
+   514→Aber es gibt auch Nachteile. Einige Mitarbeiter fühlen sich isoliert und vermissen den Kontakt zu Kollegen. Die Grenze zwischen Arbeit und Freizeit verschwimmt, und viele arbeiten abends oder am Wochenende weiter, weil der Arbeitsplatz nur wenige Schritte entfernt ist.
+   515→
+   516→Unternehmen stehen vor neuen Herausforderungen: Wie kann man die Teamarbeit organisieren? Wie lässt sich die Unternehmenskultur pflegen? Und wie geht man mit Mitarbeitern um, die im Büro produktiver sind als zu Hause?
+   517→
+   518→Experten sind sich einig: Die Zukunft gehört dem hybriden Modell — einer Kombination aus Büro- und Heimarbeit.`,
+   519→    questions: [
+   520→      {
+   521→        id: 1,
+   522→        text: 'Vor der Pandemie arbeiteten mehr als 30 Prozent im Homeoffice.',
+   523→        type: 'richtig-falsch',
+   524→        correctAnswer: 'falsch',
+   525→      },
+   526→      {
+   527→        id: 2,
+   528→        text: 'Homeoffice ist besonders bei Eltern mit kleinen Kindern beliebt.',
+   529→        type: 'richtig-falsch',
+   530→        correctAnswer: 'richtig',
+   531→      },
+   532→      {
+   533→        id: 3,
+   534→        text: 'Was ist ein Nachteil des Homeoffice?',
+   535→        type: 'multiple-choice',
+   536→        correctAnswer: 'b',
+   537→        options: [
+   538→          { key: 'a', text: 'man muss länger pendeln' },
+   539→          { key: 'b', text: 'man fühlt sich isoliert' },
+   540→          { key: 'c', text: 'die Arbeitszeit ist zu kurz' },
+   541→        ],
+   542→      },
+   543→      {
+   544→        id: 4,
+   545→        text: 'Im Homeoffice arbeiten die Menschen weniger.',
+   546→        type: 'richtig-falsch',
+   547→        correctAnswer: 'falsch',
+   548→      },
+   549→      {
+   550→        id: 5,
+   551→        text: 'Was empfehlen Experten für die Zukunft?',
+   552→        type: 'multiple-choice',
+   553→        correctAnswer: 'c',
+   554→        options: [
+   555→          { key: 'a', text: 'nur noch Homeoffice' },
+   556→          { key: 'b', text: 'nur noch Büroarbeit' },
+   557→          { key: 'c', text: 'eine Kombination aus beidem' },
+   558→        ],
+   559→      },
+   560→      {
+   561→        id: 6,
+   562→        text: 'Die Grenze zwischen Arbeit und Freizeit ist im Homeoffice klarer.',
+   563→        type: 'richtig-falsch',
+   564→        correctAnswer: 'falsch',
+   565→      },
+   566→    ],
+   567→  },
+   568→  {
+   569→    id: 'b1-email-1',
+   570→    level: 'B1',
+   571→    title: 'E-Mail: Mietvertrag kündigen',
+   572→    titleTr: 'E-Posta: Kira Sözleşmesi Feshi',
+   573→    category: 'Günlük Yaşam',
+   574→    icon: Mail,
+   575→    text: `Von: max.mueller@gmx.de
+   576→An: verwaltung@wohnen-nord.de
+   577→Betreff: Kündigung meines Mietvertrags
+   578→
+   579→Sehr geehrte Damen und Herren,
+   580→
+   581→hiermit kündige ich meinen Mietvertrag für die Wohnung in der Mühlenstraße 42, 10407 Berlin, fristgerecht zum 31. Oktober 2024.
+   582→
+   583→Ich ziehe aus beruflichen Gründen nach München um. Die Wohnung ist in einem guten Zustand und ich habe alle Reparaturen, die zu meinen Pflichten gehören, durchgeführt.
+   584→
+   585→Die Wohnungsübergabe schlage ich für Samstag, den 26. Oktober, vor. Für eine Terminvereinbarung stehe ich Ihnen unter der Telefonnummer 0170-554-3322 zur Verfügung.
+   586→
+   587→Bitte teilen Sie mir mit, wann die Kaution zurückerstattet wird und welche Unterlagen Sie dafür benötigen. Ich habe die Endreinigung bereits beauftragt.
+   588→
+   589→Mit freundlichen Grüßen
+   590→Max Müller`,
+   591→    questions: [
+   592→      {
+   593→        id: 1,
+   594→        text: 'Max kündigt den Mietvertrag zum 31. Dezember.',
+   595→        type: 'richtig-falsch',
+   596→        correctAnswer: 'falsch',
+   597→      },
+   598→      {
+   599→        id: 2,
+   600→        text: 'Max zieht nach München.',
+   601→        type: 'richtig-falsch',
+   602→        correctAnswer: 'richtig',
+   603→      },
+   604→      {
+   605→        id: 3,
+   606→        text: 'Warum kündigt Max den Mietvertrag?',
+   607→        type: 'multiple-choice',
+   608→        correctAnswer: 'a',
+   609→        options: [
+   610→          { key: 'a', text: 'berufliche Gründe' },
+   611→          { key: 'b', text: 'die Wohnung ist zu teuer' },
+   612→          { key: 'c', text: 'Nachbarschaftsprobleme' },
+   613→        ],
+   614→      },
+   615→      {
+   616→        id: 4,
+   617→        text: 'Max hat die Endreinigung noch nicht beauftragt.',
+   618→        type: 'richtig-falsch',
+   619→        correctAnswer: 'falsch',
+   620→      },
+   621→      {
+   622→        id: 5,
+   623→        text: 'Wie kann die Verwaltung Max erreichen?',
+   624→        type: 'multiple-choice',
+   625→        correctAnswer: 'b',
+   626→        options: [
+   627→          { key: 'a', text: 'per E-Mail nur' },
+   628→          { key: 'b', text: 'unter der Telefonnummer 0170-554-3322' },
+   629→          { key: 'c', text: 'per Brief' },
+   630→        ],
+   631→      },
+   632→      {
+   633→        id: 6,
+   634→        text: 'Die Wohnung ist in schlechtem Zustand.',
+   635→        type: 'richtig-falsch',
+   636→        correctAnswer: 'falsch',
+   637→      },
+   638→    ],
+   639→  },
+   640→  {
+   641→    id: 'b1-notice-1',
+   642→    level: 'B1',
+   643→    title: 'Artikel: Nachhaltigkeit im Alltag',
+   644→    titleTr: 'Makale: Günlük Hayatta Sürdürülebilirlik',
+   645→    category: 'Çevre',
+   646→    icon: ClipboardList,
+   647→    text: `Nachhaltigkeit im Alltag: Kleine Schritte, große Wirkung
+   648→
+   649→Immer mehr Menschen in Deutschland möchten umweltbewusster leben. Doch wo anfangen? Experten empfehlen, mit kleinen Veränderungen zu beginnen.
+   650→
+   651→Einer der einfachsten Schritte ist der Verzicht auf Plastiktüten. Seit 2022 dürfen in deutschen Geschäften keine kostenlosen Plastiktüten mehr ausgegeben werden. Stattdessen nutzen viele Kunden Stoffbeutel, die mehrfach verwendet werden können.
+   652→
+   653→Auch beim Essen lässt sich viel tun: Regionale und saisonale Produkte haben einen kürzeren Transportweg und dadurch einen geringeren CO₂-Fußabdruck. Der Verzicht auf Fleisch an ein oder zwei Tagen pro Woche kann den ökologischen Fußabdruck einer Person um bis zu 15 Prozent reduzieren.
+   654→
+   655→Im Haushalt hilft energiesparende Geräte beim Stromsparen. LED-Lampen verbrauchen beispielsweise bis zu 80 Prozent weniger Strom als herkömmliche Glühbirnen. Auch das Abschalten von Standby-Geräten macht einen Unterschied.
+   656→
+   657→Der öffentliche Nahverkehr ist eine gute Alternative zum Auto. In vielen Städten gibt es jetzt auch Leihräder und E-Scooter, die kurze Strecken umweltfreundlich erledigen.
+   658→
+   659→Jeder kleine Schritt zählt — gemeinsam können wir viel erreichen.`,
+   660→    questions: [
+   661→      {
+   662→        id: 1,
+   663→        text: 'In Deutschland kann man noch kostenlose Plastiktüten bekommen.',
+   664→        type: 'richtig-falsch',
+   665→        correctAnswer: 'falsch',
+   666→      },
+   667→      {
+   668→        id: 2,
+   669→        text: 'LED-Lampen verbrauchen bis zu 80 Prozent weniger Strom.',
+   670→        type: 'richtig-falsch',
+   671→        correctAnswer: 'richtig',
+   672→      },
+   673→      {
+   674→        id: 3,
+   675→        text: 'Wie viel CO₂ kann man durch weniger Fleisch einsparen?',
+   676→        type: 'multiple-choice',
+   677→        correctAnswer: 'c',
+   678→        options: [
+   679→          { key: 'a', text: 'bis zu 5 Prozent' },
+   680→          { key: 'b', text: 'bis zu 10 Prozent' },
+   681→          { key: 'c', text: 'bis zu 15 Prozent' },
+   682→        ],
+   683→      },
+   684→      {
+   685→        id: 4,
+   686→        text: 'Regionale Produkte haben einen längeren Transportweg.',
+   687→        type: 'richtig-falsch',
+   688→        correctAnswer: 'falsch',
+   689→      },
+   690→      {
+   691→        id: 5,
+   692→        text: 'Was wird als Alternative zum Auto empfohlen?',
+   693→        type: 'multiple-choice',
+   694→        correctAnswer: 'a',
+   695→        options: [
+   696→          { key: 'a', text: 'öffentlicher Nahverkehr' },
+   697→          { key: 'b', text: 'Fahrgemeinschaft' },
+   698→          { key: 'c', text: 'nur zu Fuß gehen' },
+   699→        ],
+   700→      },
+   701→      {
+   702→        id: 6,
+   703→        text: 'Stoffbeutel können nur einmal verwendet werden.',
+   704→        type: 'richtig-falsch',
+   705→        correctAnswer: 'falsch',
+   706→      },
+   707→    ],
+   708→  },
+   709→];
+   710→
+   711→// ── Level Config ─────────────────────────────────────────────────────────────
+   712→
+   713→const LEVEL_CONFIG: Record<string, { color: string; bg: string; badge: string; desc: string }> = {
+   714→  A1: { color: 'text-emerald-700', bg: 'bg-emerald-50 border-emerald-200', badge: 'bg-emerald-100 text-emerald-700', desc: 'Başlangıç — Günlük temel metinler' },
+   715→  A2: { color: 'text-amber-700', bg: 'bg-amber-50 border-amber-200', badge: 'bg-amber-100 text-amber-700', desc: 'Temel — Daha uzun ve karmaşık metinler' },
+   716→  B1: { color: 'text-blue-700', bg: 'bg-blue-50 border-blue-200', badge: 'bg-blue-100 text-blue-700', desc: 'Orta — İş, toplum ve akademik metinler' },
+   717→};
+   718→
+   719→// ── Animation ────────────────────────────────────────────────────────────────
+   720→
+   721→const fadeInUp = {
+   722→  initial: { opacity: 0, y: 16 },
+   723→  animate: { opacity: 1, y: 0 },
+   724→  exit: { opacity: 0, y: -8 },
+   725→};
+   726→
+   727→const staggerContainer = {
+   728→  animate: { transition: { staggerChildren: 0.04 } },
+   729→};
+   730→
+   731→// ── Component ────────────────────────────────────────────────────────────────
+   732→
+   733→export function ReadingModule() {
+   734→  const { saveExerciseResult } = useAppStore() as any;
+   735→
+   736→  const [screen, setScreen] = useState<Screen>('topics');
+   737→  const [selectedExercise, setSelectedExercise] = useState<ReadingExercise | null>(null);
+   738→  const [selectedLevel, setSelectedLevel] = useState<string>('all');
+   739→  const [answers, setAnswers] = useState<Record<number, string>>({});
+   740→  const [submitted, setSubmitted] = useState(false);
+   741→
+   742→  // ── Filtered exercises by level
+   743→  const filteredExercises = useMemo(() => {
+   744→    if (selectedLevel === 'all') return readingExercises;
+   745→    return readingExercises.filter((e) => e.level === selectedLevel);
+   746→  }, [selectedLevel]);
+   747→
+   748→  // ── Group by level for topics screen
+   749→  const grouped = useMemo(() => {
+   750→    const map = new Map<string, ReadingExercise[]>();
+   751→    for (const ex of filteredExercises) {
+   752→      const arr = map.get(ex.level) || [];
+   753→      arr.push(ex);
+   754→      map.set(ex.level, arr);
+   755→    }
+   756→    return map;
+   757→  }, [filteredExercises]);
+   758→
+   759→  // ── Results after submit
+   760→  const results = useMemo(() => {
+   761→    if (!selectedExercise || !submitted) return null;
+   762→    let correct = 0;
+   763→    for (const q of selectedExercise.questions) {
+   764→      if (answers[q.id] === q.correctAnswer) correct++;
+   765→    }
+   766→    return {
+   767→      correct,
+   768→      total: selectedExercise.questions.length,
+   769→      percentage: Math.round((correct / selectedExercise.questions.length) * 100),
+   770→    };
+   771→  }, [selectedExercise, submitted, answers]);
+   772→
+   773→  // ── Handlers
+   774→  const handleStartExercise = (exercise: ReadingExercise) => {
+   775→    setSelectedExercise(exercise);
+   776→    setAnswers({});
+   777→    setSubmitted(false);
+   778→    setScreen('read');
+   779→  };
+   780→
+   781→  const handleAnswer = (questionId: number, answer: string) => {
+   782→    if (submitted) return;
+   783→    setAnswers((prev) => ({ ...prev, [questionId]: answer }));
+   784→  };
+   785→
+   786→  const handleSubmit = () => {
+   787→    if (!selectedExercise) return;
+   788→    const unanswered = selectedExercise.questions.filter((q) => !answers[q.id]).length;
+   789→    if (unanswered > 0) return;
+   790→    setSubmitted(true);
+   791→
+   792→    // Save to store
+   793→    if (saveExerciseResult) {
+   794→      const correctCount = selectedExercise.questions.filter((q) => answers[q.id] === q.correctAnswer).length;
+   795→      saveExerciseResult({
+   796→        type: 'reading',
+   797→        correct: correctCount,
+   798→        total: selectedExercise.questions.length,
+   799→        level: selectedExercise.level,
+   800→      });
+   801→    }
+   802→  };
+   803→
+   804→  const handleRetry = () => {
+   805→    if (!selectedExercise) return;
+   806→    setAnswers({});
+   807→    setSubmitted(false);
+   808→  };
+   809→
+   810→  const handleBackToTopics = () => {
+   811→    setScreen('topics');
+   812→    setSelectedExercise(null);
+   813→    setAnswers({});
+   814→    setSubmitted(false);
+   815→  };
+   816→
+   817→  const allAnswered = selectedExercise
+   818→    ? selectedExercise.questions.every((q) => answers[q.id])
+   819→    : false;
+   820→
+   821→  // ── Render: Topics Screen
+   822→  if (screen === 'topics') {
+   823→    return (
+   824→      <motion.div key="topics" initial="initial" animate="animate" exit="exit" variants={staggerContainer} className="space-y-6">
+   825→        {/* Header */}
+   826→        <motion.div variants={fadeInUp} className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 p-6 text-white shadow-sm">
+   827→          <div className="relative z-10">
+   828→            <div className="mb-2 flex items-center gap-3">
+   829→              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur">
+   830→                <BookOpenText className="h-5 w-5" />
+   831→              </div>
+   832→              <h2 className="text-xl font-bold">Okuma Anlama</h2>
+   833→            </div>
+   834→            <p className="ml-[52px] text-sm text-white/80">
+   835→              Almanca metinleri okuyun, soruları cevaplayın. Seviyenize göre seçin.
+   836→            </p>
+   837→          </div>
+   838→          <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/10" />
+   839→          <div className="absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-white/10" />
+   840→        </motion.div>
+   841→
+   842→        {/* Level filter */}
+   843→        <motion.div variants={fadeInUp} className="flex gap-2">
+   844→          {[{ key: 'all', label: 'Tümü' }, { key: 'A1', label: 'A1' }, { key: 'A2', label: 'A2' }, { key: 'B1', label: 'B1' }].map((l) => (
+   845→            <button
+   846→              key={l.key}
+   847→              onClick={() => setSelectedLevel(l.key)}
+   848→              className={cn(
+   849→                'rounded-full px-4 py-1.5 text-xs font-medium transition-colors',
+   850→                selectedLevel === l.key
+   851→                  ? 'bg-indigo-600 text-white'
+   852→                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+   853→              )}
+   854→            >
+   855→              {l.label}
+   856→            </button>
+   857→          ))}
+   858→        </motion.div>
+   859→
+   860→        {/* Exercise list grouped by level */}
+   861→        {Array.from(grouped.entries()).map(([level, exercises]) => (
+   862→          <motion.div key={level} variants={fadeInUp} className="space-y-3">
+   863→            <div className="flex items-center gap-2">
+   864→              <Badge className={cn('text-xs font-semibold', LEVEL_CONFIG[level]?.badge)}>{level}</Badge>
+   865→              <span className="text-xs text-gray-500">{LEVEL_CONFIG[level]?.desc}</span>
+   866→            </div>
+   867→            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+   868→              {exercises.map((ex) => {
+   869→                const Icon = ex.icon;
+   870→                return (
+   871→                  <motion.div
+   872→                    key={ex.id}
+   873→                    whileHover={{ scale: 1.01 }}
+   874→                    whileTap={{ scale: 0.99 }}
+   875→                    onClick={() => handleStartExercise(ex)}
+   876→                    className="group cursor-pointer"
+   877→                  >
+   878→                    <Card className="h-full rounded-2xl border-0 shadow-sm transition-shadow hover:shadow-md">
+   879→                      <CardContent className="p-4">
+   880→                        <div className="flex items-start gap-3">
+   881→                          <div className={cn('flex h-10 w-10 shrink-0 items-center justify-center rounded-xl', LEVEL_CONFIG[level]?.bg)}>
+   882→                            <Icon className={cn('h-5 w-5', LEVEL_CONFIG[level]?.color)} />
+   883→                          </div>
+   884→                          <div className="min-w-0 flex-1">
+   885→                            <h4 className="text-sm font-semibold text-gray-800 leading-tight">{ex.title}</h4>
+   886→                            <p className="mt-0.5 text-xs text-gray-500 truncate">{ex.titleTr}</p>
+   887→                            <div className="mt-2 flex items-center gap-2 text-[10px] text-gray-400">
+   888→                              <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{ex.category}</Badge>
+   889→                              <span className="flex items-center gap-0.5">
+   890→                                <ClipboardList className="h-3 w-3" />
+   891→                                {ex.questions.length} soru
+   892→                              </span>
+   893→                            </div>
+   894→                          </div>
+   895→                          <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-gray-300 transition-transform group-hover:translate-x-0.5 group-hover:text-gray-500" />
+   896→                        </div>
+   897→                      </CardContent>
+   898→                    </Card>
+   899→                  </motion.div>
+   900→                );
+   901→              })}
+   902→            </div>
+   903→          </motion.div>
+   904→        ))}
+   905→      </motion.div>
+   906→    );
+   907→  }
+   908→
+   909→  // ── Render: Reading Screen
+   910→  if (screen === 'read' && selectedExercise) {
+   911→    const ex = selectedExercise;
+   912→    const config = LEVEL_CONFIG[ex.level] || LEVEL_CONFIG.A1;
+   913→    const Icon = ex.icon;
+   914→    const progress = submitted
+   915→      ? 100
+   916→      : (Object.keys(answers).length / ex.questions.length) * 100;
+   917→
+   918→    return (
+   919→      <motion.div key="read" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-5">
+   920→        {/* Back button + title */}
+   921→        <div className="flex items-center justify-between">
+   922→          <Button variant="ghost" size="sm" onClick={handleBackToTopics} className="-ml-2 text-gray-600 hover:text-gray-800">
+   923→            <ArrowLeft className="mr-1 h-4 w-4" />
+   924→            Metinler
+   925→          </Button>
+   926→          <Badge className={cn('text-xs font-semibold', config.badge)}>{ex.level}</Badge>
+   927→        </div>
+   928→
+   929→        {/* Progress bar */}
+   930→        {!submitted && (
+   931→          <div className="flex items-center gap-3">
+   932→            <Progress value={progress} className="h-2" />
+   933→            <span className="shrink-0 text-xs text-gray-400">
+   934→              {Object.keys(answers).length}/{ex.questions.length}
+   935→            </span>
+   936→          </div>
+   937→        )}
+   938→
+   939→        {/* Reading text card */}
+   940→        <Card className="rounded-2xl border-0 shadow-sm overflow-hidden">
+   941→          <div className={cn('px-4 py-3 flex items-center gap-2', config.bg)}>
+   942→            <Icon className={cn('h-4 w-4', config.color)} />
+   943→            <h3 className="text-sm font-semibold text-gray-800">{ex.title}</h3>
+   944→            <Badge variant="secondary" className="ml-auto text-[10px] px-1.5 py-0">{ex.category}</Badge>
+   945→          </div>
+   946→          <CardContent className="p-4">
+   947→            <div className="whitespace-pre-line text-sm leading-relaxed text-gray-700 font-mono bg-gray-50 rounded-xl p-4 max-h-[45vh] overflow-y-auto">
+   948→              {ex.text}
+   949→            </div>
+   950→          </CardContent>
+   951→        </Card>
+   952→
+   953→        {/* Questions */}
+   954→        <div className="space-y-3">
+   955→          <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+   956→            <ClipboardList className="h-4 w-4" />
+   957→            Sorular
+   958→          </h3>
+   959→
+   960→          {ex.questions.map((q, idx) => {
+   961→            const userAnswer = answers[q.id];
+   962→            const isCorrect = userAnswer === q.correctAnswer;
+   963→
+   964→            return (
+   965→              <motion.div
+   966→                key={q.id}
+   967→                initial={{ opacity: 0, y: 8 }}
+   968→                animate={{ opacity: 1, y: 0 }}
+   969→                transition={{ delay: idx * 0.05 }}
+   970→              >
+   971→                <Card className={cn(
+   972→                  'rounded-2xl border-0 shadow-sm overflow-hidden transition-colors',
+   973→                  submitted && userAnswer && (isCorrect ? 'ring-2 ring-emerald-300' : !isCorrect ? 'ring-2 ring-red-300' : '')
+   974→                )}>
+   975→                  <CardContent className="p-4 space-y-3">
+   976→                    {/* Question text */}
+   977→                    <div className="flex items-start gap-2">
+   978→                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-100 text-[10px] font-bold text-gray-500">
+   979→                        {idx + 1}
+   980→                      </span>
+   981→                      <p className="text-sm text-gray-800 font-medium leading-relaxed">
+   982→                        {q.text}
+   983→                      </p>
+   984→                    </div>
+   985→
+   986→                    {/* Richtig/Falsch buttons */}
+   987→                    {q.type === 'richtig-falsch' && (
+   988→                      <div className="ml-8 flex gap-2">
+   989→                        {['richtig', 'falsch'].map((opt) => {
+   990→                          const selected = userAnswer === opt;
+   991→                          const showCorrect = submitted && opt === q.correctAnswer;
+   992→                          const showWrong = submitted && selected && !isCorrect;
+   993→                          return (
+   994→                            <button
+   995→                              key={opt}
+   996→                              disabled={submitted}
+   997→                              onClick={() => handleAnswer(q.id, opt)}
+   998→                              className={cn(
+   999→                                'flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium transition-all',
+  1000→                                !submitted && !selected && 'bg-gray-100 text-gray-600 hover:bg-gray-200',
+  1001→                                !submitted && selected && 'bg-indigo-100 text-indigo-700 ring-2 ring-indigo-300',
+  1002→                                submitted && showCorrect && 'bg-emerald-100 text-emerald-700',
+  1003→                                submitted && showWrong && 'bg-red-100 text-red-600',
+  1004→                                submitted && !showCorrect && !showWrong && 'bg-gray-100 text-gray-400'
+  1005→                              )}
+  1006→                            >
+  1007→                              {showCorrect && <CheckCircle2 className="h-4 w-4" />}
+  1008→                              {showWrong && <XCircle className="h-4 w-4" />}
+  1009→                              {opt === 'richtig' ? 'Richtig' : 'Falsch'}
+  1010→                            </button>
+  1011→                          );
+  1012→                        })}
+  1013→                      </div>
+  1014→                    )}
+  1015→
+  1016→                    {/* Multiple choice options */}
+  1017→                    {q.type === 'multiple-choice' && q.options && (
+  1018→                      <div className="ml-8 space-y-1.5">
+  1019→                        {q.options.map((opt) => {
+  1020→                          const selected = userAnswer === opt.key;
+  1021→                          const showCorrect = submitted && opt.key === q.correctAnswer;
+  1022→                          const showWrong = submitted && selected && !isCorrect;
+  1023→                          return (
+  1024→                            <button
+  1025→                              key={opt.key}
+  1026→                              disabled={submitted}
+  1027→                              onClick={() => handleAnswer(q.id, opt.key)}
+  1028→                              className={cn(
+  1029→                                'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all text-left',
+  1030→                                !submitted && !selected && 'bg-gray-50 text-gray-600 hover:bg-gray-100',
+  1031→                                !submitted && selected && 'bg-indigo-50 text-indigo-700 ring-2 ring-indigo-300',
+  1032→                                submitted && showCorrect && 'bg-emerald-50 text-emerald-700',
+  1033→                                submitted && showWrong && 'bg-red-50 text-red-600',
+  1034→                                submitted && !showCorrect && !showWrong && 'bg-gray-50 text-gray-400'
+  1035→                              )}
+  1036→                            >
+  1037→                              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gray-200 text-[10px] font-bold">
+  1038→                                {opt.key.toUpperCase()}
+  1039→                              </span>
+  1040→                              <span className="flex-1">{opt.text}</span>
+  1041→                              {showCorrect && <CheckCircle2 className="h-4 w-4 shrink-0" />}
+  1042→                              {showWrong && <XCircle className="h-4 w-4 shrink-0" />}
+  1043→                            </button>
+  1044→                          );
+  1045→                        })}
+  1046→                      </div>
+  1047→                    )}
+  1048→
+  1049→                    {/* Submitted feedback */}
+  1050→                    {submitted && !userAnswer && (
+  1051→                      <p className="ml-8 text-xs text-gray-400">Cevaplanmadı</p>
+  1052→                    )}
+  1053→                  </CardContent>
+  1054→                </Card>
+  1055→              </motion.div>
+  1056→            );
+  1057→          })}
+  1058→        </div>
+  1059→
+  1060→        {/* Submit / Summary buttons */}
+  1061→        {!submitted ? (
+  1062→          <div className="sticky bottom-4 z-10">
+  1063→            <Button
+  1064→              onClick={handleSubmit}
+  1065→              disabled={!allAnswered}
+  1066→              className="w-full rounded-xl bg-indigo-600 py-6 text-white hover:bg-indigo-700 disabled:opacity-50 shadow-lg"
+  1067→              size="lg"
+  1068→            >
+  1069→              Cevapları Kontrol Et
+  1070→            </Button>
+  1071→          </div>
+  1072→        ) : results ? (
+  1073→          <motion.div
+  1074→            initial={{ opacity: 0, y: 16 }}
+  1075→            animate={{ opacity: 1, y: 0 }}
+  1076→            className="space-y-3"
+  1077→          >
+  1078→            {/* Result card */}
+  1079→            <Card className={cn(
+  1080→              'rounded-2xl border-0 shadow-lg overflow-hidden',
+  1081→              results.percentage >= 80 ? 'bg-emerald-50' : results.percentage >= 50 ? 'bg-amber-50' : 'bg-red-50'
+  1082→            )}>
+  1083→              <CardContent className="p-6 text-center">
+  1084→                <div className="mb-3 flex justify-center">
+  1085→                  <div className={cn(
+  1086→                    'flex h-14 w-14 items-center justify-center rounded-full',
+  1087→                    results.percentage >= 80 ? 'bg-emerald-100' : results.percentage >= 50 ? 'bg-amber-100' : 'bg-red-100'
+  1088→                  )}>
+  1089→                    {results.percentage >= 80 ? (
+  1090→                      <Trophy className="h-7 w-7 text-emerald-600" />
+  1091→                    ) : results.percentage >= 50 ? (
+  1092→                      <Star className="h-7 w-7 text-amber-500" />
+  1093→                    ) : (
+  1094→                      <RotateCcw className="h-7 w-7 text-red-500" />
+  1095→                    )}
+  1096→                  </div>
+  1097→                </div>
+  1098→                <h3 className="text-lg font-bold text-gray-800">
+  1099→                  {results.percentage >= 80 ? 'Harika!' : results.percentage >= 50 ? 'İyi gidiyorsun!' : 'Tekrar dene!'}
+  1100→                </h3>
+  1101→                <p className="mt-1 text-sm text-gray-500">
+  1102→                  {results.correct} doğru / {results.total} soru
+  1103→                </p>
+  1104→                <div className="mt-3 text-3xl font-bold text-gray-800">{results.percentage}%</div>
+  1105→              </CardContent>
+  1106→            </Card>
+  1107→
+  1108→            <div className="flex gap-2">
+  1109→              <Button onClick={handleRetry} variant="outline" className="flex-1 rounded-xl">
+  1110→                <RotateCcw className="mr-2 h-4 w-4" />
+  1111→                Tekrar Dene
+  1112→              </Button>
+  1113→              <Button onClick={handleBackToTopics} className="flex-1 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700">
+  1114→                <BookOpenText className="mr-2 h-4 w-4" />
+  1115→                Diğer Metinler
+  1116→              </Button>
+  1117→            </div>
+  1118→          </motion.div>
+  1119→        ) : null}
+  1120→      </motion.div>
+  1121→    );
+  1122→  }
+  1123→
+  1124→  return null;
+  1125→}
+  1126→

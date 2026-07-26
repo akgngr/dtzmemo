@@ -30,6 +30,7 @@ import { ListeningModule } from '@/components/modules/ListeningModule';
 import { ReadingModule } from '@/components/modules/ReadingModule';
 import { QuizModule } from '@/components/modules/QuizModule';
 import { AchievementsModule } from '@/components/modules/AchievementsModule';
+import { CustomWordsModule } from '@/components/modules/CustomWordsModule';
 
 const moduleMap: Record<string, React.ComponentType> = {
   dashboard: Dashboard,
@@ -49,6 +50,7 @@ const moduleMap: Record<string, React.ComponentType> = {
   reading: ReadingModule,
   quiz: QuizModule,
   achievements: AchievementsModule,
+  'custom-words': CustomWordsModule,
   statistics: StatisticsModule,
   settings: SettingsModule,
 };

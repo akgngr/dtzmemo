@@ -129,6 +129,7 @@ export const navItems = [
   { id: 'reading', label: 'Okuma', icon: BookOpenText },
   { id: 'quiz', label: 'Quiz', icon: CircleHelp },
   { id: 'achievements', label: 'Başarımlar', icon: Award },
+  { id: 'custom-words', label: 'Sözlüklerim', icon: FolderPlus },
   { id: 'statistics', label: 'İstatistik', icon: BarChart3 },
   { id: 'settings', label: 'Ayarlar', icon: Settings },
 ];
