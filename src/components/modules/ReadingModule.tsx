@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   BookOpenText,
@@ -19,6 +19,8 @@ import {
   Plus,
   Trash2,
   User,
+  Sparkles,
+  Loader2,
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -33,7 +35,7 @@ import { cn } from '@/lib/utils';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
-type Screen = 'topics' | 'read' | 'summary' | 'create';
+type Screen = 'topics' | 'read' | 'summary' | 'create' | 'ai-generate';
 
 type QuestionType = 'richtig-falsch' | 'multiple-choice';
 
@@ -768,6 +770,13 @@ export function ReadingModule() {
   const [newOptB, setNewOptB] = useState('');
   const [newOptC, setNewOptC] = useState('');
 
+  // ── AI generation state
+  const [aiPrompt, setAiPrompt] = useState('');
+  const [aiLevel, setAiLevel] = useState<'A1' | 'A2' | 'B1'>('A1');
+  const [aiCategory, setAiCategory] = useState('');
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState('');
+
   // ── Merge custom exercises with built-in
   const allExercises = useMemo(() => {
     const custom: ReadingExercise[] = (customReadingExercises || []).map((c: CustomReadingExercise) => ({
@@ -917,6 +926,76 @@ export function ReadingModule() {
 
   const isCustomExercise = (id: string) => id.startsWith('custom-');
 
+  // ── AI generate handler
+  const handleAIGenerate = useCallback(async () => {
+    if (!aiPrompt.trim()) return;
+    setAiLoading(true);
+    setAiError('');
+    try {
+      const { apiKeys } = useAppStore.getState() as any;
+      const zhipuKey = apiKeys?.zhipuKey || '';
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [{ role: 'user', content: aiPrompt.trim() }],
+          systemPrompt: `Sen bir Almanca dil öğretmenisin. Kullanıcının verdiği konu hakkında kısa bir Almanca okuma metni ve ${aiLevel} seviyesinde 5 adet comprehension sorusu oluştur.
+
+KURALLAR:
+- Metin ${aiLevel} seviyesinde olmalı, gerçekçi günlük dil kullanmalı
+- Metin kısa olmalı (4-8 cümle)
+- Soruların 3'ü richtig/falsch (true/false), 2'si çoktan seçmeli (a/b/c) olmalı
+- TÜMÜ ALMANCA olarak yaz
+
+JSON formatında döndür, BAŞKA HİÇBİR ŞEY EKLEME:
+{"title":"Almanca başlık","titleTr":"Türkçe başlık","category":"Kategori","text":"Almanca metin buraya...","questions":[{"text":"Soru 1","type":"richtig-falsch","correctAnswer":"richtig"},{"text":"Soru 2","type":"richtig-falsch","correctAnswer":"falsch"},{"text":"Soru 3","type":"richtig-falsch","correctAnswer":"richtig"},{"text":"Soru 4","type":"multiple-choice","correctAnswer":"a","options":[{"key":"a","text":"A şıkkı"},{"key":"b","text":"B şıkkı"},{"key":"c","text":"C şıkkı"}]},{"text":"Soru 5","type":"multiple-choice","correctAnswer":"b","options":[{"key":"a","text":"A şıkkı"},{"key":"b","text":"B şıkkı"},{"key":"c","text":"C şıkkı"}]}]}`,
+          zhipuKey,
+          maxTokens: 1500,
+          temperature: 0.7,
+        }),
+      });
+      const data = await res.json();
+      if (data.error) {
+        setAiError(data.error);
+        return;
+      }
+      const reply = data.reply || '';
+      let cleaned = reply.trim();
+      if (cleaned.startsWith('```')) {
+        cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '');
+      }
+      const match = cleaned.match(/\{[\s\S]*\}/);
+      if (!match) {
+        setAiError('Yanıt JSON formatında değil. Lütfen tekrar deneyin.');
+        return;
+      }
+      const parsed = JSON.parse(match[0]);
+      if (!parsed.text || !parsed.questions || !Array.isArray(parsed.questions)) {
+        setAiError('Geçersiz yanıt formatı.');
+        return;
+      }
+      // Fill the create form with AI result
+      setCreateForm({
+        title: parsed.title || 'AI Metni',
+        titleTr: parsed.titleTr || '',
+        level: aiLevel,
+        category: aiCategory || parsed.category || 'Özel',
+        text: parsed.text,
+      });
+      setDraftQuestions(parsed.questions.map((q: any, i: number) => ({
+        text: q.text,
+        type: q.type || 'richtig-falsch',
+        correctAnswer: q.correctAnswer || 'richtig',
+        options: q.options || [],
+      })));
+      setScreen('create');
+    } catch (err: any) {
+      setAiError(err?.message || 'Bir hata oluştu. Lütfen tekrar deneyin.');
+    } finally {
+      setAiLoading(false);
+    }
+  }, [aiPrompt, aiLevel, aiCategory]);
+
   // ── Render: Topics Screen
   if (screen === 'topics') {
     return (
@@ -938,14 +1017,22 @@ export function ReadingModule() {
           <div className="absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-white/10" />
         </motion.div>
 
-        {/* Add custom exercise button */}
-        <motion.div variants={fadeInUp}>
+        {/* Add custom + AI buttons */}
+        <motion.div variants={fadeInUp} className="flex gap-2">
           <Button
             onClick={() => setScreen('create')}
-            className="w-full rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 shadow-sm"
+            className="flex-1 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 shadow-sm"
           >
             <Plus className="mr-2 h-4 w-4" />
             Kendi Metinimi Ekle
+          </Button>
+          <Button
+            onClick={() => setScreen('ai-generate')}
+            variant="outline"
+            className="flex-1 rounded-xl border-purple-200 text-purple-600 hover:bg-purple-50 hover:border-purple-300"
+          >
+            <Sparkles className="mr-2 h-4 w-4" />
+            AI ile Oluştur
           </Button>
         </motion.div>
 
@@ -1245,6 +1332,120 @@ export function ReadingModule() {
             </div>
           </motion.div>
         ) : null}
+      </motion.div>
+    );
+  }
+
+  // ── Render: AI Generate Screen
+  if (screen === 'ai-generate') {
+    return (
+      <motion.div key="ai-generate" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} className="space-y-5">
+        {/* Back + title */}
+        <div className="flex items-center justify-between">
+          <Button variant="ghost" size="sm" onClick={() => setScreen('topics')} className="-ml-2 text-gray-600 hover:text-gray-800">
+            <ArrowLeft className="mr-1 h-4 w-4" />
+            Metinler
+          </Button>
+          <Badge className="bg-purple-100 text-purple-700 text-xs font-semibold">AI Oluştur</Badge>
+        </div>
+
+        {/* AI card */}
+        <Card className="rounded-2xl border-0 shadow-sm overflow-hidden">
+          <div className="bg-gradient-to-r from-violet-500 to-purple-600 px-4 py-3 text-white">
+            <h3 className="text-sm font-bold flex items-center gap-2">
+              <Sparkles className="h-4 w-4" />
+              Yapay Zeka ile Metin Oluştur
+            </h3>
+            <p className="mt-1 text-xs text-white/80">
+              Bir konu yazın, AI size Almanca okuma metni ve soruları hazırlasın.
+            </p>
+          </div>
+          <CardContent className="p-4 space-y-4">
+            {/* Level + Category */}
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Seviye</label>
+                <div className="flex gap-1.5">
+                  {(['A1', 'A2', 'B1'] as const).map((l) => (
+                    <button
+                      key={l}
+                      onClick={() => setAiLevel(l)}
+                      className={cn(
+                        'flex-1 rounded-lg py-2 text-xs font-semibold transition-colors',
+                        aiLevel === l ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      )}
+                    >
+                      {l}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Kategori</label>
+                <Input
+                  placeholder="z.B. İş, Sağlık..."
+                  value={aiCategory}
+                  onChange={(e) => setAiCategory(e.target.value)}
+                  className="rounded-xl h-10"
+                />
+              </div>
+            </div>
+
+            {/* Prompt */}
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">Konu *</label>
+              <Textarea
+                placeholder={"Örn: Bir süpermarkette alışveriş yapan birinin deneyimi, bir doktor randevusu, bir e-posta daveti..."}
+                value={aiPrompt}
+                onChange={(e) => setAiPrompt(e.target.value)}
+                className="rounded-xl min-h-[100px] text-sm"
+              />
+            </div>
+
+            {/* Example prompts */}
+            <div>
+              <p className="text-[11px] text-gray-400 mb-1.5">Örnek konular:</p>
+              <div className="flex flex-wrap gap-1.5">
+                {['Bir e-posta daveti', 'Süpermarkette alışveriş', 'Doktor randevusu', 'Bir kiralık daire arama', 'Tren bileti alma', 'Spor salonu kaydı'].map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => setAiPrompt(p)}
+                    className="rounded-full bg-gray-100 px-2.5 py-1 text-[11px] text-gray-600 hover:bg-purple-50 hover:text-purple-600 transition-colors"
+                  >
+                    {p}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Error */}
+            {aiError && (
+              <div className="rounded-lg bg-red-50 border border-red-200 p-3 text-xs text-red-700">
+                {aiError}
+              </div>
+            )}
+
+            {/* Generate button */}
+            <Button
+              onClick={handleAIGenerate}
+              disabled={!aiPrompt.trim() || aiLoading}
+              className="w-full rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 text-white hover:from-violet-600 hover:to-purple-700 disabled:opacity-50"
+              size="lg"
+            >
+              {aiLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Oluşturuluyor...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  Metin ve Soruları Oluştur
+                </>
+              )}
+            </Button>
+          </CardContent>
+        </Card>
       </motion.div>
     );
   }

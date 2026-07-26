@@ -12,6 +12,7 @@ import {
   Share2,
   BookOpen,
   FileText,
+  FileJson,
   Link,
   AlertCircle,
   CheckCircle2,
@@ -183,6 +184,42 @@ function downloadCSV(content: string, filename: string) {
   URL.revokeObjectURL(url);
 }
 
+function downloadJSON(content: string, filename: string) {
+  const blob = new Blob([content], { type: 'application/json;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function downloadSampleCSV() {
+  const csv = 'almanca,türkçe\nGuten Morgen,İyi günler\nAuf Wiedersehen,Hoşça kal\nVielen Dank,Çok teşekkürler\nEntschuldigung,Özür dilerim\n';
+  downloadCSV(csv, 'ornek-kelime-listesi.csv');
+}
+
+function downloadSampleJSON() {
+  const json = JSON.stringify({
+    name: 'Örnek Liste',
+    description: 'Bu bir örnek listedir',
+    words: [
+      { german: 'Guten Morgen', turkish: 'İyi günler' },
+      { german: 'Auf Wiedersehen', turkish: 'Hoşça kal' },
+      { german: 'Vielen Dank', turkish: 'Çok teşekkürler' },
+      { german: 'Entschuldigung', turkish: 'Özür dilerim' },
+    ],
+  }, null, 2);
+  downloadJSON(json, 'ornek-kelime-listesi.json');
+}
+
+/** Build JSON string from word list */
+function buildJSON(words: CustomWord[], name: string, description: string): string {
+  return JSON.stringify({ name, description, words }, null, 2);
+}
+
 function formatDate(isoString: string): string {
   try {
     const d = new Date(isoString);
@@ -317,22 +354,41 @@ export function CustomWordsModule() {
   // ── Handlers ──────────────────────────────────────────────────────────────
 
   const handleFileSelect = useCallback((file: File) => {
-    if (!file.name.endsWith('.csv')) {
-      setToastMessage('Lütfen bir .csv dosyası seçin.');
+    if (!file.name.endsWith('.csv') && !file.name.endsWith('.json')) {
+      setToastMessage('Lütfen bir .csv veya .json dosyası seçin.');
       return;
     }
     const reader = new FileReader();
     reader.onload = (e) => {
       const text = e.target?.result as string;
-      const parsed = parseCSV(text);
-      if (parsed.length === 0) {
-        setToastMessage('CSV dosyasından kelime çifti bulunamadı.');
-        return;
+      if (file.name.endsWith('.json')) {
+        try {
+          const data = JSON.parse(text);
+          const words: CustomWord[] = (data.words || []).filter(
+            (w: any) => typeof w.german === 'string' && typeof w.turkish === 'string' && w.german && w.turkish
+          );
+          if (words.length === 0) {
+            setToastMessage('JSON dosyasından kelime çifti bulunamadı.');
+            return;
+          }
+          setCsvParsedWords(words);
+          setCsvImportName(data.name || file.name.replace(/\.json$/i, ''));
+          setCsvImportDescription(data.description || '');
+          setShowCsvPreview(true);
+        } catch {
+          setToastMessage('JSON dosyası ayrıştırılamadı. Lütfen formatı kontrol edin.');
+        }
+      } else {
+        const parsed = parseCSV(text);
+        if (parsed.length === 0) {
+          setToastMessage('CSV dosyasından kelime çifti bulunamadı.');
+          return;
+        }
+        setCsvParsedWords(parsed);
+        setCsvImportName(file.name.replace(/\.csv$/i, ''));
+        setCsvImportDescription('');
+        setShowCsvPreview(true);
       }
-      setCsvParsedWords(parsed);
-      setCsvImportName(file.name.replace(/\.csv$/i, ''));
-      setCsvImportDescription('');
-      setShowCsvPreview(true);
     };
     reader.readAsText(file);
   }, []);
@@ -528,6 +584,20 @@ export function CustomWordsModule() {
     setToastMessage(`"${selectedList.name}" CSV olarak indirildi.`);
   };
 
+  const handleExportJSON = () => {
+    if (!selectedList || selectedList.words.length === 0) {
+      setToastMessage('Dışa aktarılacak kelime yok.');
+      return;
+    }
+    const json = JSON.stringify(
+      { name: selectedList.name, description: selectedList.description, words: selectedList.words },
+      null, 2
+    );
+    const safeName = selectedList.name.replace(/[^a-zA-Z0-9ğüşıöçĞÜŞİÖÇ\s-_]/g, '').replace(/\s+/g, '_');
+    downloadJSON(json, `${safeName}.json`);
+    setToastMessage(`"${selectedList.name}" JSON olarak indirildi.`);
+  };
+
   // ── Add word to existing list ──────────────────────────────────────────────
   const handleAddWordToExistingList = () => {
     if (!selectedListId) return;
@@ -677,7 +747,7 @@ export function CustomWordsModule() {
               <CardContent className="p-5">
                 <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-700">
                   <Upload className="h-4 w-4 text-teal-600" />
-                  CSV Dosyasından İçe Aktar
+                  Dosyadan İçe Aktar
                 </div>
 
                 {!showCsvPreview ? (
@@ -689,22 +759,42 @@ export function CustomWordsModule() {
                       className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-8 transition-colors hover:border-teal-400 hover:bg-teal-50/50"
                     >
                       <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-teal-100">
-                        <FileText className="h-5 w-5 text-teal-600" />
+                        <FileJson className="h-5 w-5 text-teal-600" />
                       </div>
                       <p className="text-sm font-medium text-gray-600">
-                        CSV dosyasını sürükleyin veya tıklayın
+                        CSV veya JSON dosyasını sürükleyin veya tıklayın
                       </p>
                       <p className="mt-1 text-xs text-gray-400">
-                        Format: almanca,türkçe (başlık satırı isteğe bağlı)
+                        Desteklenen formatlar: CSV (almanca,türkçe) ve JSON
                       </p>
                     </div>
                     <input
                       ref={fileInputRef}
                       type="file"
-                      accept=".csv"
+                      accept=".csv,.json"
                       className="hidden"
                       onChange={handleFileInputChange}
                     />
+                    <div className="mt-3 flex gap-2">
+                      <button onClick={downloadSampleCSV} className="flex-1 flex items-center justify-center gap-1.5 rounded-lg border border-dashed border-gray-300 px-3 py-2 text-xs text-gray-500 transition-colors hover:border-teal-400 hover:text-teal-600">
+                        <Download className="h-3.5 w-3.5" />
+                        Örnek CSV İndir
+                      </button>
+                      <button onClick={downloadSampleJSON} className="flex-1 flex items-center justify-center gap-1.5 rounded-lg border border-dashed border-gray-300 px-3 py-2 text-xs text-gray-500 transition-colors hover:border-teal-400 hover:text-teal-600">
+                        <Download className="h-3.5 w-3.5" />
+                        Örnek JSON İndir
+                      </button>
+                    </div>
+                    <div className="mt-3 flex gap-2">
+                      <button onClick={downloadSampleCSV} className="flex-1 flex items-center justify-center gap-1.5 rounded-lg border border-dashed border-gray-300 px-3 py-2 text-xs text-gray-500 transition-colors hover:border-teal-400 hover:text-teal-600">
+                        <Download className="h-3.5 w-3.5" />
+                        Örnek CSV İndir
+                      </button>
+                      <button onClick={downloadSampleJSON} className="flex-1 flex items-center justify-center gap-1.5 rounded-lg border border-dashed border-gray-300 px-3 py-2 text-xs text-gray-500 transition-colors hover:border-teal-400 hover:text-teal-600">
+                        <Download className="h-3.5 w-3.5" />
+                        Örnek JSON İndir
+                      </button>
+                    </div>
                   </>
                 ) : (
                   <div className="space-y-3">
@@ -1195,15 +1285,26 @@ export function CustomWordsModule() {
                 </div>
 
                 {/* Export CSV button */}
-                <Button
-                  variant="outline"
-                  onClick={handleExportCSV}
-                  className="w-full rounded-xl"
-                  disabled={selectedList.words.length === 0}
-                >
-                  <Download className="mr-2 h-4 w-4" />
-                  CSV Olarak İndir
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={handleExportCSV}
+                    className="flex-1 rounded-xl"
+                    disabled={selectedList.words.length === 0}
+                  >
+                    <Download className="mr-1.5 h-4 w-4" />
+                    CSV
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={handleExportJSON}
+                    className="flex-1 rounded-xl"
+                    disabled={selectedList.words.length === 0}
+                  >
+                    <Download className="mr-1.5 h-4 w-4" />
+                    JSON
+                  </Button>
+                </div>
 
                 {/* Share button */}
                 <Button
