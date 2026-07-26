@@ -143,6 +143,9 @@ export function PronunciationTrainerModule() {
     const catName = categories.find((c) => c.id === currentWord.category)?.nameTr || currentWord.category;
     return (
       <div className="space-y-4">
+        <Button variant="ghost" size="sm" onClick={() => setScreen('topics')} className="text-muted-foreground hover:text-foreground">
+          ← Geri Dön
+        </Button>
         <div className="flex items-center justify-between"><div className="flex items-center gap-2"><Target className="h-5 w-5 text-amber-600" /><span className="font-medium text-sm">{MODE_CONFIG[mode].label}</span></div><div className="flex items-center gap-2"><Badge variant="outline">{currentIndex + 1} / {pool.length}</Badge><Badge variant="outline" className={totalCorrect > 0 ? 'border-emerald-200 text-emerald-700 bg-emerald-50' : ''}>{totalCorrect} doğru</Badge></div></div>
         <Progress value={((currentIndex + 1) / pool.length) * 100} className="h-2 [&>div]:bg-amber-500" />
         <AnimatePresence mode="wait"><motion.div key={currentWord.id} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.2 }}>

@@ -325,13 +325,16 @@ export function VocabExplorerModule() {
             const isPracticed = progress && (progress.correct + progress.wrong > 0);
 
             return (
-              <motion.button
+              <motion.div
                 key={word.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: Math.min(idx * 0.015, 0.5) }}
                 onClick={() => handleWordClick(word)}
-                className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-gray-50 group"
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleWordClick(word); } }}
+                className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-gray-50 group cursor-pointer"
               >
                 <div className={cn('h-2 w-2 rounded-full shrink-0', clr.bg)} />
                 <div className="flex-1 min-w-0">
@@ -346,7 +349,7 @@ export function VocabExplorerModule() {
                   {isPracticed && <Eye className="h-3 w-3 text-emerald-500" />}
                   <SpeakButton text={word.german} size="sm" color="emerald" label="" className="opacity-0 group-hover:opacity-100 transition-opacity h-7 w-7" />
                 </div>
-              </motion.button>
+              </motion.div>
             );
           })}
         </AnimatePresence>
