@@ -30,6 +30,30 @@ interface ApiKeys {
   googleTtsKey: string;
 }
 
+export interface CustomWord {
+  german: string;
+  turkish: string;
+}
+
+export interface CustomWordList {
+  id: string;
+  name: string;
+  description: string;
+  words: CustomWord[];
+  createdAt: string;
+  category: string;
+}
+
+export type TargetLanguage = 'tr' | 'en' | 'fa' | 'ar' | 'fr';
+
+export const LANGUAGE_OPTIONS: { value: TargetLanguage; label: string; flag: string }[] = [
+  { value: 'tr', label: 'Turkce', flag: 'TR' },
+  { value: 'en', label: 'Ingilizce', flag: 'EN' },
+  { value: 'fa', label: 'Farsca', flag: 'FA' },
+  { value: 'ar', label: 'Arapca', flag: 'AR' },
+  { value: 'fr', label: 'Fransizca', flag: 'FR' },
+];
+
 interface SpeechUsage {
   // YYYY-MM format — when the current billing cycle started
   month: string;
@@ -99,7 +123,17 @@ interface AppState {
   setApiKeys: (keys: Partial<ApiKeys>) => void;
   clearApiKeys: () => void;
 
-  // Clear all data (preserves API keys)
+  // ===== Custom Word Lists =====
+  customWordLists: CustomWordList[];
+  addCustomWordList: (list: CustomWordList) => void;
+  deleteCustomWordList: (id: string) => void;
+  updateCustomWordList: (id: string, updates: Partial<CustomWordList>) => void;
+
+  // ===== Target Language =====
+  targetLanguage: TargetLanguage;
+  setTargetLanguage: (lang: TargetLanguage) => void;
+
+  // Clear all data (preserves API keys + custom words)
   clearAllData: () => void;
 }
 
@@ -358,6 +392,31 @@ export const useAppStore = create<AppState>()(
           apiKeys: { zhipuKey: '', elevenLabsKey: '', googleTtsKey: '' },
         }),
 
+      // ===== Custom Word Lists =====
+      customWordLists: [],
+
+      addCustomWordList: (list) =>
+        set((state) => ({
+          customWordLists: [...state.customWordLists, list],
+        })),
+
+      deleteCustomWordList: (id) =>
+        set((state) => ({
+          customWordLists: state.customWordLists.filter((l) => l.id !== id),
+        })),
+
+      updateCustomWordList: (id, updates) =>
+        set((state) => ({
+          customWordLists: state.customWordLists.map((l) =>
+            l.id === id ? { ...l, ...updates } : l
+          ),
+        })),
+
+      // ===== Target Language =====
+      targetLanguage: 'tr' as TargetLanguage,
+
+      setTargetLanguage: (lang) => set({ targetLanguage: lang }),
+
       clearAllData: () =>
         set({
           selectedCategories: [],
@@ -375,15 +434,14 @@ export const useAppStore = create<AppState>()(
             count: 0,
             monthlyLimit: DEFAULT_SPEECH_MONTHLY_LIMIT,
           },
-          // NOTE: apiKeys are NOT cleared — they are user credentials
+          // NOTE: apiKeys and customWordLists are NOT cleared
         }),
     }),
     {
       name: "deutsch-memo-storage",
-      version: 4,
+      version: 5,
       migrate: (persistedState: any, version: number) => {
         if (version === 0 || version === 1) {
-          // Migrate from selectedCategory (string|null) to selectedCategories (string[])
           const oldCategory = persistedState.selectedCategory;
           return {
             ...persistedState,
@@ -392,7 +450,6 @@ export const useAppStore = create<AppState>()(
           };
         }
         if (version === 2) {
-          // Add speechUsage (Google Web Speech API usage tracker)
           const now = new Date();
           const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
           return {
@@ -405,10 +462,16 @@ export const useAppStore = create<AppState>()(
           };
         }
         if (version === 3) {
-          // Add apiKeys
           return {
             ...persistedState,
             apiKeys: { zhipuKey: '', elevenLabsKey: '', googleTtsKey: '' },
+          };
+        }
+        if (version === 4) {
+          return {
+            ...persistedState,
+            customWordLists: persistedState.customWordLists || [],
+            targetLanguage: persistedState.targetLanguage || 'tr',
           };
         }
         return persistedState;

@@ -26,6 +26,7 @@ import { CategoryFilter } from '@/components/shared/CategoryFilter';
 import { getCategoryColor } from '@/lib/constants';
 import { categories, wordPairs, type WordPair } from '@/lib/german-data';
 import { useAppStore } from '@/lib/store';
+import { MemoryCurveChart } from '@/components/shared/MemoryCurveChart';
 import { cn } from '@/lib/utils';
 
 type Screen = 'overview' | 'review' | 'summary';
@@ -280,6 +281,14 @@ export function SpacedRepetitionModule() {
             </Card>
           </motion.div>
         </div>
+
+        {/* Memory Curve Chart */}
+        <Card className="border-0 shadow-sm">
+          <CardContent className="p-4">
+            <h3 className="text-sm font-semibold mb-3">Hafiza Egirisi</h3>
+            <MemoryCurveChart cardProgress={cardProgress} />
+          </CardContent>
+        </Card>
 
         {/* CTA or empty state */}
         <AnimatePresence mode="wait">

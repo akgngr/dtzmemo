@@ -45,6 +45,7 @@ import {
   Headphones,
   CircleHelp,
   Award,
+  FolderPlus,
 } from 'lucide-react';
 import { categories } from '@/lib/german-data';
 

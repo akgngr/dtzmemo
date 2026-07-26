@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { Shield, Trash2, Sparkles, AlertTriangle, Mic, Volume2, Calendar, Settings2, Key, Eye, EyeOff, CheckCircle2, Info } from 'lucide-react';
+import { Shield, Trash2, Sparkles, AlertTriangle, Mic, Volume2, Calendar, Settings2, Key, Eye, EyeOff, CheckCircle2, Info, Globe } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { categories, wordPairs } from '@/lib/german-data';
-import { useAppStore } from '@/lib/store';
+import { useAppStore, LANGUAGE_OPTIONS, type TargetLanguage } from '@/lib/store';
 import { cn } from '@/lib/utils';
 
 // Pretty-print a YYYY-MM month string ("2025-07" → "Temmuz 2025")
@@ -140,6 +140,8 @@ export function SettingsModule() {
   const hasSpeechQuota = useAppStore((s) => s.hasSpeechQuota);
   const remainingSpeechQuota = useAppStore((s) => s.remainingSpeechQuota);
   const daysUntilSpeechReset = useAppStore((s) => s.daysUntilSpeechReset);
+  const targetLanguage = useAppStore((s) => s.targetLanguage);
+  const setTargetLanguage = useAppStore((s) => s.setTargetLanguage);
 
   // API Keys
   const apiKeys = useAppStore((s) => s.apiKeys);
@@ -179,6 +181,55 @@ export function SettingsModule() {
 
   return (
     <div className="space-y-6">
+      {/* ===== Language Preference ===== */}
+      <Card className="border-0 shadow-sm">
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Globe className="h-4 w-4 text-emerald-600" />
+            Hedef Dil
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="rounded-lg bg-blue-50 p-4">
+            <div className="flex items-start gap-3">
+              <Info className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
+              <div className="text-sm text-blue-800">
+                <p className="font-medium mb-1">Hedef dil tercihinizi secin</p>
+                <p>
+                  Su an icin yalnizca Turkce ceviriler mevcuttur. Farkli dillerdeki kelimeleri
+                  "Ozel Kelime Listeleri" modulune manuel olarak ekleyebilirsiniz.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {LANGUAGE_OPTIONS.map((lang) => {
+              const isActive = targetLanguage === lang.value;
+              return (
+                <button
+                  key={lang.value}
+                  onClick={() => setTargetLanguage(lang.value)}
+                  disabled={lang.value !== 'tr'}
+                  className={cn(
+                    'rounded-full px-4 py-2 text-sm font-medium border transition-all',
+                    isActive
+                      ? 'border-emerald-300 bg-emerald-50 text-emerald-700'
+                      : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50',
+                    lang.value !== 'tr' && 'opacity-50 cursor-not-allowed'
+                  )}
+                >
+                  <span className="mr-1.5 font-bold text-xs">{lang.flag}</span>
+                  {lang.label}
+                  {lang.value !== 'tr' && (
+                    <span className="ml-1.5 text-[10px] text-amber-600">yakin</span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* ===== API Keys Card ===== */}
       <Card className="border-0 shadow-sm">
         <CardHeader className="pb-2">

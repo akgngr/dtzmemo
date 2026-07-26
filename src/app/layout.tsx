@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { PwaInstallPrompt } from "@/components/shared/PwaInstallPrompt";
+import { PwaRegister } from "@/components/shared/PwaRegister";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,10 +16,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DeutschMemo - Almanca Türkçe Ezberleme",
-  description: "Almanca B1 seviyesi ezberleme uygulaması. Kartlar, boşluk doldurma, sürükle bırak ve daha fazlası.",
+  title: "DeutschMemo - Almanca Turkce Ezberleme",
+  description: "Almanca B1 seviyesi ezberleme uygulamasi. Kartlar, bosluk doldurma, surukle birak ve daha fazlasi.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "DeutschMemo",
+  },
   icons: {
-    icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
+    icon: "/icons/icon-192.png",
+    apple: "/icons/icon-192.png",
   },
 };
 
@@ -28,11 +37,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="tr" suppressHydrationWarning>
+      <head>
+        <meta name="theme-color" content="#059669" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
         {children}
+        <PwaInstallPrompt />
         <Toaster />
+        <PwaRegister />
       </body>
     </html>
   );
