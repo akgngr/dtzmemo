@@ -212,6 +212,10 @@ export const useAppStore = create<AppState>()(
             'competition': 'Yarışma',
             'kelime-ezber': 'Kelime Ezberleme',
             'conversation': 'Konuşma Pratiği',
+            'pronunciation': 'Telaffuz Pratiği',
+            'spaced-repetition': 'Aralıklı Tekrar',
+            'listening': 'Dinleme Anlama',
+            'quiz': 'Kelime Quiz',
           };
 
           const entry: ExerciseHistoryEntry = {

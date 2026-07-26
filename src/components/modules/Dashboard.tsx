@@ -17,6 +17,10 @@ import {
   Timer,
   Settings,
   MessageCircle,
+  RotateCcw,
+  Headphones,
+  CircleHelp,
+  Award,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -112,6 +116,10 @@ export function Dashboard() {
             { id: 'vocab', label: 'Kelimeler', icon: BookOpen, desc: 'Kelime listesi', color: 'from-cyan-500 to-cyan-600' },
             { id: 'conversation', label: 'Konuşma', icon: MessageCircle, desc: 'AI ile Almanca sohbet', color: 'from-indigo-500 to-purple-600' },
             { id: 'competition', label: 'Yarışma', icon: Timer, desc: 'Zamana karşı', color: 'from-violet-500 to-violet-600' },
+            { id: 'spaced-repetition', label: 'Tekrar', icon: RotateCcw, desc: 'Aralıklı tekrar', color: 'from-blue-500 to-cyan-600' },
+            { id: 'listening', label: 'Dinleme', icon: Headphones, desc: 'Dinleyerek öğren', color: 'from-rose-500 to-pink-600' },
+            { id: 'quiz', label: 'Quiz', icon: CircleHelp, desc: 'Çoktan seçmeli', color: 'from-indigo-500 to-purple-600' },
+            { id: 'achievements', label: 'Başarımlar', icon: Award, desc: 'Hedefler & rozetler', color: 'from-amber-500 to-red-500' },
             { id: 'statistics', label: 'İstatistikler', icon: BarChart3, desc: 'İlerleme takibi', color: 'from-orange-500 to-orange-600' },
             { id: 'settings', label: 'Ayarlar', icon: Settings, desc: 'Veri yönetimi', color: 'from-gray-500 to-gray-600' },
           ].map((item) => (

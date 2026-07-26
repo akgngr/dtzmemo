@@ -41,6 +41,10 @@ import {
   MessageCircle,
   Mic,
   Compass,
+  RotateCcw,
+  Headphones,
+  CircleHelp,
+  Award,
 } from 'lucide-react';
 import { categories } from '@/lib/german-data';
 
@@ -118,6 +122,10 @@ export const navItems = [
   { id: 'pronunciation', label: 'Telaffuz', icon: Mic },
   { id: 'conversation', label: 'Konuşma', icon: MessageCircle },
   { id: 'competition', label: 'Yarışma', icon: Timer },
+  { id: 'spaced-repetition', label: 'Tekrar', icon: RotateCcw },
+  { id: 'listening', label: 'Dinleme', icon: Headphones },
+  { id: 'quiz', label: 'Quiz', icon: CircleHelp },
+  { id: 'achievements', label: 'Başarımlar', icon: Award },
   { id: 'statistics', label: 'İstatistik', icon: BarChart3 },
   { id: 'settings', label: 'Ayarlar', icon: Settings },
 ];

@@ -26,6 +26,10 @@ import { CompetitionModule } from '@/components/modules/CompetitionModule';
 import { ConversationModule } from '@/components/modules/ConversationModule';
 import { StatisticsModule } from '@/components/modules/StatisticsModule';
 import { SettingsModule } from '@/components/modules/SettingsModule';
+import { SpacedRepetitionModule } from '@/components/modules/SpacedRepetitionModule';
+import { ListeningModule } from '@/components/modules/ListeningModule';
+import { QuizModule } from '@/components/modules/QuizModule';
+import { AchievementsModule } from '@/components/modules/AchievementsModule';
 
 const moduleMap: Record<string, React.ComponentType> = {
   dashboard: Dashboard,
@@ -40,6 +44,10 @@ const moduleMap: Record<string, React.ComponentType> = {
   pronunciation: PronunciationTrainerModule,
   conversation: ConversationModule,
   competition: CompetitionModule,
+  'spaced-repetition': SpacedRepetitionModule,
+  listening: ListeningModule,
+  quiz: QuizModule,
+  achievements: AchievementsModule,
   statistics: StatisticsModule,
   settings: SettingsModule,
 };

@@ -1,0 +1,694 @@
+     1→'use client';
+     2→
+     3→import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+     4→import {
+     5→  motion,
+     6→  AnimatePresence,
+     7→} from 'framer-motion';
+     8→import {
+     9→  CircleHelp,
+    10→  Check,
+    11→  X,
+    12→  Flame,
+    13→  Trophy,
+    14→  Clock,
+    15→  Target,
+    16→  TrendingUp,
+    17→  Home,
+    18→  ArrowLeft,
+    19→  Timer,
+    20→} from 'lucide-react';
+    21→import { Card, CardContent } from '@/components/ui/card';
+    22→import { Button } from '@/components/ui/button';
+    23→import { Badge } from '@/components/ui/badge';
+    24→import { Progress } from '@/components/ui/progress';
+    25→import { Separator } from '@/components/ui/separator';
+    26→import { SpeakButton } from '@/components/shared/SpeakButton';
+    27→import { CategoryFilter } from '@/components/shared/CategoryFilter';
+    28→import { wordPairs, type WordPair } from '@/lib/german-data';
+    29→import { useAppStore } from '@/lib/store';
+    30→import { cn } from '@/lib/utils';
+    31→
+    32→type Screen = 'setup' | 'quiz' | 'summary';
+    33→type Direction = 'de-to-tr' | 'tr-to-de';
+    34→
+    35→interface QuizQuestion {
+    36→  word: WordPair;
+    37→  options: string[];
+    38→  correctIndex: number;
+    39→}
+    40→
+    41→function shuffleArray<T>(array: T[]): T[] {
+    42→  const shuffled = [...array];
+    43→  for (let i = shuffled.length - 1; i > 0; i--) {
+    44→    const j = Math.floor(Math.random() * (i + 1));
+    45→    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    46→  }
+    47→  return shuffled;
+    48→}
+    49→
+    50→function generateQuestions(
+    51→  pool: WordPair[],
+    52→  count: number,
+    53→  direction: Direction
+    54→): QuizQuestion[] {
+    55→  const shuffled = shuffleArray(pool);
+    56→  const selected = shuffled.slice(0, Math.min(count, shuffled.length));
+    57→
+    58→  return selected.map((word) => {
+    59→    const otherWords = pool.filter(
+    60→      (w) =>
+    61→        w.id !== word.id &&
+    62→        (direction === 'de-to-tr'
+    63→          ? !selected.slice(0, selected.indexOf(word) >= 0 ? selected.indexOf(word) : 0)
+    64→              .some((s) => s.turkish === w.turkish)
+    65→          : true)
+    66→    );
+    67→
+    68→    const field: 'turkish' | 'german' = direction === 'de-to-tr' ? 'turkish' : 'german';
+    69→    const correctValue = word[field];
+    70→
+    71→    // Pick 3 unique wrong answers
+    72→    const usedValues = new Set<string>([correctValue]);
+    73→    const wrongOptions: string[] = [];
+    74→    const candidates = shuffleArray(otherWords);
+    75→
+    76→    for (const candidate of candidates) {
+    77→      const val = candidate[field];
+    78→      if (!usedValues.has(val)) {
+    79→        wrongOptions.push(val);
+    80→        usedValues.add(val);
+    81→      }
+    82→      if (wrongOptions.length >= 3) break;
+    83→    }
+    84→
+    85→    // Fallback: if we don't have enough, allow duplicates (shouldn't happen with a decent pool)
+    86→    while (wrongOptions.length < 3 && pool.length > 1) {
+    87→      const rand = pool[Math.floor(Math.random() * pool.length)];
+    88→      const val = rand[field];
+    89→      if (val !== correctValue) {
+    90→        wrongOptions.push(val);
+    91→      }
+    92→    }
+    93→
+    94→    const options = shuffleArray([correctValue, ...wrongOptions]);
+    95→    const correctIndex = options.indexOf(correctValue);
+    96→
+    97→    return { word, options, correctIndex };
+    98→  });
+    99→}
+   100→
+   101→export function QuizModule() {
+   102→  const { selectedCategories, incrementPracticed, saveExerciseResult } = useAppStore();
+   103→
+   104→  const [screen, setScreen] = useState<Screen>('setup');
+   105→  const [questionCount, setQuestionCount] = useState(10);
+   106→  const [direction, setDirection] = useState<Direction>('de-to-tr');
+   107→  const [timerEnabled, setTimerEnabled] = useState(false);
+   108→
+   109→  // Quiz state
+   110→  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
+   111→  const [currentIndex, setCurrentIndex] = useState(0);
+   112→  const [correctCount, setCorrectCount] = useState(0);
+   113→  const [streak, setStreak] = useState(0);
+   114→  const [bestStreak, setBestStreak] = useState(0);
+   115→  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+   116→  const [answerTimes, setAnswerTimes] = useState<number[]>([]);
+   117→  const [questionStartTime, setQuestionStartTime] = useState(0);
+   118→  const [timerProgress, setTimerProgress] = useState(100);
+   119→
+   120→  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+   121→  const autoAdvanceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+   122→  const handleAnswerRef = useRef<(idx: number) => void>(() => {});
+   123→  const selectedOptionRef = useRef<number | null>(null);
+   124→
+   125→  const filteredPool = useMemo(() => {
+   126→    if (selectedCategories.length > 0) {
+   127→      return wordPairs.filter((w) => selectedCategories.includes(w.category));
+   128→    }
+   129→    return [...wordPairs];
+   130→  }, [selectedCategories]);
+   131→
+   132→  const currentQuestion = questions[currentIndex];
+   133→  const isAnswered = selectedOption !== null;
+   134→
+   135→  const handleAnswer = useCallback(
+   136→    (optionIndex: number) => {
+   137→      if (isAnswered || !currentQuestion) return;
+   138→
+   139→      setSelectedOption(optionIndex);
+   140→      if (timerRef.current) clearInterval(timerRef.current);
+   141→
+   142→      const timeTaken = (Date.now() - questionStartTime) / 1000;
+   143→      setAnswerTimes((prev) => [...prev, timeTaken]);
+   144→
+   145→      const isCorrect = optionIndex === currentQuestion.correctIndex;
+   146→
+   147→      if (isCorrect) {
+   148→        setCorrectCount((prev) => prev + 1);
+   149→        setStreak((prev) => {
+   150→          const newStreak = prev + 1;
+   151→          setBestStreak((best) => Math.max(best, newStreak));
+   152→          return newStreak;
+   153→        });
+   154→        incrementPracticed(true);
+   155→      } else {
+   156→        setStreak(0);
+   157→        incrementPracticed(false);
+   158→      }
+   159→
+   160→      // Auto-advance after 1.2s
+   161→      autoAdvanceRef.current = setTimeout(() => {
+   162→        if (currentIndex + 1 >= questions.length) {
+   163→          // Quiz finished
+   164→          const finalCorrect = isCorrect ? correctCount + 1 : correctCount;
+   165→          saveExerciseResult(
+   166→            'quiz',
+   167→            finalCorrect,
+   168→            questions.length,
+   169→            selectedCategories.length > 0 ? selectedCategories : undefined
+   170→          );
+   171→          setScreen('summary');
+   172→        } else {
+   173→          setCurrentIndex((prev) => prev + 1);
+   174→          setSelectedOption(null);
+   175→          setQuestionStartTime(Date.now());
+   176→          setTimerProgress(100);
+   177→          setTimeUp(false);
+   178→        }
+   179→      }, 1200);
+   180→    },
+   181→    [isAnswered, currentQuestion, questionStartTime, currentIndex, questions.length, correctCount, incrementPracticed, saveExerciseResult, selectedCategories]
+   182→  );
+   183→
+   184→  // Timer logic
+   185→  useEffect(() => {
+   186→    if (screen !== 'quiz' || !timerEnabled || isAnswered || !currentQuestion) return;
+   187→
+   188→    timerRef.current = setInterval(() => {
+   189→      setTimerProgress((prev) => {
+   190→        const next = prev - 1;
+   191→        if (next <= 0) {
+   192→          if (timerRef.current) clearInterval(timerRef.current);
+   193→          setTimeUp(true);
+   194→          return 0;
+   195→        }
+   196→        return next;
+   197→      });
+   198→    }, 100);
+   199→
+   200→    return () => {
+   201→      if (timerRef.current) clearInterval(timerRef.current);
+   202→    };
+   203→  }, [screen, timerEnabled, isAnswered, currentIndex, currentQuestion]);
+   204→
+   205→  // Auto-submit on time up
+   206→  useEffect(() => {
+   207→    if (timeUp && !isAnswered && currentQuestion) {
+   208→      handleAnswer(-1);
+   209→    }
+   210→  }, [timeUp, isAnswered, currentQuestion, handleAnswer]);
+   211→
+   212→  const handleStart = useCallback(() => {
+   213→    const qs = generateQuestions(filteredPool, questionCount, direction);
+   214→    if (qs.length === 0) return;
+   215→    setQuestions(qs);
+   216→    setCurrentIndex(0);
+   217→    setCorrectCount(0);
+   218→    setStreak(0);
+   219→    setBestStreak(0);
+   220→    setSelectedOption(null);
+   221→    setAnswerTimes([]);
+   222→    setQuestionStartTime(Date.now());
+   223→    setTimerProgress(100);
+   224→    setTimeUp(false);
+   225→    setScreen('quiz');
+   226→  }, [filteredPool, questionCount, direction]);
+   227→
+   228→  const handleRetry = useCallback(() => {
+   229→    setScreen('setup');
+   230→  }, []);
+   231→
+   232→  const handleGoHome = useCallback(() => {
+   233→    useAppStore.getState().setActiveModule('dashboard');
+   234→  }, []);
+   235→
+   236→  // Cleanup
+   237→  useEffect(() => {
+   238→    return () => {
+   239→      if (timerRef.current) clearInterval(timerRef.current);
+   240→      if (autoAdvanceRef.current) clearTimeout(autoAdvanceRef.current);
+   241→    };
+   242→  }, []);
+   243→
+   244→  // ======================== SETUP SCREEN ========================
+   245→  if (screen === 'setup') {
+   246→    return (
+   247→      <div className="space-y-6">
+   248→        {/* Header */}
+   249→        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 text-white shadow-sm">
+   250→          <div className="flex items-center gap-3 mb-2">
+   251→            <CircleHelp className="h-7 w-7" />
+   252→            <h2 className="text-2xl font-bold">Kelime Quiz</h2>
+   253→          </div>
+   254→          <p className="text-white/80 text-sm">
+   255→            Coktan secmeli sorularla Almanca-Turkce kelime bilgini test et
+   256→          </p>
+   257→        </div>
+   258→
+   259→        {/* Settings Card */}
+   260→        <Card className="rounded-2xl border-0 shadow-sm">
+   261→          <CardContent className="p-5 space-y-5">
+   262→            {/* Question Count */}
+   263→            <div className="space-y-2.5">
+   264→              <label className="text-sm font-medium text-muted-foreground">Soru Sayisi</label>
+   265→              <div className="grid grid-cols-3 gap-2">
+   266→                {[10, 15, 20].map((count) => (
+   267→                  <Button
+   268→                    key={count}
+   269→                    variant={questionCount === count ? 'default' : 'outline'}
+   270→                    className={cn(
+   271→                      'rounded-xl h-11 text-sm font-semibold transition-all',
+   272→                      questionCount === count &&
+   273→                        'bg-gradient-to-r from-indigo-500 to-purple-600 text-white border-0 shadow-sm'
+   274→                    )}
+   275→                    onClick={() => setQuestionCount(count)}
+   276→                  >
+   277→                    {count}
+   278→                  </Button>
+   279→                ))}
+   280→              </div>
+   281→            </div>
+   282→
+   283→            <Separator />
+   284→
+   285→            {/* Direction Toggle */}
+   286→            <div className="space-y-2.5">
+   287→              <label className="text-sm font-medium text-muted-foreground">Soru Yonu</label>
+   288→              <div className="grid grid-cols-2 gap-2">
+   289→                <Button
+   290→                  variant={direction === 'de-to-tr' ? 'default' : 'outline'}
+   291→                  className={cn(
+   292→                    'rounded-xl h-11 text-sm font-semibold transition-all',
+   293→                    direction === 'de-to-tr' &&
+   294→                      'bg-gradient-to-r from-indigo-500 to-purple-600 text-white border-0 shadow-sm'
+   295→                  )}
+   296→                  onClick={() => setDirection('de-to-tr')}
+   297→                >
+   298→                  DE &rarr; TR
+   299→                </Button>
+   300→                <Button
+   301→                  variant={direction === 'tr-to-de' ? 'default' : 'outline'}
+   302→                  className={cn(
+   303→                    'rounded-xl h-11 text-sm font-semibold transition-all',
+   304→                    direction === 'tr-to-de' &&
+   305→                      'bg-gradient-to-r from-indigo-500 to-purple-600 text-white border-0 shadow-sm'
+   306→                  )}
+   307→                  onClick={() => setDirection('tr-to-de')}
+   308→                >
+   309→                  TR &rarr; DE
+   310→                </Button>
+   311→              </div>
+   312→              <p className="text-xs text-muted-foreground">
+   313→                {direction === 'de-to-tr'
+   314→                  ? 'Almanca kelime gosterilir, Turkce karsiligi secilir'
+   315→                  : 'Turkce kelime gosterilir, Almanca karsiligi secilir'}
+   316→              </p>
+   317→            </div>
+   318→
+   319→            <Separator />
+   320→
+   321→            {/* Timer Toggle */}
+   322→            <div className="flex items-center justify-between">
+   323→              <div className="flex items-center gap-2.5">
+   324→                <Timer className="h-4.5 w-4.5 text-muted-foreground" />
+   325→                <div>
+   326→                  <p className="text-sm font-medium">Zamanlayici</p>
+   327→                  <p className="text-xs text-muted-foreground">
+   328→                    {timerEnabled ? 'Her soru icin 10 saniye' : 'Suresiz mod'}
+   329→                  </p>
+   330→                </div>
+   331→              </div>
+   332→              <Button
+   333→                variant={timerEnabled ? 'default' : 'outline'}
+   334→                size="sm"
+   335→                className={cn(
+   336→                  'rounded-lg transition-all',
+   337→                  timerEnabled &&
+   338→                    'bg-gradient-to-r from-indigo-500 to-purple-600 text-white border-0 shadow-sm'
+   339→                )}
+   340→                onClick={() => setTimerEnabled(!timerEnabled)}
+   341→              >
+   342→                {timerEnabled ? 'Acik' : 'Kapali'}
+   343→              </Button>
+   344→            </div>
+   345→          </CardContent>
+   346→        </Card>
+   347→
+   348→        {/* Start Button */}
+   349→        <Button
+   350→          className={cn(
+   351→            'w-full h-13 rounded-2xl text-base font-bold shadow-sm border-0',
+   352→            'bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700'
+   353→          )}
+   354→          onClick={handleStart}
+   355→          disabled={filteredPool.length < 4}
+   356→        >
+   357→          <CircleHelp className="mr-2 h-5 w-5" />
+   358→          Quizi Baslat
+   359→        </Button>
+   360→
+   361→        {filteredPool.length < 4 && (
+   362→          <p className="text-center text-sm text-destructive">
+   363→            En az 4 kelime gereklidir. Lutfen kategori secin.
+   364→          </p>
+   365→        )}
+   366→
+   367→        {/* Category Filter */}
+   368→        <CategoryFilter />
+   369→      </div>
+   370→    );
+   371→  }
+   372→
+   373→  // ======================== QUIZ SCREEN ========================
+   374→  if (screen === 'quiz' && currentQuestion) {
+   375→    const isCorrectAnswer = selectedOption === currentQuestion.correctIndex;
+   376→    const isTimeUpWrong = selectedOption === -1;
+   377→    const showCorrectHighlight = isAnswered && !isCorrectAnswer;
+   378→    const promptText = direction === 'de-to-tr' ? currentQuestion.word.german : currentQuestion.word.turkish;
+   379→    const speakLang = direction === 'de-to-tr' ? 'de' : 'tr';
+   380→
+   381→    return (
+   382→      <div className="space-y-4">
+   383→        {/* Top Bar */}
+   384→        <div className="flex items-center justify-between">
+   385→          <Button
+   386→            variant="ghost"
+   387→            size="sm"
+   388→            onClick={() => {
+   389→              if (timerRef.current) clearInterval(timerRef.current);
+   390→              if (autoAdvanceRef.current) clearTimeout(autoAdvanceRef.current);
+   391→              setScreen('setup');
+   392→            }}
+   393→          >
+   394→            <ArrowLeft className="mr-1 h-4 w-4" />
+   395→            Geri Don
+   396→          </Button>
+   397→          <div className="flex items-center gap-2">
+   398→            <Badge variant="secondary" className="text-xs font-semibold">
+   399→              {currentIndex + 1}/{questions.length}
+   400→            </Badge>
+   401→            <Badge
+   402→              variant="secondary"
+   403→              className="text-xs font-semibold text-emerald-600 bg-emerald-50"
+   404→            >
+   405→              <Check className="mr-1 h-3 w-3" />
+   406→              {correctCount}
+   407→            </Badge>
+   408→            {streak >= 3 && (
+   409→              <motion.div
+   410→                initial={{ scale: 0 }}
+   411→                animate={{ scale: 1 }}
+   412→                transition={{ type: 'spring', stiffness: 500, damping: 15 }}
+   413→              >
+   414→                <Badge className="text-xs font-semibold text-orange-600 bg-orange-50 border-orange-200">
+   415→                  <Flame className="mr-1 h-3 w-3" />
+   416→                  {streak}
+   417→                </Badge>
+   418→              </motion.div>
+   419→            )}
+   420→          </div>
+   421→        </div>
+   422→
+   423→        {/* Progress Bar */}
+   424→        <Progress value={((currentIndex + 1) / questions.length) * 100} className="h-2" />
+   425→
+   426→        {/* Timer Bar */}
+   427→        {timerEnabled && (
+   428→          <div className="relative">
+   429→            <Progress
+   430→              value={timerProgress}
+   431→              className={cn(
+   432→                'h-1.5 transition-none',
+   433→                timerProgress <= 30 && !isAnswered
+   434→                  ? '[&>div]:bg-red-500'
+   435→                  : timerProgress <= 60 && !isAnswered
+   436→                    ? '[&>div]:bg-amber-500'
+   437→                    : '[&>div]:bg-indigo-500'
+   438→              )}
+   439→            />
+   440→            <div className="absolute right-0 top-0 -translate-y-5">
+   441→              <span className="text-xs text-muted-foreground font-mono">
+   442→                {Math.ceil(timerProgress / 10)}s
+   443→              </span>
+   444→            </div>
+   445→          </div>
+   446→        )}
+   447→
+   448→        {/* Question Card */}
+   449→        <AnimatePresence mode="wait">
+   450→          <motion.div
+   451→            key={currentIndex}
+   452→            initial={{ opacity: 0, x: 40 }}
+   453→            animate={{ opacity: 1, x: 0 }}
+   454→            exit={{ opacity: 0, x: -40 }}
+   455→            transition={{ duration: 0.25, ease: 'easeInOut' }}
+   456→          >
+   457→            <Card className="rounded-2xl border-0 shadow-sm overflow-hidden">
+   458→              <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-6 text-center">
+   459→                <p className="text-white/70 text-xs font-medium uppercase tracking-wider mb-2">
+   460→                  {direction === 'de-to-tr' ? 'Bu kelimenin Turkcesi nedir?' : 'Bu kelimenin Almancasi nedir?'}
+   461→                </p>
+   462→                <p className="text-white text-3xl font-bold tracking-tight">
+   463→                  {promptText}
+   464→                </p>
+   465→                <div className="mt-3 flex justify-center">
+   466→                  <SpeakButton text={promptText} lang={speakLang} size="sm" variant="subtle" />
+   467→                </div>
+   468→              </div>
+   469→
+   470→              <CardContent className="p-4 space-y-2.5">
+   471→                {currentQuestion.options.map((option, idx) => {
+   472→                  const isThisCorrect = idx === currentQuestion.correctIndex;
+   473→                  const isSelected = selectedOption === idx;
+   474→                  const isTimeUpSelected = isTimeUpWrong && isThisCorrect;
+   475→
+   476→                  let optionClass = 'border-border hover:bg-accent/50 text-foreground';
+   477→
+   478→                  if (isAnswered) {
+   479→                    if (isThisCorrect) {
+   480→                      optionClass =
+   481→                        'border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-50';
+   482→                    } else if (isSelected) {
+   483→                      optionClass =
+   484→                        'border-red-300 bg-red-50 text-red-700 hover:bg-red-50';
+   485→                    } else {
+   486→                      optionClass = 'border-border/50 text-muted-foreground opacity-60';
+   487→                    }
+   488→                  }
+   489→
+   490→                  return (
+   491→                    <Button
+   492→                      key={idx}
+   493→                      variant="outline"
+   494→                      disabled={isAnswered}
+   495→                      className={cn(
+   496→                        'w-full justify-start h-14 px-4 rounded-xl text-base font-medium transition-all',
+   497→                        optionClass
+   498→                      )}
+   499→                      onClick={() => handleAnswer(idx)}
+   500→                    >
+   501→                      <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-muted text-xs font-bold mr-3 shrink-0">
+   502→                        {String.fromCharCode(65 + idx)}
+   503→                      </span>
+   504→                      <span className="flex-1 text-left">{option}</span>
+   505→                      {isAnswered && isThisCorrect && (
+   506→                        <motion.div
+   507→                          initial={{ scale: 0 }}
+   508→                          animate={{ scale: 1 }}
+   509→                          transition={{ type: 'spring', stiffness: 500 }}
+   510→                        >
+   511→                          <Check className="h-5 w-5 text-emerald-600" />
+   512→                        </motion.div>
+   513→                      )}
+   514→                      {isAnswered && isSelected && !isThisCorrect && (
+   515→                        <motion.div
+   516→                          initial={{ scale: 0 }}
+   517→                          animate={{ scale: 1 }}
+   518→                          transition={{ type: 'spring', stiffness: 500 }}
+   519→                        >
+   520→                          <X className="h-5 w-5 text-red-600" />
+   521→                        </motion.div>
+   522→                      )}
+   523→                    </Button>
+   524→                  );
+   525→                })}
+   526→              </CardContent>
+   527→            </Card>
+   528→          </motion.div>
+   529→        </AnimatePresence>
+   530→
+   531→        {/* Streak Display */}
+   532→        {streak >= 3 && (
+   533→          <motion.div
+   534→            className="flex items-center justify-center gap-2 text-orange-500"
+   535→            initial={{ opacity: 0, y: 10 }}
+   536→            animate={{ opacity: 1, y: 0 }}
+   537→          >
+   538→            <Flame className="h-5 w-5" />
+   539→            <span className="text-sm font-bold">{streak} seri dogru!</span>
+   540→          </motion.div>
+   541→        )}
+   542→      </div>
+   543→    );
+   544→  }
+   545→
+   546→  // ======================== SUMMARY SCREEN ========================
+   547→  if (screen === 'summary') {
+   548→    const wrongCount = questions.length - correctCount;
+   549→    const accuracy = Math.round((correctCount / questions.length) * 100);
+   550→    const avgTime =
+   551→      timerEnabled && answerTimes.length > 0
+   552→        ? (answerTimes.reduce((a, b) => a + b, 0) / answerTimes.length).toFixed(1)
+   553→        : null;
+   554→
+   555→    const getEmojiFeedback = () => {
+   556→      if (accuracy >= 90) return { label: 'Muhtesem!', color: 'text-emerald-500' };
+   557→      if (accuracy >= 70) return { label: 'Cok iyi!', color: 'text-blue-500' };
+   558→      if (accuracy >= 50) return { label: 'Iyi calisma!', color: 'text-amber-500' };
+   559→      return { label: 'Tekrar dene!', color: 'text-red-500' };
+   560→    };
+   561→
+   562→    const feedback = getEmojiFeedback();
+   563→
+   564→    return (
+   565→      <div className="space-y-6">
+   566→        {/* Header */}
+   567→        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 text-white text-center shadow-sm">
+   568→          <motion.div
+   569→            initial={{ scale: 0 }}
+   570→            animate={{ scale: 1 }}
+   571→            transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+   572→          >
+   573→            <Trophy className="h-12 w-12 mx-auto mb-3 text-yellow-300" />
+   574→          </motion.div>
+   575→          <h2 className="text-2xl font-bold mb-1">Quiz Tamamlandi!</h2>
+   576→          <p className={cn('text-lg font-semibold', feedback.color)}>{feedback.label}</p>
+   577→        </div>
+   578→
+   579→        {/* Stats Card */}
+   580→        <Card className="rounded-2xl border-0 shadow-sm">
+   581→          <CardContent className="p-5">
+   582→            <div className="grid grid-cols-2 gap-4">
+   583→              {/* Correct */}
+   584→              <div className="bg-emerald-50 rounded-xl p-4 text-center">
+   585→                <div className="flex items-center justify-center gap-1.5 mb-1">
+   586→                  <Check className="h-4 w-4 text-emerald-500" />
+   587→                  <span className="text-xs font-medium text-emerald-600">Dogru</span>
+   588→                </div>
+   589→                <p className="text-2xl font-bold text-emerald-700">{correctCount}</p>
+   590→              </div>
+   591→
+   592→              {/* Wrong */}
+   593→              <div className="bg-red-50 rounded-xl p-4 text-center">
+   594→                <div className="flex items-center justify-center gap-1.5 mb-1">
+   595→                  <X className="h-4 w-4 text-red-500" />
+   596→                  <span className="text-xs font-medium text-red-600">Yanlis</span>
+   597→                </div>
+   598→                <p className="text-2xl font-bold text-red-700">{wrongCount}</p>
+   599→              </div>
+   600→
+   601→              {/* Accuracy */}
+   602→              <div className="bg-indigo-50 rounded-xl p-4 text-center">
+   603→                <div className="flex items-center justify-center gap-1.5 mb-1">
+   604→                  <Target className="h-4 w-4 text-indigo-500" />
+   605→                  <span className="text-xs font-medium text-indigo-600">Dogruluk</span>
+   606→                </div>
+   607→                <p className="text-2xl font-bold text-indigo-700">%{accuracy}</p>
+   608→              </div>
+   609→
+   610→              {/* Best Streak */}
+   611→              <div className="bg-orange-50 rounded-xl p-4 text-center">
+   612→                <div className="flex items-center justify-center gap-1.5 mb-1">
+   613→                  <Flame className="h-4 w-4 text-orange-500" />
+   614→                  <span className="text-xs font-medium text-orange-600">En Iyi Seri</span>
+   615→                </div>
+   616→                <p className="text-2xl font-bold text-orange-700">{bestStreak}</p>
+   617→              </div>
+   618→            </div>
+   619→
+   620→            {/* Average Time (if timer was on) */}
+   621→            {avgTime && (
+   622→              <>
+   623→                <Separator className="my-4" />
+   624→                <div className="bg-purple-50 rounded-xl p-4 text-center">
+   625→                  <div className="flex items-center justify-center gap-1.5 mb-1">
+   626→                    <Clock className="h-4 w-4 text-purple-500" />
+   627→                    <span className="text-xs font-medium text-purple-600">Ortalama Sure</span>
+   628→                  </div>
+   629→                  <p className="text-2xl font-bold text-purple-700">{avgTime}s</p>
+   630→                </div>
+   631→              </>
+   632→            )}
+   633→          </CardContent>
+   634→        </Card>
+   635→
+   636→        {/* Score Bar Visualization */}
+   637→        <Card className="rounded-2xl border-0 shadow-sm">
+   638→          <CardContent className="p-5 space-y-3">
+   639→            <div className="flex items-center justify-between">
+   640→              <span className="text-sm font-medium text-muted-foreground">Genel Performans</span>
+   641→              <span className="text-sm font-bold text-foreground">%{accuracy}</span>
+   642→            </div>
+   643→            <div className="relative h-4 w-full rounded-full bg-muted overflow-hidden">
+   644→              <motion.div
+   645→                className={cn(
+   646→                  'h-full rounded-full',
+   647→                  accuracy >= 70
+   648→                    ? 'bg-gradient-to-r from-emerald-400 to-emerald-500'
+   649→                    : accuracy >= 50
+   650→                      ? 'bg-gradient-to-r from-amber-400 to-amber-500'
+   651→                      : 'bg-gradient-to-r from-red-400 to-red-500'
+   652→                )}
+   653→                initial={{ width: 0 }}
+   654→                animate={{ width: `${accuracy}%` }}
+   655→                transition={{ duration: 0.8, ease: 'easeOut', delay: 0.3 }}
+   656→              />
+   657→            </div>
+   658→            <div className="flex justify-between text-xs text-muted-foreground">
+   659→              <span>0%</span>
+   660→              <span>50%</span>
+   661→              <span>100%</span>
+   662→            </div>
+   663→          </CardContent>
+   664→        </Card>
+   665→
+   666→        {/* Action Buttons */}
+   667→        <div className="space-y-3">
+   668→          <Button
+   669→            className={cn(
+   670→              'w-full h-12 rounded-2xl text-base font-bold shadow-sm border-0',
+   671→              'bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700'
+   672→            )}
+   673→            onClick={handleRetry}
+   674→          >
+   675→            <TrendingUp className="mr-2 h-5 w-5" />
+   676→            Tekrar Dene
+   677→          </Button>
+   678→          <Button
+   679→            variant="outline"
+   680→            className="w-full h-12 rounded-2xl text-base font-semibold"
+   681→            onClick={handleGoHome}
+   682→          >
+   683→            <Home className="mr-2 h-5 w-5" />
+   684→            Ana Menuye Don
+   685→          </Button>
+   686→        </div>
+   687→      </div>
+   688→    );
+   689→  }
+   690→
+   691→  // Fallback (should not happen)
+   692→  return null;
+   693→}
+   694→

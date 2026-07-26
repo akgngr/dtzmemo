@@ -18,3 +18,38 @@ Stage Summary:
 - Uygulama sorunsuz çalışır durumda
 - Build hatası veya çalışma zamanı hatası tespit edilmedi
 - Sunucu http://localhost:3000 adresinde aktif
+
+---
+Task ID: 2
+Agent: main
+Task: VocabExplorerModule hydration hatası düzeltme + PronunciationTrainer geri butonu
+
+Work Log:
+- VocabExplorerModule.tsx: motion.button içinde SpeakButton (button) kullanılması hydration hatası veriyordu
+- Çözüm: motion.button → motion.div (role="button", tabIndex, onKeyDown) ile değiştirildi
+- PronunciationTrainerModule.tsx: Pratik ekranına "← Geri Dön" butonu eklendi (setScreen('topics'))
+- Build başarıyla geçti
+
+Stage Summary:
+- Hydration hatası giderildi
+- Telaffuz modülüne geri navigasyonu eklendi
+
+---
+Task ID: 3
+Agent: main
+Task: 4 yeni özellik modülü oluştur ve kaydet
+
+Work Log:
+- SpacedRepetitionModule.tsx: SM-2 aralıklı tekrar sistemi (overview/review/summary ekranları, due card tespiti, Easy/Medium/Hard puanlama)
+- ListeningModule.tsx: Dinleme anlama pratiği (easy/medium/hard modlar, TTS ile dinleme, 4 seçenekli cevap)
+- QuizModule.tsx: Çoktan seçmeli quiz (10/15/20 soru, DE→TR/TR→DE yön, opsiyonel timer, streak takibi)
+- AchievementsModule.tsx: Günlük hedefler (20 kart, %80 doğruluk, seri) + 12 başarımlık rozet sistemi
+- constants.ts: 4 yeni nav item eklendi (Tekrar, Dinleme, Quiz, Başarımlar) + icon importları
+- page.tsx: 4 yeni modül import ve moduleMap kaydı
+- Dashboard.tsx: 4 yeni hızlı başlangıç kartı eklendi
+- store.ts: saveExerciseResult labels'a 3 yeni egzersiz tipi eklendi
+- Build: 0 hata ile başarıyla geçti
+
+Stage Summary:
+- Toplam 4 yeni modül oluşturuldu ve uygulamaya entegre edildi
+- Uygulama artık 17 aktif modüle sahip
