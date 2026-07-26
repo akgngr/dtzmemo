@@ -20,6 +20,8 @@ import { DragDropModule } from '@/components/modules/DragDropModule';
 import { MatchingModule } from '@/components/modules/MatchingModule';
 import { WordMemorizationModule } from '@/components/modules/WordMemorizationModule';
 import { VocabModule } from '@/components/modules/VocabModule';
+import { VocabExplorerModule } from '@/components/modules/VocabExplorerModule';
+import { PronunciationTrainerModule } from '@/components/modules/PronunciationTrainerModule';
 import { CompetitionModule } from '@/components/modules/CompetitionModule';
 import { ConversationModule } from '@/components/modules/ConversationModule';
 import { StatisticsModule } from '@/components/modules/StatisticsModule';
@@ -34,6 +36,8 @@ const moduleMap: Record<string, React.ComponentType> = {
   matching: MatchingModule,
   'kelime-ezber': WordMemorizationModule,
   vocab: VocabModule,
+  'vocab-explorer': VocabExplorerModule,
+  pronunciation: PronunciationTrainerModule,
   conversation: ConversationModule,
   competition: CompetitionModule,
   statistics: StatisticsModule,

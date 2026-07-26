@@ -39,6 +39,8 @@ import {
   X,
   Sparkles,
   MessageCircle,
+  Mic,
+  Compass,
 } from 'lucide-react';
 import { categories } from '@/lib/german-data';
 
@@ -112,6 +114,8 @@ export const navItems = [
   { id: 'matching', label: 'Eşleştirme', icon: ArrowLeftRight },
   { id: 'kelime-ezber', label: 'Kelime Ezber', icon: Sparkles },
   { id: 'vocab', label: 'Kelimeler', icon: BookOpen },
+  { id: 'vocab-explorer', label: 'Kelime Gezgini', icon: Compass },
+  { id: 'pronunciation', label: 'Telaffuz', icon: Mic },
   { id: 'conversation', label: 'Konuşma', icon: MessageCircle },
   { id: 'competition', label: 'Yarışma', icon: Timer },
   { id: 'statistics', label: 'İstatistik', icon: BarChart3 },
