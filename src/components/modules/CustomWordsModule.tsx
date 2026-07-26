@@ -20,6 +20,11 @@ import {
   ListChecks,
   Copy,
   Check,
+  Download,
+  RotateCcw,
+  ArrowRight,
+  Volume2,
+  Shuffle,
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -154,6 +159,30 @@ function generateId(): string {
   return `cwl-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
+/** Build CSV string from word pairs */
+function buildCSV(words: CustomWord[]): string {
+  const lines = ['almanca,türkçe'];
+  for (const w of words) {
+    const german = w.german.includes(',') ? `"${w.german}"` : w.german;
+    const turkish = w.turkish.includes(',') ? `"${w.turkish}"` : w.turkish;
+    lines.push(`${german},${turkish}`);
+  }
+  return lines.join('\n');
+}
+
+/** Trigger a CSV file download */
+function downloadCSV(content: string, filename: string) {
+  const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 function formatDate(isoString: string): string {
   try {
     const d = new Date(isoString);
@@ -194,7 +223,7 @@ const staggerContainer = {
 
 export function CustomWordsModule() {
   // ── Screen state ──────────────────────────────────────────────────────────
-  const [screen, setScreen] = useState<'lists' | 'detail'>('lists');
+  const [screen, setScreen] = useState<'lists' | 'detail' | 'practice'>('lists');
   const [selectedListId, setSelectedListId] = useState<string | null>(null);
 
   // ── Store integration with fallback ───────────────────────────────────────
@@ -260,6 +289,19 @@ export function CustomWordsModule() {
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // ── Add word to existing list state ────────────────────────────────────────
+  const [showAddWord, setShowAddWord] = useState(false);
+  const [addWordGerman, setAddWordGerman] = useState('');
+  const [addWordTurkish, setAddWordTurkish] = useState('');
+
+  // ── Practice (Flashcard) state ────────────────────────────────────────────
+  const [practiceWords, setPracticeWords] = useState<CustomWord[]>([]);
+  const [practiceIndex, setPracticeIndex] = useState(0);
+  const [practiceFlipped, setPracticeFlipped] = useState(false);
+  const [practiceKnown, setPracticeKnown] = useState(0);
+  const [practiceUnknown, setPracticeUnknown] = useState(0);
+  const [practiceShuffled, setPracticeShuffled] = useState(false);
 
   // ── Toast auto-dismiss ────────────────────────────────────────────────────
   useEffect(() => {
@@ -435,6 +477,19 @@ export function CustomWordsModule() {
     setSelectedListId(null);
     setDeleteConfirm(false);
     setShareCopied(false);
+    setShowAddWord(false);
+    setAddWordGerman('');
+    setAddWordTurkish('');
+  };
+
+  const handleBackFromPractice = () => {
+    setScreen('detail');
+    setPracticeWords([]);
+    setPracticeIndex(0);
+    setPracticeFlipped(false);
+    setPracticeKnown(0);
+    setPracticeUnknown(0);
+    setPracticeShuffled(false);
   };
 
   const handleDeleteList = () => {
@@ -461,9 +516,81 @@ export function CustomWordsModule() {
     }
   };
 
-  const handlePractice = () => {
-    setToastMessage('Flashcard modu yakında bu liste için kullanılabilecek.');
+  // ── CSV Export ─────────────────────────────────────────────────────────────
+  const handleExportCSV = () => {
+    if (!selectedList || selectedList.words.length === 0) {
+      setToastMessage('Dışa aktarılacak kelime yok.');
+      return;
+    }
+    const csv = buildCSV(selectedList.words);
+    const safeName = selectedList.name.replace(/[^a-zA-Z0-9ğüşıöçĞÜŞİÖÇ\s-_]/g, '').replace(/\s+/g, '_');
+    downloadCSV(csv, `${safeName}.csv`);
+    setToastMessage(`"${selectedList.name}" CSV olarak indirildi.`);
   };
+
+  // ── Add word to existing list ──────────────────────────────────────────────
+  const handleAddWordToExistingList = () => {
+    if (!selectedListId) return;
+    const german = addWordGerman.trim();
+    const turkish = addWordTurkish.trim();
+    if (!german || !turkish) {
+      setToastMessage('Hem Almanca hem Türkçe alanlarını doldurun.');
+      return;
+    }
+    const updatedList: CustomWordList = {
+      ...selectedList!,
+      words: [...selectedList!.words, { german, turkish }],
+    };
+    if (hasStoreSupport && storeState.addCustomWordList) {
+      storeState.deleteCustomWordList(selectedListId);
+      storeState.addCustomWordList(updatedList);
+    } else {
+      setLocalLists((prev) => prev.map((l) => (l.id === selectedListId ? updatedList : l)));
+    }
+    setAddWordGerman('');
+    setAddWordTurkish('');
+    setToastMessage('Yeni kelime listeye eklendi.');
+  };
+
+  // ── Practice (Flashcard) ──────────────────────────────────────────────────
+  const handlePractice = () => {
+    if (!selectedList || selectedList.words.length === 0) {
+      setToastMessage('Bu listede pratik yapılacak kelime yok.');
+      return;
+    }
+    const words = practiceShuffled
+      ? [...selectedList.words].sort(() => Math.random() - 0.5)
+      : [...selectedList.words];
+    setPracticeWords(words);
+    setPracticeIndex(0);
+    setPracticeFlipped(false);
+    setPracticeKnown(0);
+    setPracticeUnknown(0);
+    setScreen('practice');
+  };
+
+  const handleFlipCard = () => {
+    setPracticeFlipped((prev) => !prev);
+  };
+
+  const handlePracticeAnswer = (known: boolean) => {
+    if (known) {
+      setPracticeKnown((prev) => prev + 1);
+    } else {
+      setPracticeUnknown((prev) => prev + 1);
+    }
+    if (practiceIndex + 1 >= practiceWords.length) {
+      // Session complete
+      setPracticeFlipped(false);
+    } else {
+      setPracticeIndex((prev) => prev + 1);
+      setPracticeFlipped(false);
+    }
+  };
+
+  const practiceComplete = practiceWords.length > 0 && practiceIndex >= practiceWords.length;
+  const practiceProgress = practiceWords.length > 0 ? ((practiceIndex + (practiceComplete ? 0 : 1)) / practiceWords.length) * 100 : 0;
+  const currentPracticeWord = practiceWords[practiceIndex] ?? null;
 
   const handleDeleteWordFromList = (wordIndex: number) => {
     if (!selectedListId) return;
@@ -897,7 +1024,7 @@ export function CustomWordsModule() {
             )}
           </motion.div>
         </motion.div>
-      ) : (
+      ) : screen === 'detail' ? (
         /* ═══════════════════════════════════════════════════════════════════
            DETAIL SCREEN
            ═══════════════════════════════════════════════════════════════════ */
@@ -985,15 +1112,97 @@ export function CustomWordsModule() {
                 </div>
               </div>
 
+              {/* Add word to list */}
+              <motion.div variants={fadeInUp}>
+                <Card className="rounded-2xl border-0 shadow-sm">
+                  <CardContent className="p-4">
+                    <button
+                      onClick={() => setShowAddWord((prev) => !prev)}
+                      className="flex w-full items-center justify-between text-sm font-semibold text-gray-700"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Plus className="h-4 w-4 text-teal-600" />
+                        Listeye Kelime Ekle
+                      </div>
+                      <motion.span
+                        animate={{ rotate: showAddWord ? 45 : 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <Plus className="h-4 w-4 text-gray-400" />
+                      </motion.span>
+                    </button>
+                    <AnimatePresence>
+                      {showAddWord && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="mt-3 space-y-2">
+                            <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_auto]">
+                              <Input
+                                placeholder="Almanca"
+                                value={addWordGerman}
+                                onChange={(e) => setAddWordGerman(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && handleAddWordToExistingList()}
+                                className="h-9 rounded-lg"
+                              />
+                              <Input
+                                placeholder="Türkçe"
+                                value={addWordTurkish}
+                                onChange={(e) => setAddWordTurkish(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && handleAddWordToExistingList()}
+                                className="h-9 rounded-lg"
+                              />
+                              <Button
+                                onClick={handleAddWordToExistingList}
+                                size="sm"
+                                className="h-9 rounded-xl bg-teal-600 hover:bg-teal-700 text-white"
+                              >
+                                <Plus className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
               {/* Action buttons */}
               <div className="space-y-2">
-                {/* Practice button */}
+                {/* Practice button with shuffle option */}
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => { setPracticeShuffled(false); handlePractice(); }}
+                    className="flex-1 bg-teal-600 hover:bg-teal-700 text-white rounded-xl"
+                    disabled={selectedList.words.length === 0}
+                  >
+                    <BookOpen className="mr-2 h-4 w-4" />
+                    Sıralı Çalış
+                  </Button>
+                  <Button
+                    onClick={() => { setPracticeShuffled(true); handlePractice(); }}
+                    variant="outline"
+                    className="rounded-xl"
+                    disabled={selectedList.words.length === 0}
+                    title="Karıştırılmış sırayla çalış"
+                  >
+                    <Shuffle className="h-4 w-4" />
+                  </Button>
+                </div>
+
+                {/* Export CSV button */}
                 <Button
-                  onClick={handlePractice}
-                  className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-xl"
+                  variant="outline"
+                  onClick={handleExportCSV}
+                  className="w-full rounded-xl"
+                  disabled={selectedList.words.length === 0}
                 >
-                  <BookOpen className="mr-2 h-4 w-4" />
-                  Bu Listeyle Çalış
+                  <Download className="mr-2 h-4 w-4" />
+                  CSV Olarak İndir
                 </Button>
 
                 {/* Share button */}
@@ -1070,6 +1279,214 @@ export function CustomWordsModule() {
               </Button>
             </div>
           )}
+        </motion.div>
+      ) : (
+        /* ═══════════════════════════════════════════════════════════════════
+           PRACTICE SCREEN (Flashcard)
+           ═══════════════════════════════════════════════════════════════════ */
+        <motion.div
+          key="practice-screen"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          className="space-y-5"
+        >
+          {/* Back + progress bar */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleBackFromPractice}
+                className="-ml-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+              >
+                <ChevronLeft className="mr-1 h-4 w-4" />
+                Listeye Dön
+              </Button>
+              <span className="text-xs text-gray-500">
+                {Math.min(practiceIndex + 1, practiceWords.length)} / {practiceWords.length}
+              </span>
+            </div>
+
+            {/* Progress bar */}
+            <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
+              <motion.div
+                className="h-full rounded-full bg-gradient-to-r from-teal-500 to-green-500"
+                animate={{ width: `${practiceProgress}%` }}
+                transition={{ duration: 0.3 }}
+              />
+            </div>
+
+            {/* Stats row */}
+            <div className="flex items-center justify-center gap-6 text-xs text-gray-500">
+              <div className="flex items-center gap-1">
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+                <span>Bildi: <strong className="text-emerald-600">{practiceKnown}</strong></span>
+              </div>
+              <div className="flex items-center gap-1">
+                <X className="h-3.5 w-3.5 text-red-400" />
+                <span>Bilmedi: <strong className="text-red-500">{practiceUnknown}</strong></span>
+              </div>
+            </div>
+          </div>
+
+          {!practiceComplete && currentPracticeWord ? (
+            <>
+              {/* Flashcard */}
+              <div className="flex justify-center">
+                <motion.div
+                  onClick={handleFlipCard}
+                  className="relative w-full max-w-sm cursor-pointer select-none overflow-hidden rounded-2xl bg-white shadow-lg"
+                  style={{ perspective: 600 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={practiceIndex}
+                      initial={{ opacity: 0, rotateY: -30 }}
+                      animate={{ opacity: 1, rotateY: 0 }}
+                      exit={{ opacity: 0, rotateY: 30 }}
+                      transition={{ duration: 0.25 }}
+                      className="p-8 text-center"
+                    >
+                      <p className="mb-1 text-xs font-medium uppercase tracking-wider text-gray-400">
+                        Almanca
+                      </p>
+                      <p className="text-2xl font-bold text-gray-800">
+                        {currentPracticeWord.german}
+                      </p>
+
+                      <AnimatePresence>
+                        {practiceFlipped && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -8 }}
+                          >
+                            <Separator className="my-4" />
+                            <p className="mb-1 text-xs font-medium uppercase tracking-wider text-gray-400">
+                              Türkçe
+                            </p>
+                            <p className="text-xl font-semibold text-teal-700">
+                              {currentPracticeWord.turkish}
+                            </p>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+
+                      {!practiceFlipped && (
+                        <p className="mt-6 text-xs text-gray-400">
+                          Cevabı görmek için tıklayın
+                        </p>
+                      )}
+                    </motion.div>
+                  </AnimatePresence>
+                </motion.div>
+              </div>
+
+              {/* Answer buttons (only shown after flip) */}
+              <AnimatePresence>
+                {practiceFlipped && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 8 }}
+                    className="flex gap-3"
+                  >
+                    <Button
+                      onClick={() => handlePracticeAnswer(false)}
+                      variant="outline"
+                      className="flex-1 rounded-xl border-red-200 py-6 text-red-600 hover:bg-red-50 hover:text-red-700"
+                    >
+                      <X className="mr-2 h-5 w-5" />
+                      Bilmedim
+                    </Button>
+                    <Button
+                      onClick={() => handlePracticeAnswer(true)}
+                      className="flex-1 rounded-xl bg-emerald-600 py-6 text-white hover:bg-emerald-700"
+                    >
+                      <Check className="mr-2 h-5 w-5" />
+                      Bildim
+                    </Button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </>
+          ) : practiceComplete ? (
+            /* ── Session Summary ─────────────────────────────────────── */
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="space-y-5"
+            >
+              <div className="rounded-2xl bg-gradient-to-br from-teal-500 to-green-600 p-8 text-center text-white shadow-lg">
+                <div className="mb-3 flex justify-center">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/20 backdrop-blur">
+                    <CheckCircle2 className="h-8 w-8" />
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold">Pratik Tamamlandı!</h3>
+                <p className="mt-2 text-sm text-white/80">
+                  {practiceWords.length} kelime çalışıldı
+                </p>
+
+                <div className="mt-6 flex items-center justify-center gap-8">
+                  <div className="text-center">
+                    <p className="text-3xl font-bold">{practiceKnown}</p>
+                    <p className="mt-1 text-xs text-white/70">Bildi</p>
+                  </div>
+                  <div className="h-10 w-px bg-white/30" />
+                  <div className="text-center">
+                    <p className="text-3xl font-bold">{practiceUnknown}</p>
+                    <p className="mt-1 text-xs text-white/70">Bilmedi</p>
+                  </div>
+                  <div className="h-10 w-px bg-white/30" />
+                  <div className="text-center">
+                    <p className="text-3xl font-bold">
+                      {practiceWords.length > 0
+                        ? Math.round((practiceKnown / practiceWords.length) * 100)
+                        : 0}%
+                    </p>
+                    <p className="mt-1 text-xs text-white/70">Doğruluk</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action buttons for summary */}
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => {
+                    setPracticeShuffled(false);
+                    handlePractice();
+                  }}
+                  variant="outline"
+                  className="flex-1 rounded-xl"
+                >
+                  <RotateCcw className="mr-2 h-4 w-4" />
+                  Tekrar Çalış
+                </Button>
+                <Button
+                  onClick={() => {
+                    setPracticeShuffled(true);
+                    handlePractice();
+                  }}
+                  variant="outline"
+                  className="flex-1 rounded-xl"
+                >
+                  <Shuffle className="mr-2 h-4 w-4" />
+                  Karıştır
+                </Button>
+              </div>
+              <Button
+                onClick={handleBackFromPractice}
+                className="w-full rounded-xl"
+                variant="ghost"
+              >
+                <ArrowRight className="mr-2 h-4 w-4" />
+                Listeye Dön
+              </Button>
+            </motion.div>
+          ) : null}
         </motion.div>
       )}
     </div>
