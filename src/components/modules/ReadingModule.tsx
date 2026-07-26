@@ -28,7 +28,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Textarea } from '@/components/ui/Textarea';
 import { useAppStore } from '@/lib/store';
 import type { CustomReadingExercise, CustomReadingQuestion } from '@/lib/store';
 import { cn } from '@/lib/utils';

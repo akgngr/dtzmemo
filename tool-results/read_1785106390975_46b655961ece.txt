@@ -1,0 +1,1595 @@
+     1→'use client';
+     2→
+     3→import React, { useState, useRef, useEffect, useCallback } from 'react';
+     4→import { motion, AnimatePresence } from 'framer-motion';
+     5→import {
+     6→  FolderPlus,
+     7→  Upload,
+     8→  Plus,
+     9→  X,
+    10→  Trash2,
+    11→  ChevronLeft,
+    12→  Share2,
+    13→  BookOpen,
+    14→  FileText,
+    15→  FileJson,
+    16→  Link,
+    17→  AlertCircle,
+    18→  CheckCircle2,
+    19→  FolderOpen,
+    20→  Pencil,
+    21→  ListChecks,
+    22→  Copy,
+    23→  Check,
+    24→  Download,
+    25→  RotateCcw,
+    26→  ArrowRight,
+    27→  Volume2,
+    28→  Shuffle,
+    29→} from 'lucide-react';
+    30→import { Card, CardContent } from '@/components/ui/card';
+    31→import { Button } from '@/components/ui/button';
+    32→import { Badge } from '@/components/ui/badge';
+    33→import { Input } from '@/components/ui/input';
+    34→import { Separator } from '@/components/ui/separator';
+    35→import { cn } from '@/lib/utils';
+    36→import { useAppStore } from '@/lib/store';
+    37→
+    38→// ── Data Types ──────────────────────────────────────────────────────────────
+    39→
+    40→interface CustomWord {
+    41→  german: string;
+    42→  turkish: string;
+    43→}
+    44→
+    45→interface CustomWordList {
+    46→  id: string;
+    47→  name: string;
+    48→  description: string;
+    49→  words: CustomWord[];
+    50→  createdAt: string;
+    51→  category: string;
+    52→}
+    53→
+    54→// ── Helpers ─────────────────────────────────────────────────────────────────
+    55→
+    56→/** Simple heuristic: does a string contain Turkish-only special chars? */
+    57→function hasTurkishSpecialChars(str: string): boolean {
+    58→  return /[şığüşçöİŞĞÜŞÇÖ]/.test(str);
+    59→}
+    60→
+    61→/** Check if a string looks like a CSV header (e.g. "german,turkish" or "Almanca,Türkçe") */
+    62→function looksLikeHeader(first: string, second: string): boolean {
+    63→  const headerKeywords = ['german', 'turkish', 'almanca', 'türkçe', 'deutsch', 'de', 'tr', 'kelime', 'word', 'çeviri', 'translation'];
+    64→  const combined = (first + ' ' + second).toLowerCase();
+    65→  return headerKeywords.some((k) => combined.includes(k));
+    66→}
+    67→
+    68→/** Parse CSV content into word pairs */
+    69→function parseCSV(content: string): CustomWord[] {
+    70→  // Strip BOM if present
+    71→  let cleaned = content.replace(/^\uFEFF/, '');
+    72→
+    73→  // Normalize line endings
+    74→  cleaned = cleaned.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    75→
+    76→  const lines = cleaned.split('\n').filter((line) => line.trim().length > 0);
+    77→
+    78→  if (lines.length === 0) return [];
+    79→
+    80→  let startIndex = 0;
+    81→
+    82→  // Check if the first line is a header
+    83→  if (lines.length > 1) {
+    84→    const firstLineParts = lines[0].split(',').map((s) => s.trim());
+    85→    if (firstLineParts.length >= 2) {
+    86→      const col1 = firstLineParts[0];
+    87→      const col2 = firstLineParts[1];
+    88→      // Skip if it looks like a header
+    89→      if (looksLikeHeader(col1, col2) || hasTurkishSpecialChars(col1)) {
+    90→        startIndex = 1;
+    91→      }
+    92→    }
+    93→  }
+    94→
+    95→  const words: CustomWord[] = [];
+    96→
+    97→  for (let i = startIndex; i < lines.length; i++) {
+    98→    const parts = lines[i].split(',').map((s) => s.trim());
+    99→    if (parts.length >= 2 && parts[0] && parts[1]) {
+   100→      words.push({ german: parts[0], turkish: parts[1] });
+   101→    }
+   102→  }
+   103→
+   104→  return words;
+   105→}
+   106→
+   107→/** Encode a list to a base64 share string */
+   108→function encodeList(list: Omit<CustomWordList, 'id' | 'createdAt' | 'category'>): string {
+   109→  const payload = { n: list.name, d: list.description, w: list.words };
+   110→  return btoa(JSON.stringify(payload));
+   111→}
+   112→
+   113→/** Decode a base64 share string */
+   114→function decodeList(encoded: string): { name: string; description: string; words: CustomWord[] } | null {
+   115→  try {
+   116→    const payload = JSON.parse(atob(encoded));
+   117→    if (payload && payload.w && Array.isArray(payload.w)) {
+   118→      return {
+   119→        name: payload.n || 'İçe Aktarılan Liste',
+   120→        description: payload.d || '',
+   121→        words: payload.w.filter(
+   122→          (w: any) => typeof w.german === 'string' && typeof w.turkish === 'string' && w.german && w.turkish
+   123→        ),
+   124→      };
+   125→    }
+   126→    return null;
+   127→  } catch {
+   128→    return null;
+   129→  }
+   130→}
+   131→
+   132→function generateShareURL(list: Omit<CustomWordList, 'id' | 'createdAt' | 'category'>): string {
+   133→  const base64 = encodeList(list);
+   134→  return window.location.origin + window.location.pathname + '?import=' + encodeURIComponent(base64);
+   135→}
+   136→
+   137→async function copyToClipboard(text: string): Promise<boolean> {
+   138→  try {
+   139→    await navigator.clipboard.writeText(text);
+   140→    return true;
+   141→  } catch {
+   142→    // Fallback for older browsers / restricted contexts
+   143→    try {
+   144→      const textarea = document.createElement('textarea');
+   145→      textarea.value = text;
+   146→      textarea.style.position = 'fixed';
+   147→      textarea.style.opacity = '0';
+   148→      document.body.appendChild(textarea);
+   149→      textarea.select();
+   150→      document.execCommand('copy');
+   151→      document.body.removeChild(textarea);
+   152→      return true;
+   153→    } catch {
+   154→      return false;
+   155→    }
+   156→  }
+   157→}
+   158→
+   159→function generateId(): string {
+   160→  return `cwl-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+   161→}
+   162→
+   163→/** Build CSV string from word pairs */
+   164→function buildCSV(words: CustomWord[]): string {
+   165→  const lines = ['almanca,türkçe'];
+   166→  for (const w of words) {
+   167→    const german = w.german.includes(',') ? `"${w.german}"` : w.german;
+   168→    const turkish = w.turkish.includes(',') ? `"${w.turkish}"` : w.turkish;
+   169→    lines.push(`${german},${turkish}`);
+   170→  }
+   171→  return lines.join('\n');
+   172→}
+   173→
+   174→/** Trigger a CSV file download */
+   175→function downloadCSV(content: string, filename: string) {
+   176→  const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+   177→  const url = URL.createObjectURL(blob);
+   178→  const a = document.createElement('a');
+   179→  a.href = url;
+   180→  a.download = filename;
+   181→  document.body.appendChild(a);
+   182→  a.click();
+   183→  document.body.removeChild(a);
+   184→  URL.revokeObjectURL(url);
+   185→}
+   186→
+   187→function downloadJSON(content: string, filename: string) {
+   188→  const blob = new Blob([content], { type: 'application/json;charset=utf-8;' });
+   189→  const url = URL.createObjectURL(blob);
+   190→  const a = document.createElement('a');
+   191→  a.href = url;
+   192→  a.download = filename;
+   193→  document.body.appendChild(a);
+   194→  a.click();
+   195→  document.body.removeChild(a);
+   196→  URL.revokeObjectURL(url);
+   197→}
+   198→
+   199→function downloadSampleCSV() {
+   200→  const csv = 'almanca,türkçe\nGuten Morgen,İyi günler\nAuf Wiedersehen,Hoşça kal\nVielen Dank,Çok teşekkürler\nEntschuldigung,Özür dilerim\n';
+   201→  downloadCSV(csv, 'ornek-kelime-listesi.csv');
+   202→}
+   203→
+   204→function downloadSampleJSON() {
+   205→  const json = JSON.stringify({
+   206→    name: 'Örnek Liste',
+   207→    description: 'Bu bir örnek listedir',
+   208→    words: [
+   209→      { german: 'Guten Morgen', turkish: 'İyi günler' },
+   210→      { german: 'Auf Wiedersehen', turkish: 'Hoşça kal' },
+   211→      { german: 'Vielen Dank', turkish: 'Çok teşekkürler' },
+   212→      { german: 'Entschuldigung', turkish: 'Özür dilerim' },
+   213→    ],
+   214→  }, null, 2);
+   215→  downloadJSON(json, 'ornek-kelime-listesi.json');
+   216→}
+   217→
+   218→/** Build JSON string from word list */
+   219→function buildJSON(words: CustomWord[], name: string, description: string): string {
+   220→  return JSON.stringify({ name, description, words }, null, 2);
+   221→}
+   222→
+   223→function formatDate(isoString: string): string {
+   224→  try {
+   225→    const d = new Date(isoString);
+   226→    return d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' });
+   227→  } catch {
+   228→    return isoString;
+   229→  }
+   230→}
+   231→
+   232→// ── Category options ───────────────────────────────────────────────────────
+   233→
+   234→const CATEGORY_OPTIONS = [
+   235→  'Genel',
+   236→  'Günlük Yaşam',
+   237→  'İş / Meslek',
+   238→  'Eğitim',
+   239→  'Seyahat',
+   240→  'Yiyecek / İçecek',
+   241→  'Sağlık',
+   242→  'Alışveriş',
+   243→  'Teknoloji',
+   244→  'Diğer',
+   245→];
+   246→
+   247→// ── Animation variants ──────────────────────────────────────────────────────
+   248→
+   249→const fadeInUp = {
+   250→  initial: { opacity: 0, y: 16 },
+   251→  animate: { opacity: 1, y: 0 },
+   252→  exit: { opacity: 0, y: -8 },
+   253→};
+   254→
+   255→const staggerContainer = {
+   256→  animate: { transition: { staggerChildren: 0.05 } },
+   257→};
+   258→
+   259→// ── Component ───────────────────────────────────────────────────────────────
+   260→
+   261→export function CustomWordsModule() {
+   262→  // ── Screen state ──────────────────────────────────────────────────────────
+   263→  const [screen, setScreen] = useState<'lists' | 'detail' | 'practice'>('lists');
+   264→  const [selectedListId, setSelectedListId] = useState<string | null>(null);
+   265→
+   266→  // ── Store integration with fallback ───────────────────────────────────────
+   267→  const storeState = useAppStore() as any;
+   268→  const hasStoreSupport = 'customWordLists' in storeState;
+   269→
+   270→  const [localLists, setLocalLists] = useState<CustomWordList[]>([]);
+   271→
+   272→  const lists: CustomWordList[] = hasStoreSupport
+   273→    ? (storeState.customWordLists as CustomWordList[])
+   274→    : localLists;
+   275→
+   276→  const addList = (list: CustomWordList) => {
+   277→    if (hasStoreSupport && storeState.addCustomWordList) {
+   278→      storeState.addCustomWordList(list);
+   279→    } else {
+   280→      setLocalLists((prev) => [...prev, list]);
+   281→    }
+   282→  };
+   283→
+   284→  const deleteList = (id: string) => {
+   285→    if (hasStoreSupport && storeState.deleteCustomWordList) {
+   286→      storeState.deleteCustomWordList(id);
+   287→    } else {
+   288→      setLocalLists((prev) => prev.filter((l) => l.id !== id));
+   289→    }
+   290→  };
+   291→
+   292→  // ── CSV Import state ──────────────────────────────────────────────────────
+   293→  const fileInputRef = useRef<HTMLInputElement>(null);
+   294→
+   295→  // Check for ?import= URL param at init time (before first render)
+   296→  const initialUrlImport = (() => {
+   297→    if (typeof window === 'undefined') return null;
+   298→    const params = new URLSearchParams(window.location.search);
+   299→    const importParam = params.get('import');
+   300→    if (!importParam) return null;
+   301→    return decodeList(importParam);
+   302→  })();
+   303→
+   304→  const [csvParsedWords, setCsvParsedWords] = useState<CustomWord[]>(
+   305→    initialUrlImport?.words ?? []
+   306→  );
+   307→  const [csvImportName, setCsvImportName] = useState(initialUrlImport?.name ?? '');
+   308→  const [csvImportDescription, setCsvImportDescription] = useState(initialUrlImport?.description ?? '');
+   309→  const [csvImportCategory, setCsvImportCategory] = useState('Genel');
+   310→  const [showCsvPreview, setShowCsvPreview] = useState(
+   311→    initialUrlImport && initialUrlImport.words.length > 0
+   312→  );
+   313→
+   314→  // ── Manual entry state ────────────────────────────────────────────────────
+   315→  const [manualListName, setManualListName] = useState('');
+   316→  const [manualListDescription, setManualListDescription] = useState('');
+   317→  const [manualListCategory, setManualListCategory] = useState('Genel');
+   318→  const [manualGermanInput, setManualGermanInput] = useState('');
+   319→  const [manualTurkishInput, setManualTurkishInput] = useState('');
+   320→  const [manualWords, setManualWords] = useState<CustomWord[]>([]);
+   321→
+   322→  // ── URL Import state ──────────────────────────────────────────────────────
+   323→  const [urlImportText, setUrlImportText] = useState('');
+   324→
+   325→  // ── Detail screen state ───────────────────────────────────────────────────
+   326→  const [deleteConfirm, setDeleteConfirm] = useState(false);
+   327→  const [shareCopied, setShareCopied] = useState(false);
+   328→  const [toastMessage, setToastMessage] = useState<string | null>(null);
+   329→
+   330→  // ── Add word to existing list state ────────────────────────────────────────
+   331→  const [showAddWord, setShowAddWord] = useState(false);
+   332→  const [addWordGerman, setAddWordGerman] = useState('');
+   333→  const [addWordTurkish, setAddWordTurkish] = useState('');
+   334→
+   335→  // ── Practice (Flashcard) state ────────────────────────────────────────────
+   336→  const [practiceWords, setPracticeWords] = useState<CustomWord[]>([]);
+   337→  const [practiceIndex, setPracticeIndex] = useState(0);
+   338→  const [practiceFlipped, setPracticeFlipped] = useState(false);
+   339→  const [practiceKnown, setPracticeKnown] = useState(0);
+   340→  const [practiceUnknown, setPracticeUnknown] = useState(0);
+   341→  const [practiceShuffled, setPracticeShuffled] = useState(false);
+   342→
+   343→  // ── Toast auto-dismiss ────────────────────────────────────────────────────
+   344→  useEffect(() => {
+   345→    if (toastMessage) {
+   346→      const timer = setTimeout(() => setToastMessage(null), 2500);
+   347→      return () => clearTimeout(timer);
+   348→    }
+   349→  }, [toastMessage]);
+   350→
+   351→  // ── Selected list data ────────────────────────────────────────────────────
+   352→  const selectedList = lists.find((l) => l.id === selectedListId) ?? null;
+   353→
+   354→  // ── Handlers ──────────────────────────────────────────────────────────────
+   355→
+   356→  const handleFileSelect = useCallback((file: File) => {
+   357→    if (!file.name.endsWith('.csv') && !file.name.endsWith('.json')) {
+   358→      setToastMessage('Lütfen bir .csv veya .json dosyası seçin.');
+   359→      return;
+   360→    }
+   361→    const reader = new FileReader();
+   362→    reader.onload = (e) => {
+   363→      const text = e.target?.result as string;
+   364→      if (file.name.endsWith('.json')) {
+   365→        try {
+   366→          const data = JSON.parse(text);
+   367→          const words: CustomWord[] = (data.words || []).filter(
+   368→            (w: any) => typeof w.german === 'string' && typeof w.turkish === 'string' && w.german && w.turkish
+   369→          );
+   370→          if (words.length === 0) {
+   371→            setToastMessage('JSON dosyasından kelime çifti bulunamadı.');
+   372→            return;
+   373→          }
+   374→          setCsvParsedWords(words);
+   375→          setCsvImportName(data.name || file.name.replace(/\.json$/i, ''));
+   376→          setCsvImportDescription(data.description || '');
+   377→          setShowCsvPreview(true);
+   378→        } catch {
+   379→          setToastMessage('JSON dosyası ayrıştırılamadı. Lütfen formatı kontrol edin.');
+   380→        }
+   381→      } else {
+   382→        const parsed = parseCSV(text);
+   383→        if (parsed.length === 0) {
+   384→          setToastMessage('CSV dosyasından kelime çifti bulunamadı.');
+   385→          return;
+   386→        }
+   387→        setCsvParsedWords(parsed);
+   388→        setCsvImportName(file.name.replace(/\.csv$/i, ''));
+   389→        setCsvImportDescription('');
+   390→        setShowCsvPreview(true);
+   391→      }
+   392→    };
+   393→    reader.readAsText(file);
+   394→  }, []);
+   395→
+   396→  const handleDropZoneClick = () => {
+   397→    fileInputRef.current?.click();
+   398→  };
+   399→
+   400→  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+   401→    const file = e.target.files?.[0];
+   402→    if (file) handleFileSelect(file);
+   403→    // Reset input so the same file can be re-selected
+   404→    e.target.value = '';
+   405→  };
+   406→
+   407→  const handleDrop = (e: React.DragEvent) => {
+   408→    e.preventDefault();
+   409→    const file = e.dataTransfer.files[0];
+   410→    if (file) handleFileSelect(file);
+   411→  };
+   412→
+   413→  const handleDragOver = (e: React.DragEvent) => {
+   414→    e.preventDefault();
+   415→  };
+   416→
+   417→  const handleConfirmCsvImport = () => {
+   418→    const name = csvImportName.trim();
+   419→    if (!name) {
+   420→      setToastMessage('Lütfen bir liste adı girin.');
+   421→      return;
+   422→    }
+   423→    const newList: CustomWordList = {
+   424→      id: generateId(),
+   425→      name,
+   426→      description: csvImportDescription.trim(),
+   427→      words: csvParsedWords,
+   428→      createdAt: new Date().toISOString(),
+   429→      category: csvImportCategory,
+   430→    };
+   431→    addList(newList);
+   432→    resetCsvImport();
+   433→    setToastMessage(`"${name}" listesi ${csvParsedWords.length} kelime ile eklendi.`);
+   434→  };
+   435→
+   436→  const resetCsvImport = () => {
+   437→    setCsvParsedWords([]);
+   438→    setCsvImportName('');
+   439→    setCsvImportDescription('');
+   440→    setCsvImportCategory('Genel');
+   441→    setShowCsvPreview(false);
+   442→  };
+   443→
+   444→  const handleAddManualWord = () => {
+   445→    const german = manualGermanInput.trim();
+   446→    const turkish = manualTurkishInput.trim();
+   447→    if (!german || !turkish) {
+   448→      setToastMessage('Hem Almanca hem Türkçe alanlarını doldurun.');
+   449→      return;
+   450→    }
+   451→    setManualWords((prev) => [...prev, { german, turkish }]);
+   452→    setManualGermanInput('');
+   453→    setManualTurkishInput('');
+   454→  };
+   455→
+   456→  const handleRemoveManualWord = (index: number) => {
+   457→    setManualWords((prev) => prev.filter((_, i) => i !== index));
+   458→  };
+   459→
+   460→  const handleSaveManualList = () => {
+   461→    const name = manualListName.trim();
+   462→    if (!name) {
+   463→      setToastMessage('Lütfen bir liste adı girin.');
+   464→      return;
+   465→    }
+   466→    if (manualWords.length === 0) {
+   467→      setToastMessage('En az bir kelime çifti ekleyin.');
+   468→      return;
+   469→    }
+   470→    const newList: CustomWordList = {
+   471→      id: generateId(),
+   472→      name,
+   473→      description: manualListDescription.trim(),
+   474→      words: [...manualWords],
+   475→      createdAt: new Date().toISOString(),
+   476→      category: manualListCategory,
+   477→    };
+   478→    addList(newList);
+   479→    setManualListName('');
+   480→    setManualListDescription('');
+   481→    setManualListCategory('Genel');
+   482→    setManualWords([]);
+   483→    setToastMessage(`"${name}" listesi ${manualWords.length} kelime ile oluşturuldu.`);
+   484→  };
+   485→
+   486→  const handleUrlImport = () => {
+   487→    const text = urlImportText.trim();
+   488→    if (!text) {
+   489→      setToastMessage('Lütfen bir bağlantı veya base64 kodu yapıştırın.');
+   490→      return;
+   491→    }
+   492→
+   493→    // Try to extract from URL
+   494→    let encoded = text;
+   495→    try {
+   496→      const url = new URL(text);
+   497→      const param = url.searchParams.get('import');
+   498→      if (param) {
+   499→        encoded = param;
+   500→      }
+   501→    } catch {
+   502→      // Not a URL — treat as raw base64
+   503→    }
+   504→
+   505→    const decoded = decodeList(encoded);
+   506→    if (!decoded || decoded.words.length === 0) {
+   507→      setToastMessage('Geçersiz veya boş veri. Lütfen bağlantıyı kontrol edin.');
+   508→      return;
+   509→    }
+   510→
+   511→    const newList: CustomWordList = {
+   512→      id: generateId(),
+   513→      name: decoded.name,
+   514→      description: decoded.description,
+   515→      words: decoded.words,
+   516→      createdAt: new Date().toISOString(),
+   517→      category: 'Genel',
+   518→    };
+   519→    addList(newList);
+   520→    setUrlImportText('');
+   521→    setToastMessage(`"${decoded.name}" listesi ${decoded.words.length} kelime ile içe aktarıldı.`);
+   522→  };
+   523→
+   524→  const handleOpenDetail = (id: string) => {
+   525→    setSelectedListId(id);
+   526→    setDeleteConfirm(false);
+   527→    setShareCopied(false);
+   528→    setScreen('detail');
+   529→  };
+   530→
+   531→  const handleBack = () => {
+   532→    setScreen('lists');
+   533→    setSelectedListId(null);
+   534→    setDeleteConfirm(false);
+   535→    setShareCopied(false);
+   536→    setShowAddWord(false);
+   537→    setAddWordGerman('');
+   538→    setAddWordTurkish('');
+   539→  };
+   540→
+   541→  const handleBackFromPractice = () => {
+   542→    setScreen('detail');
+   543→    setPracticeWords([]);
+   544→    setPracticeIndex(0);
+   545→    setPracticeFlipped(false);
+   546→    setPracticeKnown(0);
+   547→    setPracticeUnknown(0);
+   548→    setPracticeShuffled(false);
+   549→  };
+   550→
+   551→  const handleDeleteList = () => {
+   552→    if (!selectedListId) return;
+   553→    const name = selectedList?.name || 'Liste';
+   554→    deleteList(selectedListId);
+   555→    setToastMessage(`"${name}" listesi silindi.`);
+   556→    handleBack();
+   557→  };
+   558→
+   559→  const handleShare = async () => {
+   560→    if (!selectedList) return;
+   561→    const url = generateShareURL({
+   562→      name: selectedList.name,
+   563→      description: selectedList.description,
+   564→      words: selectedList.words,
+   565→    });
+   566→    const ok = await copyToClipboard(url);
+   567→    if (ok) {
+   568→      setShareCopied(true);
+   569→      setTimeout(() => setShareCopied(false), 2000);
+   570→    } else {
+   571→      setToastMessage('Bağlantı kopyalanamadı.');
+   572→    }
+   573→  };
+   574→
+   575→  // ── CSV Export ─────────────────────────────────────────────────────────────
+   576→  const handleExportCSV = () => {
+   577→    if (!selectedList || selectedList.words.length === 0) {
+   578→      setToastMessage('Dışa aktarılacak kelime yok.');
+   579→      return;
+   580→    }
+   581→    const csv = buildCSV(selectedList.words);
+   582→    const safeName = selectedList.name.replace(/[^a-zA-Z0-9ğüşıöçĞÜŞİÖÇ\s-_]/g, '').replace(/\s+/g, '_');
+   583→    downloadCSV(csv, `${safeName}.csv`);
+   584→    setToastMessage(`"${selectedList.name}" CSV olarak indirildi.`);
+   585→  };
+   586→
+   587→  const handleExportJSON = () => {
+   588→    if (!selectedList || selectedList.words.length === 0) {
+   589→      setToastMessage('Dışa aktarılacak kelime yok.');
+   590→      return;
+   591→    }
+   592→    const json = JSON.stringify(
+   593→      { name: selectedList.name, description: selectedList.description, words: selectedList.words },
+   594→      null, 2
+   595→    );
+   596→    const safeName = selectedList.name.replace(/[^a-zA-Z0-9ğüşıöçĞÜŞİÖÇ\s-_]/g, '').replace(/\s+/g, '_');
+   597→    downloadJSON(json, `${safeName}.json`);
+   598→    setToastMessage(`"${selectedList.name}" JSON olarak indirildi.`);
+   599→  };
+   600→
+   601→  // ── Add word to existing list ──────────────────────────────────────────────
+   602→  const handleAddWordToExistingList = () => {
+   603→    if (!selectedListId) return;
+   604→    const german = addWordGerman.trim();
+   605→    const turkish = addWordTurkish.trim();
+   606→    if (!german || !turkish) {
+   607→      setToastMessage('Hem Almanca hem Türkçe alanlarını doldurun.');
+   608→      return;
+   609→    }
+   610→    const updatedList: CustomWordList = {
+   611→      ...selectedList!,
+   612→      words: [...selectedList!.words, { german, turkish }],
+   613→    };
+   614→    if (hasStoreSupport && storeState.addCustomWordList) {
+   615→      storeState.deleteCustomWordList(selectedListId);
+   616→      storeState.addCustomWordList(updatedList);
+   617→    } else {
+   618→      setLocalLists((prev) => prev.map((l) => (l.id === selectedListId ? updatedList : l)));
+   619→    }
+   620→    setAddWordGerman('');
+   621→    setAddWordTurkish('');
+   622→    setToastMessage('Yeni kelime listeye eklendi.');
+   623→  };
+   624→
+   625→  // ── Practice (Flashcard) ──────────────────────────────────────────────────
+   626→  const handlePractice = () => {
+   627→    if (!selectedList || selectedList.words.length === 0) {
+   628→      setToastMessage('Bu listede pratik yapılacak kelime yok.');
+   629→      return;
+   630→    }
+   631→    const words = practiceShuffled
+   632→      ? [...selectedList.words].sort(() => Math.random() - 0.5)
+   633→      : [...selectedList.words];
+   634→    setPracticeWords(words);
+   635→    setPracticeIndex(0);
+   636→    setPracticeFlipped(false);
+   637→    setPracticeKnown(0);
+   638→    setPracticeUnknown(0);
+   639→    setScreen('practice');
+   640→  };
+   641→
+   642→  const handleFlipCard = () => {
+   643→    setPracticeFlipped((prev) => !prev);
+   644→  };
+   645→
+   646→  const handlePracticeAnswer = (known: boolean) => {
+   647→    if (known) {
+   648→      setPracticeKnown((prev) => prev + 1);
+   649→    } else {
+   650→      setPracticeUnknown((prev) => prev + 1);
+   651→    }
+   652→    if (practiceIndex + 1 >= practiceWords.length) {
+   653→      // Session complete
+   654→      setPracticeFlipped(false);
+   655→    } else {
+   656→      setPracticeIndex((prev) => prev + 1);
+   657→      setPracticeFlipped(false);
+   658→    }
+   659→  };
+   660→
+   661→  const practiceComplete = practiceWords.length > 0 && practiceIndex >= practiceWords.length;
+   662→  const practiceProgress = practiceWords.length > 0 ? ((practiceIndex + (practiceComplete ? 0 : 1)) / practiceWords.length) * 100 : 0;
+   663→  const currentPracticeWord = practiceWords[practiceIndex] ?? null;
+   664→
+   665→  const handleDeleteWordFromList = (wordIndex: number) => {
+   666→    if (!selectedListId) return;
+   667→    const updatedWords = selectedList.words.filter((_, i) => i !== wordIndex);
+   668→    const updatedList: CustomWordList = {
+   669→      ...selectedList,
+   670→      words: updatedWords,
+   671→    };
+   672→    // Re-add the updated list (replace)
+   673→    if (hasStoreSupport && storeState.addCustomWordList) {
+   674→      storeState.deleteCustomWordList(selectedListId);
+   675→      storeState.addCustomWordList(updatedList);
+   676→    } else {
+   677→      setLocalLists((prev) => prev.map((l) => (l.id === selectedListId ? updatedList : l)));
+   678→    }
+   679→  };
+   680→
+   681→  // ── Unique categories from existing lists ─────────────────────────────────
+   682→  const existingCategories = Array.from(new Set(lists.map((l) => l.category)));
+   683→
+   684→  // ── Render ────────────────────────────────────────────────────────────────
+   685→  return (
+   686→    <div className="space-y-6">
+   687→      {/* Toast notification */}
+   688→      <AnimatePresence>
+   689→        {toastMessage && (
+   690→          <motion.div
+   691→            initial={{ opacity: 0, y: -20 }}
+   692→            animate={{ opacity: 1, y: 0 }}
+   693→            exit={{ opacity: 0, y: -20 }}
+   694→            className="fixed top-4 left-1/2 z-50 -translate-x-1/2"
+   695→          >
+   696→            <div className="flex items-center gap-2 rounded-xl bg-gray-900 px-4 py-3 text-sm text-white shadow-lg">
+   697→              <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+   698→              <span>{toastMessage}</span>
+   699→            </div>
+   700→          </motion.div>
+   701→        )}
+   702→      </AnimatePresence>
+   703→
+   704→      {screen === 'lists' ? (
+   705→        <motion.div
+   706→          key="lists-screen"
+   707→          initial="initial"
+   708→          animate="animate"
+   709→          exit="exit"
+   710→          variants={staggerContainer}
+   711→          className="space-y-6"
+   712→        >
+   713→          {/* ── Gradient Header ──────────────────────────────────────────── */}
+   714→          <motion.div
+   715→            variants={fadeInUp}
+   716→            className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-teal-500 to-green-600 p-6 text-white shadow-sm"
+   717→          >
+   718→            <div className="relative z-10">
+   719→              <div className="mb-2 flex items-center gap-3">
+   720→                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur">
+   721→                  <FolderPlus className="h-5 w-5" />
+   722→                </div>
+   723→                <h2 className="text-xl font-bold">Özel Kelime Listeleri</h2>
+   724→              </div>
+   725→              <p className="ml-[52px] text-sm text-white/80">
+   726→                Kendi kelime listelerinizi oluşturun, CSV ile içe aktarın veya paylaşın.
+   727→              </p>
+   728→            </div>
+   729→            {/* Decorative circles */}
+   730→            <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/10" />
+   731→            <div className="absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-white/10" />
+   732→          </motion.div>
+   733→
+   734→          {/* Store fallback note */}
+   735→          {!hasStoreSupport && (
+   736→            <motion.div variants={fadeInUp}>
+   737→              <div className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+   738→                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+   739→                <span>Veriler şu anda yerel olarak saklanmaktadır. Kalıcı depolama için mağaza güncellemesi gereklidir.</span>
+   740→              </div>
+   741→            </motion.div>
+   742→          )}
+   743→
+   744→          {/* ── CSV Import Area ──────────────────────────────────────────── */}
+   745→          <motion.div variants={fadeInUp}>
+   746→            <Card className="rounded-2xl border-0 shadow-sm">
+   747→              <CardContent className="p-5">
+   748→                <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-700">
+   749→                  <Upload className="h-4 w-4 text-teal-600" />
+   750→                  Dosyadan İçe Aktar
+   751→                </div>
+   752→
+   753→                {!showCsvPreview ? (
+   754→                  <>
+   755→                    <div
+   756→                      onClick={handleDropZoneClick}
+   757→                      onDrop={handleDrop}
+   758→                      onDragOver={handleDragOver}
+   759→                      className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-8 transition-colors hover:border-teal-400 hover:bg-teal-50/50"
+   760→                    >
+   761→                      <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-teal-100">
+   762→                        <FileJson className="h-5 w-5 text-teal-600" />
+   763→                      </div>
+   764→                      <p className="text-sm font-medium text-gray-600">
+   765→                        CSV veya JSON dosyasını sürükleyin veya tıklayın
+   766→                      </p>
+   767→                      <p className="mt-1 text-xs text-gray-400">
+   768→                        Desteklenen formatlar: CSV (almanca,türkçe) ve JSON
+   769→                      </p>
+   770→                    </div>
+   771→                    <input
+   772→                      ref={fileInputRef}
+   773→                      type="file"
+   774→                      accept=".csv,.json"
+   775→                      className="hidden"
+   776→                      onChange={handleFileInputChange}
+   777→                    />
+   778→                    <div className="mt-3 flex gap-2">
+   779→                      <button onClick={downloadSampleCSV} className="flex-1 flex items-center justify-center gap-1.5 rounded-lg border border-dashed border-gray-300 px-3 py-2 text-xs text-gray-500 transition-colors hover:border-teal-400 hover:text-teal-600">
+   780→                        <Download className="h-3.5 w-3.5" />
+   781→                        Örnek CSV İndir
+   782→                      </button>
+   783→                      <button onClick={downloadSampleJSON} className="flex-1 flex items-center justify-center gap-1.5 rounded-lg border border-dashed border-gray-300 px-3 py-2 text-xs text-gray-500 transition-colors hover:border-teal-400 hover:text-teal-600">
+   784→                        <Download className="h-3.5 w-3.5" />
+   785→                        Örnek JSON İndir
+   786→                      </button>
+   787→                    </div>
+   788→                    <div className="mt-3 flex gap-2">
+   789→                      <button onClick={downloadSampleCSV} className="flex-1 flex items-center justify-center gap-1.5 rounded-lg border border-dashed border-gray-300 px-3 py-2 text-xs text-gray-500 transition-colors hover:border-teal-400 hover:text-teal-600">
+   790→                        <Download className="h-3.5 w-3.5" />
+   791→                        Örnek CSV İndir
+   792→                      </button>
+   793→                      <button onClick={downloadSampleJSON} className="flex-1 flex items-center justify-center gap-1.5 rounded-lg border border-dashed border-gray-300 px-3 py-2 text-xs text-gray-500 transition-colors hover:border-teal-400 hover:text-teal-600">
+   794→                        <Download className="h-3.5 w-3.5" />
+   795→                        Örnek JSON İndir
+   796→                      </button>
+   797→                    </div>
+   798→                  </>
+   799→                ) : (
+   800→                  <div className="space-y-3">
+   801→                    <div className="flex items-center gap-2 rounded-lg bg-teal-50 px-3 py-2 text-sm text-teal-700">
+   802→                      <CheckCircle2 className="h-4 w-4" />
+   803→                      <span>
+   804→                        <strong>{csvParsedWords.length}</strong> kelime çifti başarıyla ayrıştırıldı.
+   805→                      </span>
+   806→                    </div>
+   807→
+   808→                    {/* Preview first few words */}
+   809→                    <div className="max-h-32 overflow-y-auto rounded-lg bg-gray-50 p-2">
+   810→                      <div className="space-y-1">
+   811→                        {csvParsedWords.slice(0, 10).map((w, i) => (
+   812→                          <div
+   813→                            key={i}
+   814→                            className="flex items-center gap-2 rounded-md bg-white px-2 py-1 text-xs"
+   815→                          >
+   816→                            <span className="font-medium text-gray-800">{w.german}</span>
+   817→                            <span className="text-gray-300">-</span>
+   818→                            <span className="text-gray-600">{w.turkish}</span>
+   819→                          </div>
+   820→                        ))}
+   821→                        {csvParsedWords.length > 10 && (
+   822→                          <p className="px-2 text-center text-xs text-gray-400">
+   823→                            ... ve {csvParsedWords.length - 10} kelime daha
+   824→                          </p>
+   825→                        )}
+   826→                      </div>
+   827→                    </div>
+   828→
+   829→                    <div className="space-y-2">
+   830→                      <Input
+   831→                        placeholder="Liste adı"
+   832→                        value={csvImportName}
+   833→                        onChange={(e) => setCsvImportName(e.target.value)}
+   834→                        className="h-9 rounded-lg"
+   835→                      />
+   836→                      <Input
+   837→                        placeholder="Açıklama (isteğe bağlı)"
+   838→                        value={csvImportDescription}
+   839→                        onChange={(e) => setCsvImportDescription(e.target.value)}
+   840→                        className="h-9 rounded-lg"
+   841→                      />
+   842→                      <div className="flex gap-2">
+   843→                        {CATEGORY_OPTIONS.map((cat) => (
+   844→                          <button
+   845→                            key={cat}
+   846→                            onClick={() => setCsvImportCategory(cat)}
+   847→                            className={cn(
+   848→                              'rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors',
+   849→                              csvImportCategory === cat
+   850→                                ? 'bg-teal-600 text-white'
+   851→                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+   852→                            )}
+   853→                          >
+   854→                            {cat}
+   855→                          </button>
+   856→                        ))}
+   857→                      </div>
+   858→                    </div>
+   859→
+   860→                    <div className="flex gap-2">
+   861→                      <Button
+   862→                        onClick={handleConfirmCsvImport}
+   863→                        className="flex-1 bg-teal-600 hover:bg-teal-700 text-white rounded-xl"
+   864→                        size="sm"
+   865→                      >
+   866→                        <Check className="mr-1.5 h-4 w-4" />
+   867→                        Listeyi Kaydet
+   868→                      </Button>
+   869→                      <Button
+   870→                        variant="outline"
+   871→                        onClick={resetCsvImport}
+   872→                        size="sm"
+   873→                        className="rounded-xl"
+   874→                      >
+   875→                        <X className="mr-1.5 h-4 w-4" />
+   876→                        İptal
+   877→                      </Button>
+   878→                    </div>
+   879→                  </div>
+   880→                )}
+   881→              </CardContent>
+   882→            </Card>
+   883→          </motion.div>
+   884→
+   885→          {/* ── URL Import ───────────────────────────────────────────────── */}
+   886→          <motion.div variants={fadeInUp}>
+   887→            <Card className="rounded-2xl border-0 shadow-sm">
+   888→              <CardContent className="p-5">
+   889→                <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-700">
+   890→                  <Link className="h-4 w-4 text-blue-600" />
+   891→                  Bağlantı ile İçe Aktar
+   892→                </div>
+   893→                <p className="mb-2 text-xs text-gray-500">
+   894→                  Paylaşılan bir liste bağlantısını veya base64 kodunu yapıştırın.
+   895→                </p>
+   896→                <div className="flex gap-2">
+   897→                  <Input
+   898→                    placeholder="Bağlantı veya base64 kodu..."
+   899→                    value={urlImportText}
+   900→                    onChange={(e) => setUrlImportText(e.target.value)}
+   901→                    className="h-9 rounded-lg flex-1"
+   902→                    onKeyDown={(e) => e.key === 'Enter' && handleUrlImport()}
+   903→                  />
+   904→                  <Button
+   905→                    onClick={handleUrlImport}
+   906→                    variant="outline"
+   907→                    size="sm"
+   908→                    className="rounded-xl whitespace-nowrap"
+   909→                  >
+   910→                    <Upload className="mr-1.5 h-4 w-4" />
+   911→                    İçe Aktar
+   912→                  </Button>
+   913→                </div>
+   914→              </CardContent>
+   915→            </Card>
+   916→          </motion.div>
+   917→
+   918→          {/* ── Manual Entry ────────────────────────────────────────────── */}
+   919→          <motion.div variants={fadeInUp}>
+   920→            <Card className="rounded-2xl border-0 shadow-sm">
+   921→              <CardContent className="p-5">
+   922→                <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-700">
+   923→                  <Pencil className="h-4 w-4 text-amber-600" />
+   924→                  Kelime Listesi Oluştur
+   925→                </div>
+   926→
+   927→                <div className="space-y-3">
+   928→                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+   929→                    <Input
+   930→                      placeholder="Liste adı"
+   931→                      value={manualListName}
+   932→                      onChange={(e) => setManualListName(e.target.value)}
+   933→                      className="h-9 rounded-lg"
+   934→                    />
+   935→                    <Input
+   936→                      placeholder="Açıklama (isteğe bağlı)"
+   937→                      value={manualListDescription}
+   938→                      onChange={(e) => setManualListDescription(e.target.value)}
+   939→                      className="h-9 rounded-lg"
+   940→                    />
+   941→                  </div>
+   942→
+   943→                  {/* Category selection */}
+   944→                  <div className="flex flex-wrap gap-1.5">
+   945→                    {CATEGORY_OPTIONS.map((cat) => (
+   946→                      <button
+   947→                        key={cat}
+   948→                        onClick={() => setManualListCategory(cat)}
+   949→                        className={cn(
+   950→                          'rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors',
+   951→                          manualListCategory === cat
+   952→                            ? 'bg-teal-600 text-white'
+   953→                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+   954→                        )}
+   955→                      >
+   956→                        {cat}
+   957→                      </button>
+   958→                    ))}
+   959→                  </div>
+   960→
+   961→                  <Separator />
+   962→
+   963→                  {/* Word pair input */}
+   964→                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_auto]">
+   965→                    <Input
+   966→                      placeholder="Almanca"
+   967→                      value={manualGermanInput}
+   968→                      onChange={(e) => setManualGermanInput(e.target.value)}
+   969→                      onKeyDown={(e) => e.key === 'Enter' && handleAddManualWord()}
+   970→                      className="h-9 rounded-lg"
+   971→                    />
+   972→                    <Input
+   973→                      placeholder="Türkçe"
+   974→                      value={manualTurkishInput}
+   975→                      onChange={(e) => setManualTurkishInput(e.target.value)}
+   976→                      onKeyDown={(e) => e.key === 'Enter' && handleAddManualWord()}
+   977→                      className="h-9 rounded-lg"
+   978→                    />
+   979→                    <Button
+   980→                      onClick={handleAddManualWord}
+   981→                      variant="outline"
+   982→                      size="sm"
+   983→                      className="h-9 rounded-xl"
+   984→                    >
+   985→                      <Plus className="h-4 w-4" />
+   986→                    </Button>
+   987→                  </div>
+   988→
+   989→                  {/* Added words as removable chips */}
+   990→                  {manualWords.length > 0 && (
+   991→                    <div className="max-h-36 overflow-y-auto rounded-lg bg-gray-50 p-2">
+   992→                      <div className="flex flex-wrap gap-1.5">
+   993→                        <AnimatePresence>
+   994→                          {manualWords.map((w, i) => (
+   995→                            <motion.div
+   996→                              key={i}
+   997→                              initial={{ opacity: 0, scale: 0.9 }}
+   998→                              animate={{ opacity: 1, scale: 1 }}
+   999→                              exit={{ opacity: 0, scale: 0.9 }}
+  1000→                              className="group flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-xs shadow-sm border border-gray-200"
+  1001→                            >
+  1002→                              <span className="font-medium text-gray-800">{w.german}</span>
+  1003→                              <span className="text-gray-300">-</span>
+  1004→                              <span className="text-gray-600">{w.turkish}</span>
+  1005→                              <button
+  1006→                                onClick={() => handleRemoveManualWord(i)}
+  1007→                                className="ml-0.5 flex h-4 w-4 items-center justify-center rounded-full text-gray-400 hover:bg-red-100 hover:text-red-500 transition-colors"
+  1008→                              >
+  1009→                                <X className="h-3 w-3" />
+  1010→                              </button>
+  1011→                            </motion.div>
+  1012→                          ))}
+  1013→                        </AnimatePresence>
+  1014→                      </div>
+  1015→                    </div>
+  1016→                  )}
+  1017→
+  1018→                  <Button
+  1019→                    onClick={handleSaveManualList}
+  1020→                    disabled={!manualListName.trim() || manualWords.length === 0}
+  1021→                    className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-xl disabled:opacity-50"
+  1022→                    size="sm"
+  1023→                  >
+  1024→                    <FolderPlus className="mr-1.5 h-4 w-4" />
+  1025→                    Listeyi Kaydet ({manualWords.length} kelime)
+  1026→                  </Button>
+  1027→                </div>
+  1028→              </CardContent>
+  1029→            </Card>
+  1030→          </motion.div>
+  1031→
+  1032→          {/* ── Existing Lists ───────────────────────────────────────────── */}
+  1033→          <motion.div variants={fadeInUp}>
+  1034→            <div className="mb-3 flex items-center gap-2">
+  1035→              <ListChecks className="h-4 w-4 text-gray-500" />
+  1036→              <h3 className="text-sm font-semibold text-gray-700">
+  1037→                Kayıtlı Listeler
+  1038→              </h3>
+  1039→              {lists.length > 0 && (
+  1040→                <Badge variant="secondary" className="ml-auto text-xs">
+  1041→                  {lists.length}
+  1042→                </Badge>
+  1043→              )}
+  1044→            </div>
+  1045→
+  1046→            {lists.length === 0 ? (
+  1047→              <motion.div
+  1048→                initial={{ opacity: 0 }}
+  1049→                animate={{ opacity: 1 }}
+  1050→                className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50/50 py-12 text-center"
+  1051→              >
+  1052→                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
+  1053→                  <FolderOpen className="h-6 w-6 text-gray-400" />
+  1054→                </div>
+  1055→                <p className="text-sm font-medium text-gray-500">
+  1056→                  Henüz özel kelime listeniz yok
+  1057→                </p>
+  1058→                <p className="mt-1 text-xs text-gray-400">
+  1059→                  Yukarıdaki yöntemlerden biriyle yeni bir liste oluşturun.
+  1060→                </p>
+  1061→              </motion.div>
+  1062→            ) : (
+  1063→              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+  1064→                <AnimatePresence>
+  1065→                  {lists.map((list, index) => (
+  1066→                    <motion.div
+  1067→                      key={list.id}
+  1068→                      initial={{ opacity: 0, y: 12 }}
+  1069→                      animate={{ opacity: 1, y: 0 }}
+  1070→                      exit={{ opacity: 0, scale: 0.95 }}
+  1071→                      transition={{ delay: index * 0.04 }}
+  1072→                      onClick={() => handleOpenDetail(list.id)}
+  1073→                      className="group cursor-pointer"
+  1074→                    >
+  1075→                      <Card className="h-full rounded-2xl border-0 shadow-sm transition-shadow hover:shadow-md">
+  1076→                        <CardContent className="p-4">
+  1077→                          <div className="flex items-start justify-between gap-2">
+  1078→                            <div className="min-w-0 flex-1">
+  1079→                              <h4 className="truncate text-sm font-semibold text-gray-800">
+  1080→                                {list.name}
+  1081→                              </h4>
+  1082→                              {list.description && (
+  1083→                                <p className="mt-0.5 truncate text-xs text-gray-500">
+  1084→                                  {list.description}
+  1085→                                </p>
+  1086→                              )}
+  1087→                            </div>
+  1088→                            <Badge
+  1089→                              variant="secondary"
+  1090→                              className={cn(
+  1091→                                'shrink-0 border-0 text-[10px] font-medium',
+  1092→                                list.category === 'Genel'
+  1093→                                  ? 'bg-gray-100 text-gray-600'
+  1094→                                  : 'bg-teal-50 text-teal-700'
+  1095→                              )}
+  1096→                            >
+  1097→                              {list.category}
+  1098→                            </Badge>
+  1099→                          </div>
+  1100→                          <Separator className="my-2" />
+  1101→                          <div className="flex items-center justify-between text-xs text-gray-400">
+  1102→                            <div className="flex items-center gap-1">
+  1103→                              <BookOpen className="h-3 w-3" />
+  1104→                              <span>{list.words.length} kelime</span>
+  1105→                            </div>
+  1106→                            <span>{formatDate(list.createdAt)}</span>
+  1107→                          </div>
+  1108→                        </CardContent>
+  1109→                      </Card>
+  1110→                    </motion.div>
+  1111→                  ))}
+  1112→                </AnimatePresence>
+  1113→              </div>
+  1114→            )}
+  1115→          </motion.div>
+  1116→        </motion.div>
+  1117→      ) : screen === 'detail' ? (
+  1118→        /* ═══════════════════════════════════════════════════════════════════
+  1119→           DETAIL SCREEN
+  1120→           ═══════════════════════════════════════════════════════════════════ */
+  1121→        <motion.div
+  1122→          key="detail-screen"
+  1123→          initial={{ opacity: 0, x: 24 }}
+  1124→          animate={{ opacity: 1, x: 0 }}
+  1125→          exit={{ opacity: 0, x: -24 }}
+  1126→          className="space-y-5"
+  1127→        >
+  1128→          {selectedList ? (
+  1129→            <>
+  1130→              {/* Back button */}
+  1131→              <Button
+  1132→                variant="ghost"
+  1133→                size="sm"
+  1134→                onClick={handleBack}
+  1135→                className="-ml-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+  1136→              >
+  1137→                <ChevronLeft className="mr-1 h-4 w-4" />
+  1138→                Listelere Dön
+  1139→              </Button>
+  1140→
+  1141→              {/* List header card */}
+  1142→              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-teal-500 to-green-600 p-5 text-white shadow-sm">
+  1143→                <div className="relative z-10">
+  1144→                  <h2 className="text-lg font-bold leading-tight">{selectedList.name}</h2>
+  1145→                  {selectedList.description && (
+  1146→                    <p className="mt-1 text-sm text-white/80">{selectedList.description}</p>
+  1147→                  )}
+  1148→                  <div className="mt-3 flex items-center gap-3 text-xs text-white/70">
+  1149→                    <div className="flex items-center gap-1">
+  1150→                      <BookOpen className="h-3.5 w-3.5" />
+  1151→                      <span>{selectedList.words.length} kelime</span>
+  1152→                    </div>
+  1153→                    <Badge className="border-0 bg-white/20 text-white backdrop-blur">
+  1154→                      {selectedList.category}
+  1155→                    </Badge>
+  1156→                    <span>{formatDate(selectedList.createdAt)}</span>
+  1157→                  </div>
+  1158→                </div>
+  1159→                <div className="absolute -right-4 -bottom-4 h-20 w-20 rounded-full bg-white/10" />
+  1160→              </div>
+  1161→
+  1162→              {/* Word list */}
+  1163→              <div className="max-h-[50vh] overflow-y-auto rounded-2xl border border-gray-100 bg-white shadow-sm">
+  1164→                <div className="divide-y divide-gray-50">
+  1165→                  <AnimatePresence>
+  1166→                    {selectedList.words.length === 0 ? (
+  1167→                      <motion.div
+  1168→                        initial={{ opacity: 0 }}
+  1169→                        animate={{ opacity: 1 }}
+  1170→                        className="flex flex-col items-center justify-center py-12 text-center"
+  1171→                      >
+  1172→                        <FolderOpen className="mb-2 h-8 w-8 text-gray-300" />
+  1173→                        <p className="text-sm text-gray-400">Bu listede kelime bulunmuyor.</p>
+  1174→                      </motion.div>
+  1175→                    ) : (
+  1176→                      selectedList.words.map((word, i) => (
+  1177→                        <motion.div
+  1178→                          key={`${word.german}-${word.turkish}-${i}`}
+  1179→                          initial={{ opacity: 0, x: -8 }}
+  1180→                          animate={{ opacity: 1, x: 0 }}
+  1181→                          exit={{ opacity: 0, x: 8, height: 0 }}
+  1182→                          transition={{ delay: i * 0.02 }}
+  1183→                          className="group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-gray-50"
+  1184→                        >
+  1185→                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-teal-50 text-[10px] font-semibold text-teal-700">
+  1186→                            {i + 1}
+  1187→                          </span>
+  1188→                          <div className="min-w-0 flex-1">
+  1189→                            <p className="text-sm font-medium text-gray-800">{word.german}</p>
+  1190→                            <p className="text-xs text-gray-500">{word.turkish}</p>
+  1191→                          </div>
+  1192→                          <button
+  1193→                            onClick={() => handleDeleteWordFromList(i)}
+  1194→                            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-gray-300 opacity-0 transition-all hover:bg-red-50 hover:text-red-500 group-hover:opacity-100"
+  1195→                          >
+  1196→                            <Trash2 className="h-3.5 w-3.5" />
+  1197→                          </button>
+  1198→                        </motion.div>
+  1199→                      ))
+  1200→                    )}
+  1201→                  </AnimatePresence>
+  1202→                </div>
+  1203→              </div>
+  1204→
+  1205→              {/* Add word to list */}
+  1206→              <motion.div variants={fadeInUp}>
+  1207→                <Card className="rounded-2xl border-0 shadow-sm">
+  1208→                  <CardContent className="p-4">
+  1209→                    <button
+  1210→                      onClick={() => setShowAddWord((prev) => !prev)}
+  1211→                      className="flex w-full items-center justify-between text-sm font-semibold text-gray-700"
+  1212→                    >
+  1213→                      <div className="flex items-center gap-2">
+  1214→                        <Plus className="h-4 w-4 text-teal-600" />
+  1215→                        Listeye Kelime Ekle
+  1216→                      </div>
+  1217→                      <motion.span
+  1218→                        animate={{ rotate: showAddWord ? 45 : 0 }}
+  1219→                        transition={{ duration: 0.2 }}
+  1220→                      >
+  1221→                        <Plus className="h-4 w-4 text-gray-400" />
+  1222→                      </motion.span>
+  1223→                    </button>
+  1224→                    <AnimatePresence>
+  1225→                      {showAddWord && (
+  1226→                        <motion.div
+  1227→                          initial={{ height: 0, opacity: 0 }}
+  1228→                          animate={{ height: 'auto', opacity: 1 }}
+  1229→                          exit={{ height: 0, opacity: 0 }}
+  1230→                          className="overflow-hidden"
+  1231→                        >
+  1232→                          <div className="mt-3 space-y-2">
+  1233→                            <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_auto]">
+  1234→                              <Input
+  1235→                                placeholder="Almanca"
+  1236→                                value={addWordGerman}
+  1237→                                onChange={(e) => setAddWordGerman(e.target.value)}
+  1238→                                onKeyDown={(e) => e.key === 'Enter' && handleAddWordToExistingList()}
+  1239→                                className="h-9 rounded-lg"
+  1240→                              />
+  1241→                              <Input
+  1242→                                placeholder="Türkçe"
+  1243→                                value={addWordTurkish}
+  1244→                                onChange={(e) => setAddWordTurkish(e.target.value)}
+  1245→                                onKeyDown={(e) => e.key === 'Enter' && handleAddWordToExistingList()}
+  1246→                                className="h-9 rounded-lg"
+  1247→                              />
+  1248→                              <Button
+  1249→                                onClick={handleAddWordToExistingList}
+  1250→                                size="sm"
+  1251→                                className="h-9 rounded-xl bg-teal-600 hover:bg-teal-700 text-white"
+  1252→                              >
+  1253→                                <Plus className="h-4 w-4" />
+  1254→                              </Button>
+  1255→                            </div>
+  1256→                          </div>
+  1257→                        </motion.div>
+  1258→                      )}
+  1259→                    </AnimatePresence>
+  1260→                  </CardContent>
+  1261→                </Card>
+  1262→              </motion.div>
+  1263→
+  1264→              {/* Action buttons */}
+  1265→              <div className="space-y-2">
+  1266→                {/* Practice button with shuffle option */}
+  1267→                <div className="flex gap-2">
+  1268→                  <Button
+  1269→                    onClick={() => { setPracticeShuffled(false); handlePractice(); }}
+  1270→                    className="flex-1 bg-teal-600 hover:bg-teal-700 text-white rounded-xl"
+  1271→                    disabled={selectedList.words.length === 0}
+  1272→                  >
+  1273→                    <BookOpen className="mr-2 h-4 w-4" />
+  1274→                    Sıralı Çalış
+  1275→                  </Button>
+  1276→                  <Button
+  1277→                    onClick={() => { setPracticeShuffled(true); handlePractice(); }}
+  1278→                    variant="outline"
+  1279→                    className="rounded-xl"
+  1280→                    disabled={selectedList.words.length === 0}
+  1281→                    title="Karıştırılmış sırayla çalış"
+  1282→                  >
+  1283→                    <Shuffle className="h-4 w-4" />
+  1284→                  </Button>
+  1285→                </div>
+  1286→
+  1287→                {/* Export CSV button */}
+  1288→                <div className="flex gap-2">
+  1289→                  <Button
+  1290→                    variant="outline"
+  1291→                    onClick={handleExportCSV}
+  1292→                    className="flex-1 rounded-xl"
+  1293→                    disabled={selectedList.words.length === 0}
+  1294→                  >
+  1295→                    <Download className="mr-1.5 h-4 w-4" />
+  1296→                    CSV
+  1297→                  </Button>
+  1298→                  <Button
+  1299→                    variant="outline"
+  1300→                    onClick={handleExportJSON}
+  1301→                    className="flex-1 rounded-xl"
+  1302→                    disabled={selectedList.words.length === 0}
+  1303→                  >
+  1304→                    <Download className="mr-1.5 h-4 w-4" />
+  1305→                    JSON
+  1306→                  </Button>
+  1307→                </div>
+  1308→
+  1309→                {/* Share button */}
+  1310→                <Button
+  1311→                  variant="outline"
+  1312→                  onClick={handleShare}
+  1313→                  className="w-full rounded-xl"
+  1314→                >
+  1315→                  {shareCopied ? (
+  1316→                    <>
+  1317→                      <Check className="mr-2 h-4 w-4 text-emerald-600" />
+  1318→                      <span className="text-emerald-600">Bağlantı Kopyalandı</span>
+  1319→                    </>
+  1320→                  ) : (
+  1321→                    <>
+  1322→                      <Share2 className="mr-2 h-4 w-4" />
+  1323→                      Listeyi Paylaş
+  1324→                    </>
+  1325→                  )}
+  1326→                </Button>
+  1327→
+  1328→                {/* Delete button */}
+  1329→                {!deleteConfirm ? (
+  1330→                  <Button
+  1331→                    variant="outline"
+  1332→                    onClick={() => setDeleteConfirm(true)}
+  1333→                    className="w-full rounded-xl border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
+  1334→                  >
+  1335→                    <Trash2 className="mr-2 h-4 w-4" />
+  1336→                    Listeyi Sil
+  1337→                  </Button>
+  1338→                ) : (
+  1339→                  <motion.div
+  1340→                    initial={{ opacity: 0, y: 4 }}
+  1341→                    animate={{ opacity: 1, y: 0 }}
+  1342→                    className="flex gap-2"
+  1343→                  >
+  1344→                    <p className="flex flex-1 items-center text-sm text-red-600">
+  1345→                      <AlertCircle className="mr-1.5 h-4 w-4" />
+  1346→                      Emin misiniz?
+  1347→                    </p>
+  1348→                    <Button
+  1349→                      onClick={handleDeleteList}
+  1350→                      variant="destructive"
+  1351→                      size="sm"
+  1352→                      className="rounded-xl"
+  1353→                    >
+  1354→                      Evet, Sil
+  1355→                    </Button>
+  1356→                    <Button
+  1357→                      variant="outline"
+  1358→                      size="sm"
+  1359→                      onClick={() => setDeleteConfirm(false)}
+  1360→                      className="rounded-xl"
+  1361→                    >
+  1362→                      İptal
+  1363→                    </Button>
+  1364→                  </motion.div>
+  1365→                )}
+  1366→              </div>
+  1367→            </>
+  1368→          ) : (
+  1369→            <div className="flex flex-col items-center justify-center py-16 text-center">
+  1370→              <AlertCircle className="mb-3 h-10 w-10 text-gray-300" />
+  1371→              <p className="text-sm text-gray-500">Liste bulunamadı.</p>
+  1372→              <Button
+  1373→                variant="ghost"
+  1374→                size="sm"
+  1375→                onClick={handleBack}
+  1376→                className="mt-3 text-teal-600 hover:text-teal-700"
+  1377→              >
+  1378→                <ChevronLeft className="mr-1 h-4 w-4" />
+  1379→                Listelere Dön
+  1380→              </Button>
+  1381→            </div>
+  1382→          )}
+  1383→        </motion.div>
+  1384→      ) : (
+  1385→        /* ═══════════════════════════════════════════════════════════════════
+  1386→           PRACTICE SCREEN (Flashcard)
+  1387→           ═══════════════════════════════════════════════════════════════════ */
+  1388→        <motion.div
+  1389→          key="practice-screen"
+  1390→          initial={{ opacity: 0, scale: 0.95 }}
+  1391→          animate={{ opacity: 1, scale: 1 }}
+  1392→          exit={{ opacity: 0, scale: 0.95 }}
+  1393→          className="space-y-5"
+  1394→        >
+  1395→          {/* Back + progress bar */}
+  1396→          <div className="space-y-3">
+  1397→            <div className="flex items-center justify-between">
+  1398→              <Button
+  1399→                variant="ghost"
+  1400→                size="sm"
+  1401→                onClick={handleBackFromPractice}
+  1402→                className="-ml-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+  1403→              >
+  1404→                <ChevronLeft className="mr-1 h-4 w-4" />
+  1405→                Listeye Dön
+  1406→              </Button>
+  1407→              <span className="text-xs text-gray-500">
+  1408→                {Math.min(practiceIndex + 1, practiceWords.length)} / {practiceWords.length}
+  1409→              </span>
+  1410→            </div>
+  1411→
+  1412→            {/* Progress bar */}
+  1413→            <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
+  1414→              <motion.div
+  1415→                className="h-full rounded-full bg-gradient-to-r from-teal-500 to-green-500"
+  1416→                animate={{ width: `${practiceProgress}%` }}
+  1417→                transition={{ duration: 0.3 }}
+  1418→              />
+  1419→            </div>
+  1420→
+  1421→            {/* Stats row */}
+  1422→            <div className="flex items-center justify-center gap-6 text-xs text-gray-500">
+  1423→              <div className="flex items-center gap-1">
+  1424→                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+  1425→                <span>Bildi: <strong className="text-emerald-600">{practiceKnown}</strong></span>
+  1426→              </div>
+  1427→              <div className="flex items-center gap-1">
+  1428→                <X className="h-3.5 w-3.5 text-red-400" />
+  1429→                <span>Bilmedi: <strong className="text-red-500">{practiceUnknown}</strong></span>
+  1430→              </div>
+  1431→            </div>
+  1432→          </div>
+  1433→
+  1434→          {!practiceComplete && currentPracticeWord ? (
+  1435→            <>
+  1436→              {/* Flashcard */}
+  1437→              <div className="flex justify-center">
+  1438→                <motion.div
+  1439→                  onClick={handleFlipCard}
+  1440→                  className="relative w-full max-w-sm cursor-pointer select-none overflow-hidden rounded-2xl bg-white shadow-lg"
+  1441→                  style={{ perspective: 600 }}
+  1442→                  whileTap={{ scale: 0.98 }}
+  1443→                >
+  1444→                  <AnimatePresence mode="wait">
+  1445→                    <motion.div
+  1446→                      key={practiceIndex}
+  1447→                      initial={{ opacity: 0, rotateY: -30 }}
+  1448→                      animate={{ opacity: 1, rotateY: 0 }}
+  1449→                      exit={{ opacity: 0, rotateY: 30 }}
+  1450→                      transition={{ duration: 0.25 }}
+  1451→                      className="p-8 text-center"
+  1452→                    >
+  1453→                      <p className="mb-1 text-xs font-medium uppercase tracking-wider text-gray-400">
+  1454→                        Almanca
+  1455→                      </p>
+  1456→                      <p className="text-2xl font-bold text-gray-800">
+  1457→                        {currentPracticeWord.german}
+  1458→                      </p>
+  1459→
+  1460→                      <AnimatePresence>
+  1461→                        {practiceFlipped && (
+  1462→                          <motion.div
+  1463→                            initial={{ opacity: 0, y: 12 }}
+  1464→                            animate={{ opacity: 1, y: 0 }}
+  1465→                            exit={{ opacity: 0, y: -8 }}
+  1466→                          >
+  1467→                            <Separator className="my-4" />
+  1468→                            <p className="mb-1 text-xs font-medium uppercase tracking-wider text-gray-400">
+  1469→                              Türkçe
+  1470→                            </p>
+  1471→                            <p className="text-xl font-semibold text-teal-700">
+  1472→                              {currentPracticeWord.turkish}
+  1473→                            </p>
+  1474→                          </motion.div>
+  1475→                        )}
+  1476→                      </AnimatePresence>
+  1477→
+  1478→                      {!practiceFlipped && (
+  1479→                        <p className="mt-6 text-xs text-gray-400">
+  1480→                          Cevabı görmek için tıklayın
+  1481→                        </p>
+  1482→                      )}
+  1483→                    </motion.div>
+  1484→                  </AnimatePresence>
+  1485→                </motion.div>
+  1486→              </div>
+  1487→
+  1488→              {/* Answer buttons (only shown after flip) */}
+  1489→              <AnimatePresence>
+  1490→                {practiceFlipped && (
+  1491→                  <motion.div
+  1492→                    initial={{ opacity: 0, y: 16 }}
+  1493→                    animate={{ opacity: 1, y: 0 }}
+  1494→                    exit={{ opacity: 0, y: 8 }}
+  1495→                    className="flex gap-3"
+  1496→                  >
+  1497→                    <Button
+  1498→                      onClick={() => handlePracticeAnswer(false)}
+  1499→                      variant="outline"
+  1500→                      className="flex-1 rounded-xl border-red-200 py-6 text-red-600 hover:bg-red-50 hover:text-red-700"
+  1501→                    >
+  1502→                      <X className="mr-2 h-5 w-5" />
+  1503→                      Bilmedim
+  1504→                    </Button>
+  1505→                    <Button
+  1506→                      onClick={() => handlePracticeAnswer(true)}
+  1507→                      className="flex-1 rounded-xl bg-emerald-600 py-6 text-white hover:bg-emerald-700"
+  1508→                    >
+  1509→                      <Check className="mr-2 h-5 w-5" />
+  1510→                      Bildim
+  1511→                    </Button>
+  1512→                  </motion.div>
+  1513→                )}
+  1514→              </AnimatePresence>
+  1515→            </>
+  1516→          ) : practiceComplete ? (
+  1517→            /* ── Session Summary ─────────────────────────────────────── */
+  1518→            <motion.div
+  1519→              initial={{ opacity: 0, scale: 0.95 }}
+  1520→              animate={{ opacity: 1, scale: 1 }}
+  1521→              className="space-y-5"
+  1522→            >
+  1523→              <div className="rounded-2xl bg-gradient-to-br from-teal-500 to-green-600 p-8 text-center text-white shadow-lg">
+  1524→                <div className="mb-3 flex justify-center">
+  1525→                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/20 backdrop-blur">
+  1526→                    <CheckCircle2 className="h-8 w-8" />
+  1527→                  </div>
+  1528→                </div>
+  1529→                <h3 className="text-xl font-bold">Pratik Tamamlandı!</h3>
+  1530→                <p className="mt-2 text-sm text-white/80">
+  1531→                  {practiceWords.length} kelime çalışıldı
+  1532→                </p>
+  1533→
+  1534→                <div className="mt-6 flex items-center justify-center gap-8">
+  1535→                  <div className="text-center">
+  1536→                    <p className="text-3xl font-bold">{practiceKnown}</p>
+  1537→                    <p className="mt-1 text-xs text-white/70">Bildi</p>
+  1538→                  </div>
+  1539→                  <div className="h-10 w-px bg-white/30" />
+  1540→                  <div className="text-center">
+  1541→                    <p className="text-3xl font-bold">{practiceUnknown}</p>
+  1542→                    <p className="mt-1 text-xs text-white/70">Bilmedi</p>
+  1543→                  </div>
+  1544→                  <div className="h-10 w-px bg-white/30" />
+  1545→                  <div className="text-center">
+  1546→                    <p className="text-3xl font-bold">
+  1547→                      {practiceWords.length > 0
+  1548→                        ? Math.round((practiceKnown / practiceWords.length) * 100)
+  1549→                        : 0}%
+  1550→                    </p>
+  1551→                    <p className="mt-1 text-xs text-white/70">Doğruluk</p>
+  1552→                  </div>
+  1553→                </div>
+  1554→              </div>
+  1555→
+  1556→              {/* Action buttons for summary */}
+  1557→              <div className="flex gap-2">
+  1558→                <Button
+  1559→                  onClick={() => {
+  1560→                    setPracticeShuffled(false);
+  1561→                    handlePractice();
+  1562→                  }}
+  1563→                  variant="outline"
+  1564→                  className="flex-1 rounded-xl"
+  1565→                >
+  1566→                  <RotateCcw className="mr-2 h-4 w-4" />
+  1567→                  Tekrar Çalış
+  1568→                </Button>
+  1569→                <Button
+  1570→                  onClick={() => {
+  1571→                    setPracticeShuffled(true);
+  1572→                    handlePractice();
+  1573→                  }}
+  1574→                  variant="outline"
+  1575→                  className="flex-1 rounded-xl"
+  1576→                >
+  1577→                  <Shuffle className="mr-2 h-4 w-4" />
+  1578→                  Karıştır
+  1579→                </Button>
+  1580→              </div>
+  1581→              <Button
+  1582→                onClick={handleBackFromPractice}
+  1583→                className="w-full rounded-xl"
+  1584→                variant="ghost"
+  1585→              >
+  1586→                <ArrowRight className="mr-2 h-4 w-4" />
+  1587→                Listeye Dön
+  1588→              </Button>
+  1589→            </motion.div>
+  1590→          ) : null}
+  1591→        </motion.div>
+  1592→      )}
+  1593→    </div>
+  1594→  );
+  1595→}

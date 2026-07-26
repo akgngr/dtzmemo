@@ -1,0 +1,1719 @@
+     1→'use client';
+     2→
+     3→import React, { useState, useMemo, useCallback } from 'react';
+     4→import { motion, AnimatePresence } from 'framer-motion';
+     5→import {
+     6→  BookOpenText,
+     7→  ArrowLeft,
+     8→  CheckCircle2,
+     9→  XCircle,
+    10→  Trophy,
+    11→  ChevronRight,
+    12→  Star,
+    13→  Clock,
+    14→  RotateCcw,
+    15→  Mail,
+    16→  FileText,
+    17→  Newspaper,
+    18→  ClipboardList,
+    19→  Plus,
+    20→  Trash2,
+    21→  User,
+    22→  Sparkles,
+    23→  Loader2,
+    24→} from 'lucide-react';
+    25→import { Card, CardContent } from '@/components/ui/card';
+    26→import { Button } from '@/components/ui/button';
+    27→import { Badge } from '@/components/ui/badge';
+    28→import { Progress } from '@/components/ui/progress';
+    29→import { Separator } from '@/components/ui/separator';
+    30→import { Input } from '@/components/ui/input';
+    31→import { Textarea } from '@/components/ui/textarea';
+    32→import { useAppStore } from '@/lib/store';
+    33→import type { CustomReadingExercise, CustomReadingQuestion } from '@/lib/store';
+    34→import { cn } from '@/lib/utils';
+    35→
+    36→// ── Types ────────────────────────────────────────────────────────────────────
+    37→
+    38→type Screen = 'topics' | 'read' | 'summary' | 'create' | 'ai-generate';
+    39→
+    40→type QuestionType = 'richtig-falsch' | 'multiple-choice';
+    41→
+    42→interface Question {
+    43→  id: number;
+    44→  text: string;
+    45→  type: QuestionType;
+    46→  correctAnswer: string; // 'richtig'/'falsch' for tf, 'a'/'b'/'c' for mc
+    47→  options?: { key: string; text: string }[];
+    48→}
+    49→
+    50→interface ReadingExercise {
+    51→  id: string;
+    52→  level: 'A1' | 'A2' | 'B1';
+    53→  title: string;
+    54→  titleTr: string;
+    55→  category: string;
+    56→  icon: React.ElementType;
+    57→  text: string;
+    58→  questions: Question[];
+    59→}
+    60→
+    61→// ── Reading Exercises Data ────────────────────────────────────────────────────
+    62→
+    63→const readingExercises: ReadingExercise[] = [
+    64→  // ══════════════════════ A1 ══════════════════════
+    65→  {
+    66→    id: 'a1-email-1',
+    67→    level: 'A1',
+    68→    title: 'E-Mail: Internet-Anschluss',
+    69→    titleTr: 'E-Posta: İnternet Bağlantısı',
+    70→    category: 'İletişim',
+    71→    icon: Mail,
+    72→    text: `Von: NetCom
+    73→Gesendet: Mittwoch, 22. Mai, 12:20
+    74→An: Kim@email.de
+    75→Betreff: Auftragsbestätigung
+    76→
+    77→Liebe Frau Kim,
+    78→
+    79→vielen Dank für Ihren Auftrag. Wir freuen uns, dass Sie sich für NetCom entschieden haben. Im Anhang dieser E-Mail haben wir die wichtigsten Punkte Ihrer Bestellung zusammengefasst.
+    80→
+    81→Die Auftragsbestätigung erhalten Sie in den nächsten Tagen per Brief. Sie enthält alle wichtigen Angaben zum Vertrag und Ihrem Internet-Anschluss sowie Ihre Zugangsdaten zu unserem Online-Service.
+    82→
+    83→Bitte beachten Sie: Zur Bereitstellung sind Arbeiten an Ihrem Hausanschluss notwendig. Unser Techniker kommt am 27.07. zwischen 10:30 und 13:30 Uhr zu Ihnen.
+    84→
+    85→Passt Ihnen der Termin? Dann klicken Sie bitte auf diesen Link: Termin-Zusage.
+    86→
+    87→Freundliche Grüße
+    88→NetCom`,
+    89→    questions: [
+    90→      {
+    91→        id: 1,
+    92→        text: 'Frau Kim bekommt einen neuen Internet-Anschluss.',
+    93→        type: 'richtig-falsch',
+    94→        correctAnswer: 'richtig',
+    95→      },
+    96→      {
+    97→        id: 2,
+    98→        text: 'Die Auftragsbestätigung kommt per E-Mail.',
+    99→        type: 'richtig-falsch',
+   100→        correctAnswer: 'falsch',
+   101→      },
+   102→      {
+   103→        id: 3,
+   104→        text: 'Wie soll Frau Kim den Termin bestätigen?',
+   105→        type: 'multiple-choice',
+   106→        correctAnswer: 'a',
+   107→        options: [
+   108→          { key: 'a', text: 'auf den Link klicken' },
+   109→          { key: 'b', text: 'den Online-Service nutzen' },
+   110→          { key: 'c', text: 'einen Brief schreiben' },
+   111→        ],
+   112→      },
+   113→      {
+   114→        id: 4,
+   115→        text: 'Der Techniker kommt um 14 Uhr.',
+   116→        type: 'richtig-falsch',
+   117→        correctAnswer: 'falsch',
+   118→      },
+   119→      {
+   120→        id: 5,
+   121→        text: 'Wo findet die Arbeit statt?',
+   122→        type: 'multiple-choice',
+   123→        correctAnswer: 'b',
+   124→        options: [
+   125→          { key: 'a', text: 'im Büro von NetCom' },
+   126→          { key: 'b', text: 'am Hausanschluss von Frau Kim' },
+   127→          { key: 'c', text: 'im Online-Service' },
+   128→        ],
+   129→      },
+   130→      {
+   131→        id: 6,
+   132→        text: 'Frau Kim hat den Auftrag per Telefon gemacht.',
+   133→        type: 'richtig-falsch',
+   134→        correctAnswer: 'falsch',
+   135→      },
+   136→    ],
+   137→  },
+   138→  {
+   139→    id: 'a1-letter-1',
+   140→    level: 'A1',
+   141→    title: 'Brief: Klassenfest',
+   142→    titleTr: 'Mektup: Sınıf Festivali',
+   143→    category: 'Eğitim',
+   144→    icon: FileText,
+   145→    text: `Liebe Familie Ivanov,
+   146→
+   147→vielleicht hat Ihnen Ihr Sohn Denis schon erzählt, dass wir im nächsten Monat ein Klassenfest planen. Als Klassenlehrerin möchte ich Sie und Ihre Familie ganz herzlich einladen.
+   148→
+   149→Damit es ein schöner Tag wird, brauchen wir die Hilfe von allen Familien. Die Teilnahme ist umsonst, aber alle sollen etwas zu essen oder zu trinken mitbringen. Außerdem brauchen wir Eltern, die Spiele organisieren. Es gibt sogar Preise für die Gewinner.
+   150→
+   151→Können Sie mir bitte mitteilen, ob Sie an dem Fest teilnehmen? Sie können mich täglich zwischen 15 und 19 Uhr telefonisch erreichen oder per E-Mail. Oder Denis kann mir einfach in der Stunde Bescheid sagen.
+   152→
+   153→Mit besten Grüßen
+   154→Silke Trautmann`,
+   155→    questions: [
+   156→      {
+   157→        id: 1,
+   158→        text: 'Frau Trautmann ist die Lehrerin von Denis.',
+   159→        type: 'richtig-falsch',
+   160→        correctAnswer: 'richtig',
+   161→      },
+   162→      {
+   163→        id: 2,
+   164→        text: 'Die Teilnahme am Fest kostet Geld.',
+   165→        type: 'richtig-falsch',
+   166→        correctAnswer: 'falsch',
+   167→      },
+   168→      {
+   169→        id: 3,
+   170→        text: 'Familie Ivanov soll',
+   171→        type: 'multiple-choice',
+   172→        correctAnswer: 'a',
+   173→        options: [
+   174→          { key: 'a', text: 'etwas zu essen oder trinken mitbringen' },
+   175→          { key: 'b', text: 'in der Schule anrufen' },
+   176→          { key: 'c', text: 'für das Fest bezahlen' },
+   177→        ],
+   178→      },
+   179→      {
+   180→        id: 4,
+   181→        text: 'Man kann Frau Trautmann zwischen 8 und 12 Uhr anrufen.',
+   182→        type: 'richtig-falsch',
+   183→        correctAnswer: 'falsch',
+   184→      },
+   185→      {
+   186→        id: 5,
+   187→        text: 'Wie kann Denis der Lehrerin Bescheid sagen?',
+   188→        type: 'multiple-choice',
+   189→        correctAnswer: 'c',
+   190→        options: [
+   191→          { key: 'a', text: 'per Brief' },
+   192→          { key: 'b', text: 'am Abend telefonisch' },
+   193→          { key: 'c', text: 'in der Stunde' },
+   194→        ],
+   195→      },
+   196→      {
+   197→        id: 6,
+   198→        text: 'Es gibt Preise für die Gewinner der Spiele.',
+   199→        type: 'richtig-falsch',
+   200→        correctAnswer: 'richtig',
+   201→      },
+   202→    ],
+   203→  },
+   204→  {
+   205→    id: 'a1-notice-1',
+   206→    level: 'A1',
+   207→    title: 'Aushang: Sportverein',
+   208→    titleTr: 'Duyuru: Spor Kulübü',
+   209→    category: 'Spor & Hobi',
+   210→    icon: Newspaper,
+   211→    text: `SV Grün-Weiß — Mitglieder-Versammlung
+   212→
+   213→Liebe Mitglieder,
+   214→
+   215→am Samstag, den 15. Juni, findet unsere jährliche Mitglieder-Versammlung statt. Wir treffen uns um 18:00 Uhr im Vereinsheim.
+   216→
+   217→Tagesordnung:
+   218→1. Begrüßung und Bericht des Vorstands
+   219→2. Finanzen und Mitgliedsbeiträge
+   220→3. Wahl des neuen Vorstands
+   221→4. Planung des Sommerfestes
+   222→5. Verschiedenes
+   223→
+   224→Bitte bringen Sie Ihren Mitgliedsausweis mit. Gäste sind herzlich willkommen!
+   225→
+   226→Für Getränke ist gesorgt. Wer etwas zum Essen mitbringen möchte, kann das gerne tun.
+   227→
+   228→Wir freuen uns auf euch!
+   229→Der Vorstand`,
+   230→    questions: [
+   231→      {
+   232→        id: 1,
+   233→        text: 'Die Versammlung ist am Sonntag.',
+   234→        type: 'richtig-falsch',
+   235→        correctAnswer: 'falsch',
+   236→      },
+   237→      {
+   238→        id: 2,
+   239→        text: 'Die Versammlung beginnt um 18:00 Uhr.',
+   240→        type: 'richtig-falsch',
+   241→        correctAnswer: 'richtig',
+   242→      },
+   243→      {
+   244→        id: 3,
+   245→        text: 'Was steht nicht auf der Tagesordnung?',
+   246→        type: 'multiple-choice',
+   247→        correctAnswer: 'c',
+   248→        options: [
+   249→          { key: 'a', text: 'Finanzen' },
+   250→          { key: 'b', text: 'Wahl des Vorstands' },
+   251→          { key: 'c', text: 'Trainingzeiten' },
+   252→        ],
+   253→      },
+   254→      {
+   255→        id: 4,
+   256→        text: 'Gäste dürfen nicht zur Versammlung kommen.',
+   257→        type: 'richtig-falsch',
+   258→        correctAnswer: 'falsch',
+   259→      },
+   260→      {
+   261→        id: 5,
+   262→        text: 'Man muss seinen Mitgliedsausweis mitbringen.',
+   263→        type: 'richtig-falsch',
+   264→        correctAnswer: 'richtig',
+   265→      },
+   266→      {
+   267→        id: 6,
+   268→        text: 'Was ist kostenlos?',
+   269→        type: 'multiple-choice',
+   270→        correctAnswer: 'a',
+   271→        options: [
+   272→          { key: 'a', text: 'Getränke' },
+   273→          { key: 'b', text: 'Essen' },
+   274→          { key: 'c', text: 'der Mitgliedsbeitrag' },
+   275→        ],
+   276→      },
+   277→    ],
+   278→  },
+   279→
+   280→  // ══════════════════════ A2 ══════════════════════
+   281→  {
+   282→    id: 'a2-email-1',
+   283→    level: 'A2',
+   284→    title: 'E-Mail: Praktikumsplatz',
+   285→    titleTr: 'E-Posta: Staj Yeri',
+   286→    category: 'İş & Meslek',
+   287→    icon: Mail,
+   288→    text: `Von: personal@techwave.de
+   289→An: Lukas.Schmidt@web.de
+   290→Betreff: Ihr Praktikum bei TechWave
+   291→
+   292→Sehr geehrter Herr Schmidt,
+   293→
+   294→vielen Dank für Ihre Bewerbung und das Gespräch am vergangenen Freitag. Wir waren sehr von Ihrem Profil beeindruckt.
+   295→
+   296→Wir freuen uns, Ihnen ab dem 01. September einen Praktikumsplatz in unserer Marketing-Abteilung anbieten zu können. Das Praktikum dauert drei Monate und umfasst 20 Stunden pro Woche. Die Arbeitszeiten können flexibel gestaltet werden.
+   297→
+   298→Ihr Ansprechpartner wird Frau Dr. Petersen sein. Sie erreicht sie unter der Durchwahl 030-5544-22 oder per E-Mail.
+   299→
+   300→Bitte bestätigen Sie uns bis zum 15. August schriftlich, ob Sie das Praktikum antreten möchten. Bringen Sie am ersten Tag bitte Ihren Personalausweis mit.
+   301→
+   302→Mit freundlichen Grüßen
+   303→Anna Müller
+   304→Personalabteilung`,
+   305→    questions: [
+   306→      {
+   307→        id: 1,
+   308→        text: 'Das Praktikum beginnt im August.',
+   309→        type: 'richtig-falsch',
+   310→        correctAnswer: 'falsch',
+   311→      },
+   312→      {
+   313→        id: 2,
+   314→        text: 'Lukas arbeitet in der Marketing-Abteilung.',
+   315→        type: 'richtig-falsch',
+   316→        correctAnswer: 'richtig',
+   317→      },
+   318→      {
+   319→        id: 3,
+   320→        text: 'Wie lange dauert das Praktikum?',
+   321→        type: 'multiple-choice',
+   322→        correctAnswer: 'b',
+   323→        options: [
+   324→          { key: 'a', text: 'zwei Monate' },
+   325→          { key: 'b', text: 'drei Monate' },
+   326→          { key: 'c', text: 'sechs Monate' },
+   327→        ],
+   328→      },
+   329→      {
+   330→        id: 4,
+   331→        text: 'Lukas muss eine Zusage bis zum 15. August schicken.',
+   332→        type: 'richtig-falsch',
+   333→        correctAnswer: 'richtig',
+   334→      },
+   335→      {
+   336→        id: 5,
+   337→        text: 'Wen muss Lukas am ersten Tag mitbringen?',
+   338→        type: 'multiple-choice',
+   339→        correctAnswer: 'c',
+   340→        options: [
+   341→          { key: 'a', text: 'seinen Lebenslauf' },
+   342→          { key: 'b', text: 'ein Zeugnis' },
+   343→          { key: 'c', text: 'seinen Personalausweis' },
+   344→        ],
+   345→      },
+   346→      {
+   347→        id: 6,
+   348→        text: 'Die Arbeitszeiten sind festgelegt.',
+   349→        type: 'richtig-falsch',
+   350→        correctAnswer: 'falsch',
+   351→      },
+   352→    ],
+   353→  },
+   354→  {
+   355→    id: 'a2-notice-1',
+   356→    level: 'A2',
+   357→    title: 'Aushang: Umzugsfirma',
+   358→    titleTr: 'Duyuru: Taşıma Şirketi',
+   359→    category: 'Günlük Yaşam',
+   360→    icon: Newspaper,
+   361→    text: `SCHNELL & SICHER UMZÜGE
+   362→Ihr zuverlässiger Partner seit 2005!
+   363→
+   364→Haben Sie einen Umzug geplant? Wir helfen Ihnen gerne!
+   365→
+   366→Unser Angebot:
+   367→• Packservice: Wir verpacken Ihre Möbel und Gegenstände fachgerecht.
+   368→• Transport: Wir bringen alles sicher an den neuen Wohnort.
+   369→• Reinigung: Wir reinigen die alte Wohnung nach dem Auszug.
+   370→
+   371→Preise:
+   372→• Studio-Wohnung (ab 30 m²): ab 350 €
+   373→• 2-Zimmer-Wohnung (ab 50 m²): ab 550 €
+   374→• 3-Zimmer-Wohnung (ab 70 m²): ab 750 €
+   375→
+   376→Alle Preise inklusive MwSt. Kurzfristige Termine möglich!
+   377→
+   378→Rufen Sie uns an: 0800-123-4567 (kostenlos)
+   379→oder schreiben Sie uns: info@schnell-umzug.de
+   380→
+   381→Wir beraten Sie gerne kostenlos und unverbindlich!`,
+   382→    questions: [
+   383→      {
+   384→        id: 1,
+   385→        text: 'Die Firma existiert seit 2010.',
+   386→        type: 'richtig-falsch',
+   387→        correctAnswer: 'falsch',
+   388→      },
+   389→      {
+   390→        id: 2,
+   391→        text: 'Die Firma bietet Packservice an.',
+   392→        type: 'richtig-falsch',
+   393→        correctAnswer: 'richtig',
+   394→      },
+   395→      {
+   396→        id: 3,
+   397→        text: 'Was kostet ein Umzug für eine 2-Zimmer-Wohnung mindestens?',
+   398→        type: 'multiple-choice',
+   399→        correctAnswer: 'b',
+   400→        options: [
+   401→          { key: 'a', text: '350 €' },
+   402→          { key: 'b', text: '550 €' },
+   403→          { key: 'c', text: '750 €' },
+   404→        ],
+   405→      },
+   406→      {
+   407→        id: 4,
+   408→        text: 'Man kann die Firma nur per E-Mail kontaktieren.',
+   409→        type: 'richtig-falsch',
+   410→        correctAnswer: 'falsch',
+   411→      },
+   412→      {
+   413→        id: 5,
+   414→        text: 'Die Beratung kostet Geld.',
+   415→        type: 'richtig-falsch',
+   416→        correctAnswer: 'falsch',
+   417→      },
+   418→      {
+   419→        id: 6,
+   420→        text: 'Welcher Service wird NICHT angeboten?',
+   421→        type: 'multiple-choice',
+   422→        correctAnswer: 'c',
+   423→        options: [
+   424→          { key: 'a', text: 'Packservice' },
+   425→          { key: 'b', text: 'Reinigung' },
+   426→          { key: 'c', text: 'Möbelkauf' },
+   427→        ],
+   428→      },
+   429→    ],
+   430→  },
+   431→  {
+   432→    id: 'a2-letter-1',
+   433→    level: 'A2',
+   434→    title: 'Brief: Sprachkurs',
+   435→    titleTr: 'Mektup: Dil Kursu',
+   436→    category: 'Eğitim',
+   437→    icon: FileText,
+   438→    text: `DeutschAkademie Berlin
+   439→Schönhauser Allee 125, 10119 Berlin
+   440→
+   441→Sehr geehrte Frau Yılmaz,
+   442→
+   443→vielen Dank für Ihre Anmeldung zum Deutschkurs B1.
+   444→
+   445→Ihr Kurs beginnt am Montag, den 09. September und findet jeden Montag und Mittwoch von 18:30 bis 20:00 Uhr statt. Der Kursraum befindet sich im 3. Stock, Raum 312.
+   446→
+   447→Bitte bringen Sie zum ersten Unterrichtstag mit:
+   448→– Ihr Kursbuch „Menschen B1.1" (kann auch bei uns gekauft werden, Preis: 18,90 €)
+   449→– Ein Heft und einen Stift
+   450→
+   451→Der Kurs kostet insgesamt 240 € für 8 Wochen. Die Zahlung ist in zwei Raten möglich: 120 € zu Beginn und 120 € nach 4 Wochen.
+   452→
+   453→Bei Fragen wenden Sie sich bitte an unser Büro (Raum 105) oder rufen Sie an: 030-4401-7788.
+   454→
+   455→Wir freuen uns auf Sie!
+   456→
+   457→Ihr Team der DeutschAkademie`,
+   458→    questions: [
+   459→      {
+   460→        id: 1,
+   461→        text: 'Der Kurs ist am Dienstag.',
+   462→        type: 'richtig-falsch',
+   463→        correctAnswer: 'falsch',
+   464→      },
+   465→      {
+   466→        id: 2,
+   467→        text: 'Der Kurs kostet 240 € für 8 Wochen.',
+   468→        type: 'richtig-falsch',
+   469→        correctAnswer: 'richtig',
+   470→      },
+   471→      {
+   472→        id: 3,
+   473→        text: 'Wie oft findet der Kurs pro Woche statt?',
+   474→        type: 'multiple-choice',
+   475→        correctAnswer: 'b',
+   476→        options: [
+   477→          { key: 'a', text: 'einmal' },
+   478→          { key: 'b', text: 'zweimal' },
+   479→          { key: 'c', text: 'dreimal' },
+   480→        ],
+   481→      },
+   482→      {
+   483→        id: 4,
+   484→        text: 'Das Kursbuch ist im Preis enthalten.',
+   485→        type: 'richtig-falsch',
+   486→        correctAnswer: 'falsch',
+   487→      },
+   488→      {
+   489→        id: 5,
+   490→        text: 'Wann muss die zweite Rate bezahlt werden?',
+   491→        type: 'multiple-choice',
+   492→        correctAnswer: 'c',
+   493→        options: [
+   494→          { key: 'a', text: 'nach 2 Wochen' },
+   495→          { key: 'b', text: 'nach 6 Wochen' },
+   496→          { key: 'c', text: 'nach 4 Wochen' },
+   497→        ],
+   498→      },
+   499→      {
+   500→        id: 6,
+   501→        text: 'Der Kursraum ist im Erdgeschoss.',
+   502→        type: 'richtig-falsch',
+   503→        correctAnswer: 'falsch',
+   504→      },
+   505→    ],
+   506→  },
+   507→
+   508→  // ══════════════════════ B1 ══════════════════════
+   509→  {
+   510→    id: 'b1-article-1',
+   511→    level: 'B1',
+   512→    title: 'Artikel: Homeoffice in Deutschland',
+   513→    titleTr: 'Makale: Almanya\'da Evden Çalışma',
+   514→    category: 'Toplum',
+   515→    icon: Newspaper,
+   516→    text: `Homeoffice in Deutschland: Eine neue Arbeitskultur
+   517→
+   518→Seit der Corona-Pandemie hat sich die Arbeitswelt in Deutschland stark verändert. Im Jahr 2023 arbeiteten rund 38 Prozent der Beschäftigten mindestens teilweise von zu Hause aus — vor der Pandemie waren es nur etwa 12 Prozent.
+   519→
+   520→Viele Arbeitnehmer schätzen die Flexibilität: Kein Pendeln, mehr Zeit für die Familie und eine bessere Vereinbarkeit von Beruf und Privatleben. Besonders bei Eltern mit kleinen Kindern ist Homeoffice sehr beliebt.
+   521→
+   522→Aber es gibt auch Nachteile. Einige Mitarbeiter fühlen sich isoliert und vermissen den Kontakt zu Kollegen. Die Grenze zwischen Arbeit und Freizeit verschwimmt, und viele arbeiten abends oder am Wochenende weiter, weil der Arbeitsplatz nur wenige Schritte entfernt ist.
+   523→
+   524→Unternehmen stehen vor neuen Herausforderungen: Wie kann man die Teamarbeit organisieren? Wie lässt sich die Unternehmenskultur pflegen? Und wie geht man mit Mitarbeitern um, die im Büro produktiver sind als zu Hause?
+   525→
+   526→Experten sind sich einig: Die Zukunft gehört dem hybriden Modell — einer Kombination aus Büro- und Heimarbeit.`,
+   527→    questions: [
+   528→      {
+   529→        id: 1,
+   530→        text: 'Vor der Pandemie arbeiteten mehr als 30 Prozent im Homeoffice.',
+   531→        type: 'richtig-falsch',
+   532→        correctAnswer: 'falsch',
+   533→      },
+   534→      {
+   535→        id: 2,
+   536→        text: 'Homeoffice ist besonders bei Eltern mit kleinen Kindern beliebt.',
+   537→        type: 'richtig-falsch',
+   538→        correctAnswer: 'richtig',
+   539→      },
+   540→      {
+   541→        id: 3,
+   542→        text: 'Was ist ein Nachteil des Homeoffice?',
+   543→        type: 'multiple-choice',
+   544→        correctAnswer: 'b',
+   545→        options: [
+   546→          { key: 'a', text: 'man muss länger pendeln' },
+   547→          { key: 'b', text: 'man fühlt sich isoliert' },
+   548→          { key: 'c', text: 'die Arbeitszeit ist zu kurz' },
+   549→        ],
+   550→      },
+   551→      {
+   552→        id: 4,
+   553→        text: 'Im Homeoffice arbeiten die Menschen weniger.',
+   554→        type: 'richtig-falsch',
+   555→        correctAnswer: 'falsch',
+   556→      },
+   557→      {
+   558→        id: 5,
+   559→        text: 'Was empfehlen Experten für die Zukunft?',
+   560→        type: 'multiple-choice',
+   561→        correctAnswer: 'c',
+   562→        options: [
+   563→          { key: 'a', text: 'nur noch Homeoffice' },
+   564→          { key: 'b', text: 'nur noch Büroarbeit' },
+   565→          { key: 'c', text: 'eine Kombination aus beidem' },
+   566→        ],
+   567→      },
+   568→      {
+   569→        id: 6,
+   570→        text: 'Die Grenze zwischen Arbeit und Freizeit ist im Homeoffice klarer.',
+   571→        type: 'richtig-falsch',
+   572→        correctAnswer: 'falsch',
+   573→      },
+   574→    ],
+   575→  },
+   576→  {
+   577→    id: 'b1-email-1',
+   578→    level: 'B1',
+   579→    title: 'E-Mail: Mietvertrag kündigen',
+   580→    titleTr: 'E-Posta: Kira Sözleşmesi Feshi',
+   581→    category: 'Günlük Yaşam',
+   582→    icon: Mail,
+   583→    text: `Von: max.mueller@gmx.de
+   584→An: verwaltung@wohnen-nord.de
+   585→Betreff: Kündigung meines Mietvertrags
+   586→
+   587→Sehr geehrte Damen und Herren,
+   588→
+   589→hiermit kündige ich meinen Mietvertrag für die Wohnung in der Mühlenstraße 42, 10407 Berlin, fristgerecht zum 31. Oktober 2024.
+   590→
+   591→Ich ziehe aus beruflichen Gründen nach München um. Die Wohnung ist in einem guten Zustand und ich habe alle Reparaturen, die zu meinen Pflichten gehören, durchgeführt.
+   592→
+   593→Die Wohnungsübergabe schlage ich für Samstag, den 26. Oktober, vor. Für eine Terminvereinbarung stehe ich Ihnen unter der Telefonnummer 0170-554-3322 zur Verfügung.
+   594→
+   595→Bitte teilen Sie mir mit, wann die Kaution zurückerstattet wird und welche Unterlagen Sie dafür benötigen. Ich habe die Endreinigung bereits beauftragt.
+   596→
+   597→Mit freundlichen Grüßen
+   598→Max Müller`,
+   599→    questions: [
+   600→      {
+   601→        id: 1,
+   602→        text: 'Max kündigt den Mietvertrag zum 31. Dezember.',
+   603→        type: 'richtig-falsch',
+   604→        correctAnswer: 'falsch',
+   605→      },
+   606→      {
+   607→        id: 2,
+   608→        text: 'Max zieht nach München.',
+   609→        type: 'richtig-falsch',
+   610→        correctAnswer: 'richtig',
+   611→      },
+   612→      {
+   613→        id: 3,
+   614→        text: 'Warum kündigt Max den Mietvertrag?',
+   615→        type: 'multiple-choice',
+   616→        correctAnswer: 'a',
+   617→        options: [
+   618→          { key: 'a', text: 'berufliche Gründe' },
+   619→          { key: 'b', text: 'die Wohnung ist zu teuer' },
+   620→          { key: 'c', text: 'Nachbarschaftsprobleme' },
+   621→        ],
+   622→      },
+   623→      {
+   624→        id: 4,
+   625→        text: 'Max hat die Endreinigung noch nicht beauftragt.',
+   626→        type: 'richtig-falsch',
+   627→        correctAnswer: 'falsch',
+   628→      },
+   629→      {
+   630→        id: 5,
+   631→        text: 'Wie kann die Verwaltung Max erreichen?',
+   632→        type: 'multiple-choice',
+   633→        correctAnswer: 'b',
+   634→        options: [
+   635→          { key: 'a', text: 'per E-Mail nur' },
+   636→          { key: 'b', text: 'unter der Telefonnummer 0170-554-3322' },
+   637→          { key: 'c', text: 'per Brief' },
+   638→        ],
+   639→      },
+   640→      {
+   641→        id: 6,
+   642→        text: 'Die Wohnung ist in schlechtem Zustand.',
+   643→        type: 'richtig-falsch',
+   644→        correctAnswer: 'falsch',
+   645→      },
+   646→    ],
+   647→  },
+   648→  {
+   649→    id: 'b1-notice-1',
+   650→    level: 'B1',
+   651→    title: 'Artikel: Nachhaltigkeit im Alltag',
+   652→    titleTr: 'Makale: Günlük Hayatta Sürdürülebilirlik',
+   653→    category: 'Çevre',
+   654→    icon: ClipboardList,
+   655→    text: `Nachhaltigkeit im Alltag: Kleine Schritte, große Wirkung
+   656→
+   657→Immer mehr Menschen in Deutschland möchten umweltbewusster leben. Doch wo anfangen? Experten empfehlen, mit kleinen Veränderungen zu beginnen.
+   658→
+   659→Einer der einfachsten Schritte ist der Verzicht auf Plastiktüten. Seit 2022 dürfen in deutschen Geschäften keine kostenlosen Plastiktüten mehr ausgegeben werden. Stattdessen nutzen viele Kunden Stoffbeutel, die mehrfach verwendet werden können.
+   660→
+   661→Auch beim Essen lässt sich viel tun: Regionale und saisonale Produkte haben einen kürzeren Transportweg und dadurch einen geringeren CO₂-Fußabdruck. Der Verzicht auf Fleisch an ein oder zwei Tagen pro Woche kann den ökologischen Fußabdruck einer Person um bis zu 15 Prozent reduzieren.
+   662→
+   663→Im Haushalt hilft energiesparende Geräte beim Stromsparen. LED-Lampen verbrauchen beispielsweise bis zu 80 Prozent weniger Strom als herkömmliche Glühbirnen. Auch das Abschalten von Standby-Geräten macht einen Unterschied.
+   664→
+   665→Der öffentliche Nahverkehr ist eine gute Alternative zum Auto. In vielen Städten gibt es jetzt auch Leihräder und E-Scooter, die kurze Strecken umweltfreundlich erledigen.
+   666→
+   667→Jeder kleine Schritt zählt — gemeinsam können wir viel erreichen.`,
+   668→    questions: [
+   669→      {
+   670→        id: 1,
+   671→        text: 'In Deutschland kann man noch kostenlose Plastiktüten bekommen.',
+   672→        type: 'richtig-falsch',
+   673→        correctAnswer: 'falsch',
+   674→      },
+   675→      {
+   676→        id: 2,
+   677→        text: 'LED-Lampen verbrauchen bis zu 80 Prozent weniger Strom.',
+   678→        type: 'richtig-falsch',
+   679→        correctAnswer: 'richtig',
+   680→      },
+   681→      {
+   682→        id: 3,
+   683→        text: 'Wie viel CO₂ kann man durch weniger Fleisch einsparen?',
+   684→        type: 'multiple-choice',
+   685→        correctAnswer: 'c',
+   686→        options: [
+   687→          { key: 'a', text: 'bis zu 5 Prozent' },
+   688→          { key: 'b', text: 'bis zu 10 Prozent' },
+   689→          { key: 'c', text: 'bis zu 15 Prozent' },
+   690→        ],
+   691→      },
+   692→      {
+   693→        id: 4,
+   694→        text: 'Regionale Produkte haben einen längeren Transportweg.',
+   695→        type: 'richtig-falsch',
+   696→        correctAnswer: 'falsch',
+   697→      },
+   698→      {
+   699→        id: 5,
+   700→        text: 'Was wird als Alternative zum Auto empfohlen?',
+   701→        type: 'multiple-choice',
+   702→        correctAnswer: 'a',
+   703→        options: [
+   704→          { key: 'a', text: 'öffentlicher Nahverkehr' },
+   705→          { key: 'b', text: 'Fahrgemeinschaft' },
+   706→          { key: 'c', text: 'nur zu Fuß gehen' },
+   707→        ],
+   708→      },
+   709→      {
+   710→        id: 6,
+   711→        text: 'Stoffbeutel können nur einmal verwendet werden.',
+   712→        type: 'richtig-falsch',
+   713→        correctAnswer: 'falsch',
+   714→      },
+   715→    ],
+   716→  },
+   717→];
+   718→
+   719→// ── Level Config ─────────────────────────────────────────────────────────────
+   720→
+   721→const LEVEL_CONFIG: Record<string, { color: string; bg: string; badge: string; desc: string }> = {
+   722→  A1: { color: 'text-emerald-700', bg: 'bg-emerald-50 border-emerald-200', badge: 'bg-emerald-100 text-emerald-700', desc: 'Başlangıç — Günlük temel metinler' },
+   723→  A2: { color: 'text-amber-700', bg: 'bg-amber-50 border-amber-200', badge: 'bg-amber-100 text-amber-700', desc: 'Temel — Daha uzun ve karmaşık metinler' },
+   724→  B1: { color: 'text-blue-700', bg: 'bg-blue-50 border-blue-200', badge: 'bg-blue-100 text-blue-700', desc: 'Orta — İş, toplum ve akademik metinler' },
+   725→};
+   726→
+   727→// ── Animation ────────────────────────────────────────────────────────────────
+   728→
+   729→const fadeInUp = {
+   730→  initial: { opacity: 0, y: 16 },
+   731→  animate: { opacity: 1, y: 0 },
+   732→  exit: { opacity: 0, y: -8 },
+   733→};
+   734→
+   735→const staggerContainer = {
+   736→  animate: { transition: { staggerChildren: 0.04 } },
+   737→};
+   738→
+   739→// ── Component ────────────────────────────────────────────────────────────────
+   740→
+   741→interface DraftQuestion {
+   742→  text: string;
+   743→  type: 'richtig-falsch' | 'multiple-choice';
+   744→  correctAnswer: string;
+   745→  options: { key: string; text: string }[];
+   746→}
+   747→
+   748→export function ReadingModule() {
+   749→  const { saveExerciseResult, customReadingExercises, addCustomReadingExercise, deleteCustomReadingExercise } = useAppStore() as any;
+   750→
+   751→  const [screen, setScreen] = useState<Screen>('topics');
+   752→  const [selectedExercise, setSelectedExercise] = useState<ReadingExercise | null>(null);
+   753→  const [selectedLevel, setSelectedLevel] = useState<string>('all');
+   754→  const [answers, setAnswers] = useState<Record<number, string>>({});
+   755→  const [submitted, setSubmitted] = useState(false);
+   756→
+   757→  // ── Create form state
+   758→  const [createForm, setCreateForm] = useState({
+   759→    title: '',
+   760→    titleTr: '',
+   761→    level: 'A1' as 'A1' | 'A2' | 'B1',
+   762→    category: '',
+   763→    text: '',
+   764→  });
+   765→  const [draftQuestions, setDraftQuestions] = useState<DraftQuestion[]>([]);
+   766→  const [newQText, setNewQText] = useState('');
+   767→  const [newQType, setNewQType] = useState<'richtig-falsch' | 'multiple-choice'>('richtig-falsch');
+   768→  const [newQAnswer, setNewQAnswer] = useState('richtig');
+   769→  const [newOptA, setNewOptA] = useState('');
+   770→  const [newOptB, setNewOptB] = useState('');
+   771→  const [newOptC, setNewOptC] = useState('');
+   772→
+   773→  // ── AI generation state
+   774→  const [aiPrompt, setAiPrompt] = useState('');
+   775→  const [aiLevel, setAiLevel] = useState<'A1' | 'A2' | 'B1'>('A1');
+   776→  const [aiCategory, setAiCategory] = useState('');
+   777→  const [aiLoading, setAiLoading] = useState(false);
+   778→  const [aiError, setAiError] = useState('');
+   779→
+   780→  // ── Merge custom exercises with built-in
+   781→  const allExercises = useMemo(() => {
+   782→    const custom: ReadingExercise[] = (customReadingExercises || []).map((c: CustomReadingExercise) => ({
+   783→      ...c,
+   784→      icon: User,
+   785→    }));
+   786→    return [...readingExercises, ...custom];
+   787→  }, [customReadingExercises]);
+   788→
+   789→  // ── Filtered exercises by level
+   790→  const filteredExercises = useMemo(() => {
+   791→    if (selectedLevel === 'all') return allExercises;
+   792→    return allExercises.filter((e) => e.level === selectedLevel);
+   793→  }, [selectedLevel, allExercises]);
+   794→
+   795→  // ── Group by level for topics screen
+   796→  const grouped = useMemo(() => {
+   797→    const map = new Map<string, ReadingExercise[]>();
+   798→    for (const ex of filteredExercises) {
+   799→      const arr = map.get(ex.level) || [];
+   800→      arr.push(ex);
+   801→      map.set(ex.level, arr);
+   802→    }
+   803→    return map;
+   804→  }, [filteredExercises]);
+   805→
+   806→  // ── Results after submit
+   807→  const results = useMemo(() => {
+   808→    if (!selectedExercise || !submitted) return null;
+   809→    let correct = 0;
+   810→    for (const q of selectedExercise.questions) {
+   811→      if (answers[q.id] === q.correctAnswer) correct++;
+   812→    }
+   813→    return {
+   814→      correct,
+   815→      total: selectedExercise.questions.length,
+   816→      percentage: Math.round((correct / selectedExercise.questions.length) * 100),
+   817→    };
+   818→  }, [selectedExercise, submitted, answers]);
+   819→
+   820→  // ── Handlers
+   821→  const handleStartExercise = (exercise: ReadingExercise) => {
+   822→    setSelectedExercise(exercise);
+   823→    setAnswers({});
+   824→    setSubmitted(false);
+   825→    setScreen('read');
+   826→  };
+   827→
+   828→  const handleAnswer = (questionId: number, answer: string) => {
+   829→    if (submitted) return;
+   830→    setAnswers((prev) => ({ ...prev, [questionId]: answer }));
+   831→  };
+   832→
+   833→  const handleSubmit = () => {
+   834→    if (!selectedExercise) return;
+   835→    const unanswered = selectedExercise.questions.filter((q) => !answers[q.id]).length;
+   836→    if (unanswered > 0) return;
+   837→    setSubmitted(true);
+   838→
+   839→    // Save to store
+   840→    if (saveExerciseResult) {
+   841→      const correctCount = selectedExercise.questions.filter((q) => answers[q.id] === q.correctAnswer).length;
+   842→      saveExerciseResult({
+   843→        type: 'reading',
+   844→        correct: correctCount,
+   845→        total: selectedExercise.questions.length,
+   846→        level: selectedExercise.level,
+   847→      });
+   848→    }
+   849→  };
+   850→
+   851→  const handleRetry = () => {
+   852→    if (!selectedExercise) return;
+   853→    setAnswers({});
+   854→    setSubmitted(false);
+   855→  };
+   856→
+   857→  const handleBackToTopics = () => {
+   858→    setScreen('topics');
+   859→    setSelectedExercise(null);
+   860→    setAnswers({});
+   861→    setSubmitted(false);
+   862→  };
+   863→
+   864→  const allAnswered = selectedExercise
+   865→    ? selectedExercise.questions.every((q) => answers[q.id])
+   866→    : false;
+   867→
+   868→  // ── Create handlers
+   869→  const handleAddQuestion = () => {
+   870→    const text = newQText.trim();
+   871→    if (!text) return;
+   872→    if (newQType === 'multiple-choice') {
+   873→      if (!newOptA.trim() || !newOptB.trim() || !newOptC.trim()) return;
+   874→    }
+   875→    const q: DraftQuestion = {
+   876→      text,
+   877→      type: newQType,
+   878→      correctAnswer: newQAnswer,
+   879→      options: newQType === 'multiple-choice'
+   880→        ? [
+   881→            { key: 'a', text: newOptA.trim() },
+   882→            { key: 'b', text: newOptB.trim() },
+   883→            { key: 'c', text: newOptC.trim() },
+   884→          ]
+   885→        : [],
+   886→    };
+   887→    setDraftQuestions((prev) => [...prev, q]);
+   888→    setNewQText('');
+   889→    setNewOptA('');
+   890→    setNewOptB('');
+   891→    setNewOptC('');
+   892→    setNewQAnswer('richtig');
+   893→  };
+   894→
+   895→  const handleRemoveDraftQuestion = (idx: number) => {
+   896→    setDraftQuestions((prev) => prev.filter((_, i) => i !== idx));
+   897→  };
+   898→
+   899→  const handleSaveExercise = () => {
+   900→    if (!createForm.title.trim() || !createForm.text.trim() || draftQuestions.length === 0) return;
+   901→    const exercise: CustomReadingExercise = {
+   902→      id: `custom-${Date.now()}`,
+   903→      level: createForm.level,
+   904→      title: createForm.title.trim(),
+   905→      titleTr: createForm.titleTr.trim() || createForm.title.trim(),
+   906→      category: createForm.category.trim() || 'Özel',
+   907→      text: createForm.text.trim(),
+   908→      questions: draftQuestions.map((q, i) => ({
+   909→        id: i + 1,
+   910→        text: q.text,
+   911→        type: q.type,
+   912→        correctAnswer: q.correctAnswer,
+   913→        options: q.options.length > 0 ? q.options : undefined,
+   914→      })),
+   915→      createdAt: new Date().toISOString(),
+   916→    };
+   917→    addCustomReadingExercise(exercise);
+   918→    setScreen('topics');
+   919→    setCreateForm({ title: '', titleTr: '', level: 'A1', category: '', text: '' });
+   920→    setDraftQuestions([]);
+   921→  };
+   922→
+   923→  const handleDeleteCustom = (id: string) => {
+   924→    deleteCustomReadingExercise(id);
+   925→  };
+   926→
+   927→  const isCustomExercise = (id: string) => id.startsWith('custom-');
+   928→
+   929→  // ── AI generate handler
+   930→  const handleAIGenerate = useCallback(async () => {
+   931→    if (!aiPrompt.trim()) return;
+   932→    setAiLoading(true);
+   933→    setAiError('');
+   934→    try {
+   935→      const { apiKeys } = useAppStore.getState() as any;
+   936→      const zhipuKey = apiKeys?.zhipuKey || '';
+   937→      const res = await fetch('/api/chat', {
+   938→        method: 'POST',
+   939→        headers: { 'Content-Type': 'application/json' },
+   940→        body: JSON.stringify({
+   941→          messages: [{ role: 'user', content: aiPrompt.trim() }],
+   942→          systemPrompt: `Sen bir Almanca dil öğretmenisin. Kullanıcının verdiği konu hakkında kısa bir Almanca okuma metni ve ${aiLevel} seviyesinde 5 adet comprehension sorusu oluştur.
+   943→
+   944→KURALLAR:
+   945→- Metin ${aiLevel} seviyesinde olmalı, gerçekçi günlük dil kullanmalı
+   946→- Metin kısa olmalı (4-8 cümle)
+   947→- Soruların 3'ü richtig/falsch (true/false), 2'si çoktan seçmeli (a/b/c) olmalı
+   948→- TÜMÜ ALMANCA olarak yaz
+   949→
+   950→JSON formatında döndür, BAŞKA HİÇBİR ŞEY EKLEME:
+   951→{"title":"Almanca başlık","titleTr":"Türkçe başlık","category":"Kategori","text":"Almanca metin buraya...","questions":[{"text":"Soru 1","type":"richtig-falsch","correctAnswer":"richtig"},{"text":"Soru 2","type":"richtig-falsch","correctAnswer":"falsch"},{"text":"Soru 3","type":"richtig-falsch","correctAnswer":"richtig"},{"text":"Soru 4","type":"multiple-choice","correctAnswer":"a","options":[{"key":"a","text":"A şıkkı"},{"key":"b","text":"B şıkkı"},{"key":"c","text":"C şıkkı"}]},{"text":"Soru 5","type":"multiple-choice","correctAnswer":"b","options":[{"key":"a","text":"A şıkkı"},{"key":"b","text":"B şıkkı"},{"key":"c","text":"C şıkkı"}]}]}`,
+   952→          zhipuKey,
+   953→          maxTokens: 1500,
+   954→          temperature: 0.7,
+   955→        }),
+   956→      });
+   957→      const data = await res.json();
+   958→      if (data.error) {
+   959→        setAiError(data.error);
+   960→        return;
+   961→      }
+   962→      const reply = data.reply || '';
+   963→      let cleaned = reply.trim();
+   964→      if (cleaned.startsWith('```')) {
+   965→        cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '');
+   966→      }
+   967→      const match = cleaned.match(/\{[\s\S]*\}/);
+   968→      if (!match) {
+   969→        setAiError('Yanıt JSON formatında değil. Lütfen tekrar deneyin.');
+   970→        return;
+   971→      }
+   972→      const parsed = JSON.parse(match[0]);
+   973→      if (!parsed.text || !parsed.questions || !Array.isArray(parsed.questions)) {
+   974→        setAiError('Geçersiz yanıt formatı.');
+   975→        return;
+   976→      }
+   977→      // Fill the create form with AI result
+   978→      setCreateForm({
+   979→        title: parsed.title || 'AI Metni',
+   980→        titleTr: parsed.titleTr || '',
+   981→        level: aiLevel,
+   982→        category: aiCategory || parsed.category || 'Özel',
+   983→        text: parsed.text,
+   984→      });
+   985→      setDraftQuestions(parsed.questions.map((q: any, i: number) => ({
+   986→        text: q.text,
+   987→        type: q.type || 'richtig-falsch',
+   988→        correctAnswer: q.correctAnswer || 'richtig',
+   989→        options: q.options || [],
+   990→      })));
+   991→      setScreen('create');
+   992→    } catch (err: any) {
+   993→      setAiError(err?.message || 'Bir hata oluştu. Lütfen tekrar deneyin.');
+   994→    } finally {
+   995→      setAiLoading(false);
+   996→    }
+   997→  }, [aiPrompt, aiLevel, aiCategory]);
+   998→
+   999→  // ── Render: Topics Screen
+  1000→  if (screen === 'topics') {
+  1001→    return (
+  1002→      <motion.div key="topics" initial="initial" animate="animate" exit="exit" variants={staggerContainer} className="space-y-6">
+  1003→        {/* Header */}
+  1004→        <motion.div variants={fadeInUp} className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 p-6 text-white shadow-sm">
+  1005→          <div className="relative z-10">
+  1006→            <div className="mb-2 flex items-center gap-3">
+  1007→              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur">
+  1008→                <BookOpenText className="h-5 w-5" />
+  1009→              </div>
+  1010→              <h2 className="text-xl font-bold">Okuma Anlama</h2>
+  1011→            </div>
+  1012→            <p className="ml-[52px] text-sm text-white/80">
+  1013→              Almanca metinleri okuyun, soruları cevaplayın. Seviyenize göre seçin.
+  1014→            </p>
+  1015→          </div>
+  1016→          <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/10" />
+  1017→          <div className="absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-white/10" />
+  1018→        </motion.div>
+  1019→
+  1020→        {/* Add custom + AI buttons */}
+  1021→        <motion.div variants={fadeInUp} className="flex gap-2">
+  1022→          <Button
+  1023→            onClick={() => setScreen('create')}
+  1024→            className="flex-1 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 shadow-sm"
+  1025→          >
+  1026→            <Plus className="mr-2 h-4 w-4" />
+  1027→            Kendi Metinimi Ekle
+  1028→          </Button>
+  1029→          <Button
+  1030→            onClick={() => setScreen('ai-generate')}
+  1031→            variant="outline"
+  1032→            className="flex-1 rounded-xl border-purple-200 text-purple-600 hover:bg-purple-50 hover:border-purple-300"
+  1033→          >
+  1034→            <Sparkles className="mr-2 h-4 w-4" />
+  1035→            AI ile Oluştur
+  1036→          </Button>
+  1037→        </motion.div>
+  1038→
+  1039→        {/* Level filter */}
+  1040→        <motion.div variants={fadeInUp} className="flex gap-2">
+  1041→          {[{ key: 'all', label: 'Tümü' }, { key: 'A1', label: 'A1' }, { key: 'A2', label: 'A2' }, { key: 'B1', label: 'B1' }].map((l) => (
+  1042→            <button
+  1043→              key={l.key}
+  1044→              onClick={() => setSelectedLevel(l.key)}
+  1045→              className={cn(
+  1046→                'rounded-full px-4 py-1.5 text-xs font-medium transition-colors',
+  1047→                selectedLevel === l.key
+  1048→                  ? 'bg-indigo-600 text-white'
+  1049→                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+  1050→              )}
+  1051→            >
+  1052→              {l.label}
+  1053→            </button>
+  1054→          ))}
+  1055→        </motion.div>
+  1056→
+  1057→        {/* Exercise list grouped by level */}
+  1058→        {Array.from(grouped.entries()).map(([level, exercises]) => (
+  1059→          <motion.div key={level} variants={fadeInUp} className="space-y-3">
+  1060→            <div className="flex items-center gap-2">
+  1061→              <Badge className={cn('text-xs font-semibold', LEVEL_CONFIG[level]?.badge)}>{level}</Badge>
+  1062→              <span className="text-xs text-gray-500">{LEVEL_CONFIG[level]?.desc}</span>
+  1063→            </div>
+  1064→            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+  1065→              {exercises.map((ex) => {
+  1066→                const Icon = ex.icon;
+  1067→                const custom = isCustomExercise(ex.id);
+  1068→                return (
+  1069→                  <motion.div
+  1070→                    key={ex.id}
+  1071→                    whileHover={{ scale: 1.01 }}
+  1072→                    whileTap={{ scale: 0.99 }}
+  1073→                    className="group cursor-pointer"
+  1074→                  >
+  1075→                    <Card className="h-full rounded-2xl border-0 shadow-sm transition-shadow hover:shadow-md">
+  1076→                      <CardContent className="p-4">
+  1077→                        <div className="flex items-start gap-3">
+  1078→                          <div
+  1079→                            onClick={() => handleStartExercise(ex)}
+  1080→                            className="flex items-start gap-3 min-w-0 flex-1"
+  1081→                          >
+  1082→                            <div className={cn('flex h-10 w-10 shrink-0 items-center justify-center rounded-xl', LEVEL_CONFIG[level]?.bg)}>
+  1083→                              <Icon className={cn('h-5 w-5', LEVEL_CONFIG[level]?.color)} />
+  1084→                            </div>
+  1085→                            <div className="min-w-0 flex-1">
+  1086→                              <div className="flex items-center gap-1.5">
+  1087→                                <h4 className="text-sm font-semibold text-gray-800 leading-tight">{ex.title}</h4>
+  1088→                                {custom && <Badge className="text-[9px] px-1 py-0 bg-purple-100 text-purple-600">Özel</Badge>}
+  1089→                              </div>
+  1090→                              <p className="mt-0.5 text-xs text-gray-500 truncate">{ex.titleTr}</p>
+  1091→                              <div className="mt-2 flex items-center gap-2 text-[10px] text-gray-400">
+  1092→                                <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{ex.category}</Badge>
+  1093→                                <span className="flex items-center gap-0.5">
+  1094→                                  <ClipboardList className="h-3 w-3" />
+  1095→                                  {ex.questions.length} soru
+  1096→                                </span>
+  1097→                              </div>
+  1098→                            </div>
+  1099→                          </div>
+  1100→                          <div className="flex items-center gap-1">
+  1101→                            {custom && (
+  1102→                              <button
+  1103→                                onClick={(e) => { e.stopPropagation(); handleDeleteCustom(ex.id); }}
+  1104→                                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-gray-300 opacity-0 transition-all hover:bg-red-50 hover:text-red-500 group-hover:opacity-100"
+  1105→                              >
+  1106→                                <Trash2 className="h-3.5 w-3.5" />
+  1107→                              </button>
+  1108→                            )}
+  1109→                            <ChevronRight className="h-4 w-4 shrink-0 text-gray-300 transition-transform group-hover:translate-x-0.5 group-hover:text-gray-500" />
+  1110→                          </div>
+  1111→                        </div>
+  1112→                      </CardContent>
+  1113→                    </Card>
+  1114→                  </motion.div>
+  1115→                );
+  1116→              })}
+  1117→            </div>
+  1118→          </motion.div>
+  1119→        ))}
+  1120→      </motion.div>
+  1121→    );
+  1122→  }
+  1123→
+  1124→  // ── Render: Reading Screen
+  1125→  if (screen === 'read' && selectedExercise) {
+  1126→    const ex = selectedExercise;
+  1127→    const config = LEVEL_CONFIG[ex.level] || LEVEL_CONFIG.A1;
+  1128→    const Icon = ex.icon;
+  1129→    const progress = submitted
+  1130→      ? 100
+  1131→      : (Object.keys(answers).length / ex.questions.length) * 100;
+  1132→
+  1133→    return (
+  1134→      <motion.div key="read" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-5">
+  1135→        {/* Back button + title */}
+  1136→        <div className="flex items-center justify-between">
+  1137→          <Button variant="ghost" size="sm" onClick={handleBackToTopics} className="-ml-2 text-gray-600 hover:text-gray-800">
+  1138→            <ArrowLeft className="mr-1 h-4 w-4" />
+  1139→            Metinler
+  1140→          </Button>
+  1141→          <Badge className={cn('text-xs font-semibold', config.badge)}>{ex.level}</Badge>
+  1142→        </div>
+  1143→
+  1144→        {/* Progress bar */}
+  1145→        {!submitted && (
+  1146→          <div className="flex items-center gap-3">
+  1147→            <Progress value={progress} className="h-2" />
+  1148→            <span className="shrink-0 text-xs text-gray-400">
+  1149→              {Object.keys(answers).length}/{ex.questions.length}
+  1150→            </span>
+  1151→          </div>
+  1152→        )}
+  1153→
+  1154→        {/* Reading text card */}
+  1155→        <Card className="rounded-2xl border-0 shadow-sm overflow-hidden">
+  1156→          <div className={cn('px-4 py-3 flex items-center gap-2', config.bg)}>
+  1157→            <Icon className={cn('h-4 w-4', config.color)} />
+  1158→            <h3 className="text-sm font-semibold text-gray-800">{ex.title}</h3>
+  1159→            <Badge variant="secondary" className="ml-auto text-[10px] px-1.5 py-0">{ex.category}</Badge>
+  1160→          </div>
+  1161→          <CardContent className="p-4">
+  1162→            <div className="whitespace-pre-line text-sm leading-relaxed text-gray-700 font-mono bg-gray-50 rounded-xl p-4 max-h-[45vh] overflow-y-auto">
+  1163→              {ex.text}
+  1164→            </div>
+  1165→          </CardContent>
+  1166→        </Card>
+  1167→
+  1168→        {/* Questions */}
+  1169→        <div className="space-y-3">
+  1170→          <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+  1171→            <ClipboardList className="h-4 w-4" />
+  1172→            Sorular
+  1173→          </h3>
+  1174→
+  1175→          {ex.questions.map((q, idx) => {
+  1176→            const userAnswer = answers[q.id];
+  1177→            const isCorrect = userAnswer === q.correctAnswer;
+  1178→
+  1179→            return (
+  1180→              <motion.div
+  1181→                key={q.id}
+  1182→                initial={{ opacity: 0, y: 8 }}
+  1183→                animate={{ opacity: 1, y: 0 }}
+  1184→                transition={{ delay: idx * 0.05 }}
+  1185→              >
+  1186→                <Card className={cn(
+  1187→                  'rounded-2xl border-0 shadow-sm overflow-hidden transition-colors',
+  1188→                  submitted && userAnswer && (isCorrect ? 'ring-2 ring-emerald-300' : !isCorrect ? 'ring-2 ring-red-300' : '')
+  1189→                )}>
+  1190→                  <CardContent className="p-4 space-y-3">
+  1191→                    {/* Question text */}
+  1192→                    <div className="flex items-start gap-2">
+  1193→                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-100 text-[10px] font-bold text-gray-500">
+  1194→                        {idx + 1}
+  1195→                      </span>
+  1196→                      <p className="text-sm text-gray-800 font-medium leading-relaxed">
+  1197→                        {q.text}
+  1198→                      </p>
+  1199→                    </div>
+  1200→
+  1201→                    {/* Richtig/Falsch buttons */}
+  1202→                    {q.type === 'richtig-falsch' && (
+  1203→                      <div className="ml-8 flex gap-2">
+  1204→                        {['richtig', 'falsch'].map((opt) => {
+  1205→                          const selected = userAnswer === opt;
+  1206→                          const showCorrect = submitted && opt === q.correctAnswer;
+  1207→                          const showWrong = submitted && selected && !isCorrect;
+  1208→                          return (
+  1209→                            <button
+  1210→                              key={opt}
+  1211→                              disabled={submitted}
+  1212→                              onClick={() => handleAnswer(q.id, opt)}
+  1213→                              className={cn(
+  1214→                                'flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium transition-all',
+  1215→                                !submitted && !selected && 'bg-gray-100 text-gray-600 hover:bg-gray-200',
+  1216→                                !submitted && selected && 'bg-indigo-100 text-indigo-700 ring-2 ring-indigo-300',
+  1217→                                submitted && showCorrect && 'bg-emerald-100 text-emerald-700',
+  1218→                                submitted && showWrong && 'bg-red-100 text-red-600',
+  1219→                                submitted && !showCorrect && !showWrong && 'bg-gray-100 text-gray-400'
+  1220→                              )}
+  1221→                            >
+  1222→                              {showCorrect && <CheckCircle2 className="h-4 w-4" />}
+  1223→                              {showWrong && <XCircle className="h-4 w-4" />}
+  1224→                              {opt === 'richtig' ? 'Richtig' : 'Falsch'}
+  1225→                            </button>
+  1226→                          );
+  1227→                        })}
+  1228→                      </div>
+  1229→                    )}
+  1230→
+  1231→                    {/* Multiple choice options */}
+  1232→                    {q.type === 'multiple-choice' && q.options && (
+  1233→                      <div className="ml-8 space-y-1.5">
+  1234→                        {q.options.map((opt) => {
+  1235→                          const selected = userAnswer === opt.key;
+  1236→                          const showCorrect = submitted && opt.key === q.correctAnswer;
+  1237→                          const showWrong = submitted && selected && !isCorrect;
+  1238→                          return (
+  1239→                            <button
+  1240→                              key={opt.key}
+  1241→                              disabled={submitted}
+  1242→                              onClick={() => handleAnswer(q.id, opt.key)}
+  1243→                              className={cn(
+  1244→                                'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all text-left',
+  1245→                                !submitted && !selected && 'bg-gray-50 text-gray-600 hover:bg-gray-100',
+  1246→                                !submitted && selected && 'bg-indigo-50 text-indigo-700 ring-2 ring-indigo-300',
+  1247→                                submitted && showCorrect && 'bg-emerald-50 text-emerald-700',
+  1248→                                submitted && showWrong && 'bg-red-50 text-red-600',
+  1249→                                submitted && !showCorrect && !showWrong && 'bg-gray-50 text-gray-400'
+  1250→                              )}
+  1251→                            >
+  1252→                              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gray-200 text-[10px] font-bold">
+  1253→                                {opt.key.toUpperCase()}
+  1254→                              </span>
+  1255→                              <span className="flex-1">{opt.text}</span>
+  1256→                              {showCorrect && <CheckCircle2 className="h-4 w-4 shrink-0" />}
+  1257→                              {showWrong && <XCircle className="h-4 w-4 shrink-0" />}
+  1258→                            </button>
+  1259→                          );
+  1260→                        })}
+  1261→                      </div>
+  1262→                    )}
+  1263→
+  1264→                    {/* Submitted feedback */}
+  1265→                    {submitted && !userAnswer && (
+  1266→                      <p className="ml-8 text-xs text-gray-400">Cevaplanmadı</p>
+  1267→                    )}
+  1268→                  </CardContent>
+  1269→                </Card>
+  1270→              </motion.div>
+  1271→            );
+  1272→          })}
+  1273→        </div>
+  1274→
+  1275→        {/* Submit / Summary buttons */}
+  1276→        {!submitted ? (
+  1277→          <div className="sticky bottom-4 z-10">
+  1278→            <Button
+  1279→              onClick={handleSubmit}
+  1280→              disabled={!allAnswered}
+  1281→              className="w-full rounded-xl bg-indigo-600 py-6 text-white hover:bg-indigo-700 disabled:opacity-50 shadow-lg"
+  1282→              size="lg"
+  1283→            >
+  1284→              Cevapları Kontrol Et
+  1285→            </Button>
+  1286→          </div>
+  1287→        ) : results ? (
+  1288→          <motion.div
+  1289→            initial={{ opacity: 0, y: 16 }}
+  1290→            animate={{ opacity: 1, y: 0 }}
+  1291→            className="space-y-3"
+  1292→          >
+  1293→            {/* Result card */}
+  1294→            <Card className={cn(
+  1295→              'rounded-2xl border-0 shadow-lg overflow-hidden',
+  1296→              results.percentage >= 80 ? 'bg-emerald-50' : results.percentage >= 50 ? 'bg-amber-50' : 'bg-red-50'
+  1297→            )}>
+  1298→              <CardContent className="p-6 text-center">
+  1299→                <div className="mb-3 flex justify-center">
+  1300→                  <div className={cn(
+  1301→                    'flex h-14 w-14 items-center justify-center rounded-full',
+  1302→                    results.percentage >= 80 ? 'bg-emerald-100' : results.percentage >= 50 ? 'bg-amber-100' : 'bg-red-100'
+  1303→                  )}>
+  1304→                    {results.percentage >= 80 ? (
+  1305→                      <Trophy className="h-7 w-7 text-emerald-600" />
+  1306→                    ) : results.percentage >= 50 ? (
+  1307→                      <Star className="h-7 w-7 text-amber-500" />
+  1308→                    ) : (
+  1309→                      <RotateCcw className="h-7 w-7 text-red-500" />
+  1310→                    )}
+  1311→                  </div>
+  1312→                </div>
+  1313→                <h3 className="text-lg font-bold text-gray-800">
+  1314→                  {results.percentage >= 80 ? 'Harika!' : results.percentage >= 50 ? 'İyi gidiyorsun!' : 'Tekrar dene!'}
+  1315→                </h3>
+  1316→                <p className="mt-1 text-sm text-gray-500">
+  1317→                  {results.correct} doğru / {results.total} soru
+  1318→                </p>
+  1319→                <div className="mt-3 text-3xl font-bold text-gray-800">{results.percentage}%</div>
+  1320→              </CardContent>
+  1321→            </Card>
+  1322→
+  1323→            <div className="flex gap-2">
+  1324→              <Button onClick={handleRetry} variant="outline" className="flex-1 rounded-xl">
+  1325→                <RotateCcw className="mr-2 h-4 w-4" />
+  1326→                Tekrar Dene
+  1327→              </Button>
+  1328→              <Button onClick={handleBackToTopics} className="flex-1 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700">
+  1329→                <BookOpenText className="mr-2 h-4 w-4" />
+  1330→                Diğer Metinler
+  1331→              </Button>
+  1332→            </div>
+  1333→          </motion.div>
+  1334→        ) : null}
+  1335→      </motion.div>
+  1336→    );
+  1337→  }
+  1338→
+  1339→  // ── Render: AI Generate Screen
+  1340→  if (screen === 'ai-generate') {
+  1341→    return (
+  1342→      <motion.div key="ai-generate" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} className="space-y-5">
+  1343→        {/* Back + title */}
+  1344→        <div className="flex items-center justify-between">
+  1345→          <Button variant="ghost" size="sm" onClick={() => setScreen('topics')} className="-ml-2 text-gray-600 hover:text-gray-800">
+  1346→            <ArrowLeft className="mr-1 h-4 w-4" />
+  1347→            Metinler
+  1348→          </Button>
+  1349→          <Badge className="bg-purple-100 text-purple-700 text-xs font-semibold">AI Oluştur</Badge>
+  1350→        </div>
+  1351→
+  1352→        {/* AI card */}
+  1353→        <Card className="rounded-2xl border-0 shadow-sm overflow-hidden">
+  1354→          <div className="bg-gradient-to-r from-violet-500 to-purple-600 px-4 py-3 text-white">
+  1355→            <h3 className="text-sm font-bold flex items-center gap-2">
+  1356→              <Sparkles className="h-4 w-4" />
+  1357→              Yapay Zeka ile Metin Oluştur
+  1358→            </h3>
+  1359→            <p className="mt-1 text-xs text-white/80">
+  1360→              Bir konu yazın, AI size Almanca okuma metni ve soruları hazırlasın.
+  1361→            </p>
+  1362→          </div>
+  1363→          <CardContent className="p-4 space-y-4">
+  1364→            {/* Level + Category */}
+  1365→            <div className="grid grid-cols-2 gap-3">
+  1366→              <div>
+  1367→                <label className="block text-xs font-medium text-gray-600 mb-1">Seviye</label>
+  1368→                <div className="flex gap-1.5">
+  1369→                  {(['A1', 'A2', 'B1'] as const).map((l) => (
+  1370→                    <button
+  1371→                      key={l}
+  1372→                      onClick={() => setAiLevel(l)}
+  1373→                      className={cn(
+  1374→                        'flex-1 rounded-lg py-2 text-xs font-semibold transition-colors',
+  1375→                        aiLevel === l ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+  1376→                      )}
+  1377→                    >
+  1378→                      {l}
+  1379→                    </button>
+  1380→                  ))}
+  1381→                </div>
+  1382→              </div>
+  1383→              <div>
+  1384→                <label className="block text-xs font-medium text-gray-600 mb-1">Kategori</label>
+  1385→                <Input
+  1386→                  placeholder="z.B. İş, Sağlık..."
+  1387→                  value={aiCategory}
+  1388→                  onChange={(e) => setAiCategory(e.target.value)}
+  1389→                  className="rounded-xl h-10"
+  1390→                />
+  1391→              </div>
+  1392→            </div>
+  1393→
+  1394→            {/* Prompt */}
+  1395→            <div>
+  1396→              <label className="block text-xs font-medium text-gray-600 mb-1">Konu *</label>
+  1397→              <Textarea
+  1398→                placeholder={"Örn: Bir süpermarkette alışveriş yapan birinin deneyimi, bir doktor randevusu, bir e-posta daveti..."}
+  1399→                value={aiPrompt}
+  1400→                onChange={(e) => setAiPrompt(e.target.value)}
+  1401→                className="rounded-xl min-h-[100px] text-sm"
+  1402→              />
+  1403→            </div>
+  1404→
+  1405→            {/* Example prompts */}
+  1406→            <div>
+  1407→              <p className="text-[11px] text-gray-400 mb-1.5">Örnek konular:</p>
+  1408→              <div className="flex flex-wrap gap-1.5">
+  1409→                {['Bir e-posta daveti', 'Süpermarkette alışveriş', 'Doktor randevusu', 'Bir kiralık daire arama', 'Tren bileti alma', 'Spor salonu kaydı'].map((p) => (
+  1410→                  <button
+  1411→                    key={p}
+  1412→                    onClick={() => setAiPrompt(p)}
+  1413→                    className="rounded-full bg-gray-100 px-2.5 py-1 text-[11px] text-gray-600 hover:bg-purple-50 hover:text-purple-600 transition-colors"
+  1414→                  >
+  1415→                    {p}
+  1416→                  </button>
+  1417→                ))}
+  1418→              </div>
+  1419→            </div>
+  1420→
+  1421→            {/* Error */}
+  1422→            {aiError && (
+  1423→              <div className="rounded-lg bg-red-50 border border-red-200 p-3 text-xs text-red-700">
+  1424→                {aiError}
+  1425→              </div>
+  1426→            )}
+  1427→
+  1428→            {/* Generate button */}
+  1429→            <Button
+  1430→              onClick={handleAIGenerate}
+  1431→              disabled={!aiPrompt.trim() || aiLoading}
+  1432→              className="w-full rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 text-white hover:from-violet-600 hover:to-purple-700 disabled:opacity-50"
+  1433→              size="lg"
+  1434→            >
+  1435→              {aiLoading ? (
+  1436→                <>
+  1437→                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+  1438→                  Oluşturuluyor...
+  1439→                </>
+  1440→              ) : (
+  1441→                <>
+  1442→                  <Sparkles className="mr-2 h-4 w-4" />
+  1443→                  Metin ve Soruları Oluştur
+  1444→                </>
+  1445→              )}
+  1446→            </Button>
+  1447→          </CardContent>
+  1448→        </Card>
+  1449→      </motion.div>
+  1450→    );
+  1451→  }
+  1452→
+  1453→  // ── Render: Create Screen
+  1454→  if (screen === 'create') {
+  1455→    const canSave = createForm.title.trim() && createForm.text.trim() && draftQuestions.length >= 1;
+  1456→
+  1457→    return (
+  1458→      <motion.div key="create" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} className="space-y-5">
+  1459→        {/* Back + title */}
+  1460→        <div className="flex items-center justify-between">
+  1461→          <Button variant="ghost" size="sm" onClick={() => setScreen('topics')} className="-ml-2 text-gray-600 hover:text-gray-800">
+  1462→            <ArrowLeft className="mr-1 h-4 w-4" />
+  1463→            Metinler
+  1464→          </Button>
+  1465→          <Badge className="bg-purple-100 text-purple-700 text-xs font-semibold">Yeni Metin</Badge>
+  1466→        </div>
+  1467→
+  1468→        {/* Header card */}
+  1469→        <Card className="rounded-2xl border-0 shadow-sm overflow-hidden">
+  1470→          <div className="bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-3 text-white">
+  1471→            <h3 className="text-sm font-bold flex items-center gap-2">
+  1472→              <Plus className="h-4 w-4" />
+  1473→              Kendi Okuma Metnini Oluştur
+  1474→            </h3>
+  1475→            <p className="mt-1 text-xs text-white/80">Bir Almanca metin yazın, ardından doğru/yanlış veya çoktan seçmeli sorular ekleyin.</p>
+  1476→          </div>
+  1477→          <CardContent className="p-4 space-y-4">
+  1478→            {/* Title fields */}
+  1479→            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+  1480→              <div>
+  1481→                <label className="block text-xs font-medium text-gray-600 mb-1">Başlık (Almanca) *</label>
+  1482→                <Input
+  1483→                  placeholder="z.B. E-Mail: Einladung"
+  1484→                  value={createForm.title}
+  1485→                  onChange={(e) => setCreateForm((p) => ({ ...p, title: e.target.value }))}
+  1486→                  className="rounded-xl h-10"
+  1487→                />
+  1488→              </div>
+  1489→              <div>
+  1490→                <label className="block text-xs font-medium text-gray-600 mb-1">Başlık (Türkçe)</label>
+  1491→                <Input
+  1492→                  placeholder="z.B. E-Posta: Davet"
+  1493→                  value={createForm.titleTr}
+  1494→                  onChange={(e) => setCreateForm((p) => ({ ...p, titleTr: e.target.value }))}
+  1495→                  className="rounded-xl h-10"
+  1496→                />
+  1497→              </div>
+  1498→            </div>
+  1499→
+  1500→            {/* Level + Category */}
+  1501→            <div className="grid grid-cols-2 gap-3">
+  1502→              <div>
+  1503→                <label className="block text-xs font-medium text-gray-600 mb-1">Seviye *</label>
+  1504→                <div className="flex gap-1.5">
+  1505→                  {(['A1', 'A2', 'B1'] as const).map((l) => (
+  1506→                    <button
+  1507→                      key={l}
+  1508→                      onClick={() => setCreateForm((p) => ({ ...p, level: l }))}
+  1509→                      className={cn(
+  1510→                        'flex-1 rounded-lg py-2 text-xs font-semibold transition-colors',
+  1511→                        createForm.level === l
+  1512→                          ? 'bg-indigo-600 text-white'
+  1513→                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+  1514→                      )}
+  1515→                    >
+  1516→                      {l}
+  1517→                    </button>
+  1518→                  ))}
+  1519→                </div>
+  1520→              </div>
+  1521→              <div>
+  1522→                <label className="block text-xs font-medium text-gray-600 mb-1">Kategori</label>
+  1523→                <Input
+  1524→                  placeholder="z.B. İş, Eğitim..."
+  1525→                  value={createForm.category}
+  1526→                  onChange={(e) => setCreateForm((p) => ({ ...p, category: e.target.value }))}
+  1527→                  className="rounded-xl h-10"
+  1528→                />
+  1529→              </div>
+  1530→            </div>
+  1531→
+  1532→            {/* Text */}
+  1533→            <div>
+  1534→              <label className="block text-xs font-medium text-gray-600 mb-1">Almanca Metin *</label>
+  1535→              <Textarea
+  1536→                placeholder="Almanca metninizi buraya yazın..."
+  1537→                value={createForm.text}
+  1538→                onChange={(e) => setCreateForm((p) => ({ ...p, text: e.target.value }))}
+  1539→                className="rounded-xl min-h-[160px] text-sm leading-relaxed font-mono"
+  1540→              />
+  1541→            </div>
+  1542→          </CardContent>
+  1543→        </Card>
+  1544→
+  1545→        {/* Add question card */}
+  1546→        <Card className="rounded-2xl border-0 shadow-sm">
+  1547→          <CardContent className="p-4 space-y-3">
+  1548→            <div className="flex items-center justify-between">
+  1549→              <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+  1550→                <ClipboardList className="h-4 w-4 text-purple-500" />
+  1551→                Sorular ({draftQuestions.length})
+  1552→              </h4>
+  1553→              <div className="flex gap-1">
+  1554→                <button
+  1555→                  onClick={() => setNewQType('richtig-falsch')}
+  1556→                  className={cn(
+  1557→                    'rounded-lg px-2.5 py-1 text-[11px] font-medium transition-colors',
+  1558→                    newQType === 'richtig-falsch' ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+  1559→                  )}
+  1560→                >
+  1561→                  Doğru/Yanlış
+  1562→                </button>
+  1563→                <button
+  1564→                  onClick={() => { setNewQType('multiple-choice'); setNewQAnswer('a'); }}
+  1565→                  className={cn(
+  1566→                    'rounded-lg px-2.5 py-1 text-[11px] font-medium transition-colors',
+  1567→                    newQType === 'multiple-choice' ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+  1568→                  )}
+  1569→                >
+  1570→                  Çoktan Seçmeli
+  1571→                </button>
+  1572→              </div>
+  1573→            </div>
+  1574→
+  1575→            <Separator />
+  1576→
+  1577→            {/* Question text */}
+  1578→            <Input
+  1579→              placeholder="Soruyu yazın (Almanca)..."
+  1580→              value={newQText}
+  1581→              onChange={(e) => setNewQText(e.target.value)}
+  1582→              onKeyDown={(e) => e.key === 'Enter' && handleAddQuestion()}
+  1583→              className="rounded-xl h-10"
+  1584→            />
+  1585→
+  1586→            {/* Richtig/Falsch answer selector */}
+  1587→            {newQType === 'richtig-falsch' && (
+  1588→              <div className="flex gap-2">
+  1589→                {(['richtig', 'falsch'] as const).map((opt) => (
+  1590→                  <button
+  1591→                    key={opt}
+  1592→                    onClick={() => setNewQAnswer(opt)}
+  1593→                    className={cn(
+  1594→                      'flex-1 rounded-xl py-2 text-xs font-medium transition-colors',
+  1595→                      newQAnswer === opt
+  1596→                        ? opt === 'richtig' ? 'bg-emerald-100 text-emerald-700 ring-2 ring-emerald-300' : 'bg-red-100 text-red-600 ring-2 ring-red-300'
+  1597→                        : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
+  1598→                    )}
+  1599→                  >
+  1600→                    {opt === 'richtig' ? 'Richtig (Doğru)' : 'Falsch (Yanlış)'}
+  1601→                  </button>
+  1602→                ))}
+  1603→              </div>
+  1604→            )}
+  1605→
+  1606→            {/* Multiple choice options */}
+  1607→            {newQType === 'multiple-choice' && (
+  1608→              <div className="space-y-2">
+  1609→                <p className="text-[11px] text-gray-500">Doğru cevabı seçmek için şıkka tıklayın:</p>
+  1610→                {[
+  1611→                  { key: 'a', val: newOptA, set: setNewOptA, placeholder: 'A şıkkı...' },
+  1612→                  { key: 'b', val: newOptB, set: setNewOptB, placeholder: 'B şıkkı...' },
+  1613→                  { key: 'c', val: newOptC, set: setNewOptC, placeholder: 'C şıkkı...' },
+  1614→                ].map((opt) => (
+  1615→                  <div key={opt.key} className="flex gap-2 items-center">
+  1616→                    <button
+  1617→                      onClick={() => setNewQAnswer(opt.key)}
+  1618→                      className={cn(
+  1619→                        'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs font-bold transition-colors',
+  1620→                        newQAnswer === opt.key
+  1621→                          ? 'bg-indigo-600 text-white'
+  1622→                          : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+  1623→                      )}
+  1624→                    >
+  1625→                      {opt.key.toUpperCase()}
+  1626→                    </button>
+  1627→                    <Input
+  1628→                      placeholder={opt.placeholder}
+  1629→                      value={opt.val}
+  1630→                      onChange={(e) => opt.set(e.target.value)}
+  1631→                      className="rounded-lg h-9"
+  1632→                    />
+  1633→                  </div>
+  1634→                ))}
+  1635→              </div>
+  1636→            )}
+  1637→
+  1638→            {/* Add question button */}
+  1639→            <Button
+  1640→              onClick={handleAddQuestion}
+  1641→              variant="outline"
+  1642→              className="w-full rounded-xl border-dashed border-2 border-gray-200 hover:border-indigo-300 hover:bg-indigo-50 text-gray-500 hover:text-indigo-600"
+  1643→            >
+  1644→              <Plus className="mr-2 h-4 w-4" />
+  1645→              Soruyu Ekle
+  1646→            </Button>
+  1647→
+  1648→            {/* Draft questions list */}
+  1649→            <AnimatePresence>
+  1650→              {draftQuestions.length > 0 && (
+  1651→                <motion.div
+  1652→                  initial={{ opacity: 0, height: 0 }}
+  1653→                  animate={{ opacity: 1, height: 'auto' }}
+  1654→                  className="space-y-2"
+  1655→                >
+  1656→                  <Separator />
+  1657→                  <p className="text-xs font-medium text-gray-500">Eklenen Sorular:</p>
+  1658→                  {draftQuestions.map((q, idx) => (
+  1659→                    <motion.div
+  1660→                      key={idx}
+  1661→                      initial={{ opacity: 0, x: -10 }}
+  1662→                      animate={{ opacity: 1, x: 0 }}
+  1663→                      exit={{ opacity: 0, x: 10 }}
+  1664→                      className="flex items-start gap-2 rounded-xl bg-gray-50 p-3"
+  1665→                    >
+  1666→                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-purple-100 text-[10px] font-bold text-purple-600">
+  1667→                        {idx + 1}
+  1668→                      </span>
+  1669→                      <div className="min-w-0 flex-1">
+  1670→                        <p className="text-xs text-gray-700 font-medium">{q.text}</p>
+  1671→                        <div className="mt-1 flex items-center gap-2">
+  1672→                          <Badge variant="secondary" className="text-[9px] px-1.5 py-0">
+  1673→                            {q.type === 'richtig-falsch' ? 'Doğru/Yanlış' : 'Çoktan Seçmeli'}
+  1674→                          </Badge>
+  1675→                          <span className="text-[10px] text-gray-400">
+  1676→                            Cevap: <strong>{q.correctAnswer.toUpperCase()}</strong>
+  1677→                          </span>
+  1678→                        </div>
+  1679→                      </div>
+  1680→                      <button
+  1681→                        onClick={() => handleRemoveDraftQuestion(idx)}
+  1682→                        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg text-gray-300 hover:bg-red-50 hover:text-red-500 transition-colors"
+  1683→                      >
+  1684→                        <Trash2 className="h-3.5 w-3.5" />
+  1685→                      </button>
+  1686→                    </motion.div>
+  1687→                  ))}
+  1688→                </motion.div>
+  1689→              )}
+  1690→            </AnimatePresence>
+  1691→          </CardContent>
+  1692→        </Card>
+  1693→
+  1694→        {/* Save / Cancel buttons */}
+  1695→        <div className="flex gap-2">
+  1696→          <Button
+  1697→            variant="outline"
+  1698→            onClick={() => setScreen('topics')}
+  1699→            className="flex-1 rounded-xl"
+  1700→          >
+  1701→            <ArrowLeft className="mr-2 h-4 w-4" />
+  1702→            İptal
+  1703→          </Button>
+  1704→          <Button
+  1705→            onClick={handleSaveExercise}
+  1706→            disabled={!canSave}
+  1707→            className="flex-1 rounded-xl bg-purple-600 hover:bg-purple-700 text-white disabled:opacity-50"
+  1708→          >
+  1709→            <CheckCircle2 className="mr-2 h-4 w-4" />
+  1710→            Kaydet
+  1711→          </Button>
+  1712→        </div>
+  1713→      </motion.div>
+  1714→    );
+  1715→  }
+  1716→
+  1717→  return null;
+  1718→}
+  1719→
