@@ -1,0 +1,699 @@
+     1→'use client';
+     2→
+     3→import React, { useState, useCallback, useRef, useEffect } from 'react';
+     4→import { motion, AnimatePresence } from 'framer-motion';
+     5→import {
+     6→  Headphones,
+     7→  ArrowLeft,
+     8→  RotateCcw,
+     9→  Target,
+    10→  CheckCircle2,
+    11→  XCircle,
+    12→  Lightbulb,
+    13→  Trophy,
+    14→  Volume2,
+    15→  Clock,
+    16→  ListChecks,
+    17→} from 'lucide-react';
+    18→import { Card, CardContent } from '@/components/ui/card';
+    19→import { Button } from '@/components/ui/button';
+    20→import { Badge } from '@/components/ui/badge';
+    21→import { Progress } from '@/components/ui/progress';
+    22→import { Separator } from '@/components/ui/separator';
+    23→import { SpeakButton } from '@/components/shared/SpeakButton';
+    24→import { CategoryFilter } from '@/components/shared/CategoryFilter';
+    25→import { wordPairs, type WordPair, categories } from '@/lib/german-data';
+    26→import { useAppStore } from '@/lib/store';
+    27→import { getCategoryColor } from '@/lib/constants';
+    28→import { cn } from '@/lib/utils';
+    29→
+    30→type Screen = 'topics' | 'play' | 'summary';
+    31→type DifficultyMode = 'easy' | 'medium' | 'hard';
+    32→
+    33→interface SessionResult {
+    34→  wordId: string;
+    35→  german: string;
+    36→  turkish: string;
+    37→  isCorrect: boolean;
+    38→  responseTime: number; // ms
+    39→}
+    40→
+    41→const SESSION_SIZE = 15;
+    42→const ADVANCE_DELAY = 1500; // ms
+    43→
+    44→const MODE_CONFIG: Record<
+    45→  DifficultyMode,
+    46→  { label: string; desc: string; badge: string; badgeColor: string; icon: React.ElementType; color: string }
+    47→> = {
+    48→  easy: {
+    49→    label: 'Kolay Dinleme',
+    50→    desc: 'Kategori aynı, 4 seçenek',
+    51→    badge: 'Başlangıç',
+    52→    badgeColor: 'bg-emerald-100 text-emerald-700',
+    53→    icon: Volume2,
+    54→    color: 'from-green-500 to-emerald-500',
+    55→  },
+    56→  medium: {
+    57→    label: 'Orta Dinleme',
+    58→    desc: 'Farklı kategoriler, 4 seçenek',
+    59→    badge: 'Orta Seviye',
+    60→    badgeColor: 'bg-amber-100 text-amber-700',
+    61→    icon: Headphones,
+    62→    color: 'from-amber-500 to-orange-500',
+    63→  },
+    64→  hard: {
+    65→    label: 'Zor Dinleme',
+    66→    desc: 'Cümle dinle, seçenekler benzer',
+    67→    badge: 'İleri Seviye',
+    68→    badgeColor: 'bg-red-100 text-red-700',
+    69→    icon: Target,
+    70→    color: 'from-red-500 to-rose-500',
+    71→  },
+    72→};
+    73→
+    74→function shuffle<T>(arr: T[]): T[] {
+    75→  const a = [...arr];
+    76→  for (let i = a.length - 1; i > 0; i--) {
+    77→    const j = Math.floor(Math.random() * (i + 1));
+    78→    [a[i], a[j]] = [a[j], a[i]];
+    79→  }
+    80→  return a;
+    81→}
+    82→
+    83→function tokenize(s: string): string[] {
+    84→  return s
+    85→    .toLowerCase()
+    86→    .split(/[^\p{L}\p{N}]+/u)
+    87→    .filter(Boolean);
+    88→}
+    89→
+    90→// Jaccard similarity on Turkish tokens, with a small length-similarity bonus.
+    91→function similarity(a: WordPair, b: WordPair): number {
+    92→  const ta = new Set(tokenize(a.turkish));
+    93→  const tb = new Set(tokenize(b.turkish));
+    94→  if (ta.size === 0 || tb.size === 0) return 0;
+    95→  let shared = 0;
+    96→  ta.forEach((t) => {
+    97→    if (tb.has(t)) shared += 1;
+    98→  });
+    99→  const jaccard = shared / (ta.size + tb.size - shared);
+   100→  const lengthPenalty = Math.abs(a.turkish.length - b.turkish.length) / 100;
+   101→  return jaccard - lengthPenalty;
+   102→}
+   103→
+   104→function buildPool(selectedCategories: string[]): WordPair[] {
+   105→  let pool = [...wordPairs];
+   106→  if (selectedCategories.length > 0) {
+   107→    pool = pool.filter((w) => selectedCategories.includes(w.category));
+   108→  }
+   109→  return shuffle(pool).slice(0, SESSION_SIZE);
+   110→}
+   111→
+   112→function generateOptions(correct: WordPair, mode: DifficultyMode): WordPair[] {
+   113→  const pool = wordPairs.filter((w) => w.id !== correct.id && w.turkish !== correct.turkish);
+   114→  let candidates: WordPair[] = [];
+   115→
+   116→  if (mode === 'easy') {
+   117→    // Same category as correct
+   118→    candidates = pool.filter((w) => w.category === correct.category);
+   119→    // Fallback to random others if same category has fewer than 3
+   120→    if (candidates.length < 3) {
+   121→      const others = shuffle(pool.filter((w) => w.category !== correct.category));
+   122→      candidates = [...candidates, ...others];
+   123→    }
+   124→  } else if (mode === 'medium') {
+   125→    // Different categories than correct
+   126→    candidates = pool.filter((w) => w.category !== correct.category);
+   127→  } else {
+   128→    // Hard: pick most similar (shared Turkish words + similar length)
+   129→    const scored = pool.map((w) => ({ w, score: similarity(correct, w) }));
+   130→    scored.sort((a, b) => b.score - a.score);
+   131→    candidates = scored.slice(0, Math.min(10, scored.length)).map((s) => s.w);
+   132→  }
+   133→
+   134→  // Pick 3 unique-by-Turkish distractors
+   135→  const distractors: WordPair[] = [];
+   136→  const seen = new Set<string>();
+   137→  for (const w of shuffle(candidates)) {
+   138→    if (!seen.has(w.turkish)) {
+   139→      distractors.push(w);
+   140→      seen.add(w.turkish);
+   141→      if (distractors.length >= 3) break;
+   142→    }
+   143→  }
+   144→
+   145→  return shuffle([correct, ...distractors]);
+   146→}
+   147→
+   148→export function ListeningModule() {
+   149→  const { selectedCategories, incrementPracticed, saveExerciseResult } = useAppStore();
+   150→  const [screen, setScreen] = useState<Screen>('topics');
+   151→  const [mode, setMode] = useState<DifficultyMode>('easy');
+   152→  const [pool, setPool] = useState<WordPair[]>([]);
+   153→  const [currentIndex, setCurrentIndex] = useState(0);
+   154→  const [options, setOptions] = useState<WordPair[]>([]);
+   155→  const [selectedId, setSelectedId] = useState<string | null>(null);
+   156→  const [hasListened, setHasListened] = useState(false);
+   157→  const [sessionResults, setSessionResults] = useState<SessionResult[]>([]);
+   158→
+   159→  const startTimeRef = useRef<number>(Date.now());
+   160→  const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+   161→
+   162→  const currentWord = pool[currentIndex];
+   163→  const totalCorrect = sessionResults.filter((r) => r.isCorrect).length;
+   164→  const totalAttempted = sessionResults.length;
+   165→  const avgResponseTime =
+   166→    totalAttempted > 0
+   167→      ? Math.round(sessionResults.reduce((s, r) => s + r.responseTime, 0) / totalAttempted / 100) / 10
+   168→      : 0;
+   169→
+   170→  // Cleanup auto-advance timer on unmount
+   171→  useEffect(() => {
+   172→    return () => {
+   173→      if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
+   174→    };
+   175→  }, []);
+   176→
+   177→  const startSession = useCallback(
+   178→    (difficultyMode: DifficultyMode) => {
+   179→      const newPool = buildPool(selectedCategories);
+   180→      if (newPool.length === 0) return;
+   181→      setMode(difficultyMode);
+   182→      setPool(newPool);
+   183→      setCurrentIndex(0);
+   184→      setSessionResults([]);
+   185→      const firstWord = newPool[0];
+   186→      setOptions(generateOptions(firstWord, difficultyMode));
+   187→      setSelectedId(null);
+   188→      setHasListened(false);
+   189→      startTimeRef.current = Date.now();
+   190→      setScreen('play');
+   191→    },
+   192→    [selectedCategories]
+   193→  );
+   194→
+   195→  const goToNext = useCallback(
+   196→    (wasCorrect: boolean) => {
+   197→      const nextIndex = currentIndex + 1;
+   198→      const newCorrect = totalCorrect + (wasCorrect ? 1 : 0);
+   199→      const newAttempted = totalAttempted + 1;
+   200→      if (nextIndex >= pool.length) {
+   201→        saveExerciseResult('listening', newCorrect, newAttempted, selectedCategories);
+   202→        setScreen('summary');
+   203→      } else {
+   204→        const nextWord = pool[nextIndex];
+   205→        setCurrentIndex(nextIndex);
+   206→        setOptions(generateOptions(nextWord, mode));
+   207→        setSelectedId(null);
+   208→        setHasListened(false);
+   209→        startTimeRef.current = Date.now();
+   210→      }
+   211→    },
+   212→    [currentIndex, pool, mode, totalCorrect, totalAttempted, saveExerciseResult, selectedCategories]
+   213→  );
+   214→
+   215→  const handleSelect = useCallback(
+   216→    (option: WordPair) => {
+   217→      if (!currentWord || selectedId !== null) return; // Already answered
+   218→      const isCorrect = option.id === currentWord.id;
+   219→      const responseTime = Date.now() - startTimeRef.current;
+   220→      setSelectedId(option.id);
+   221→      incrementPracticed(isCorrect);
+   222→      setSessionResults((prev) => [
+   223→        ...prev,
+   224→        {
+   225→          wordId: currentWord.id,
+   226→          german: currentWord.german,
+   227→          turkish: currentWord.turkish,
+   228→          isCorrect,
+   229→          responseTime,
+   230→        },
+   231→      ]);
+   232→      if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
+   233→      advanceTimerRef.current = setTimeout(() => {
+   234→        advanceTimerRef.current = null;
+   235→        goToNext(isCorrect);
+   236→      }, ADVANCE_DELAY);
+   237→    },
+   238→    [currentWord, selectedId, incrementPracticed, goToNext]
+   239→  );
+   240→
+   241→  const handleBack = useCallback(() => {
+   242→    if (advanceTimerRef.current) {
+   243→      clearTimeout(advanceTimerRef.current);
+   244→      advanceTimerRef.current = null;
+   245→    }
+   246→    setScreen('topics');
+   247→  }, []);
+   248→
+   249→  // ── Topics Screen ───────────────────────────────────────────────
+   250→  if (screen === 'topics') {
+   251→    return (
+   252→      <div className="space-y-6">
+   253→        <motion.div
+   254→          initial={{ opacity: 0, scale: 0.95 }}
+   255→          animate={{ opacity: 1, scale: 1 }}
+   256→          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-500 to-pink-600 p-6 text-white shadow-lg md:p-8"
+   257→        >
+   258→          <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/10" />
+   259→          <div className="absolute -bottom-12 -left-8 h-32 w-32 rounded-full bg-white/10" />
+   260→          <div className="relative z-10">
+   261→            <div className="flex items-center gap-2 text-rose-200">
+   262→              <Headphones className="h-5 w-5" />
+   263→              <span className="text-sm font-medium">Dinleme Anlama</span>
+   264→            </div>
+   265→            <h2 className="mt-2 text-2xl font-bold md:text-3xl">Dinleme Anlama</h2>
+   266→            <p className="mt-2 max-w-2xl text-rose-100">
+   267→              Almanca cümleyi dinle, doğru Türkçe çeviriyi 4 seçenek arasından bul. İşitme becerini
+   268→              geliştir, kelime dağarcığını pekiştir.
+   269→            </p>
+   270→            <div className="mt-4 flex flex-wrap gap-2">
+   271→              <Badge className="border-0 bg-white/20 text-white backdrop-blur">
+   272→                <Headphones className="mr-1 h-3 w-3" /> Sesli dinleme
+   273→              </Badge>
+   274→              <Badge className="border-0 bg-white/20 text-white backdrop-blur">
+   275→                <ListChecks className="mr-1 h-3 w-3" /> 4 seçenek
+   276→              </Badge>
+   277→              <Badge className="border-0 bg-white/20 text-white backdrop-blur">
+   278→                <Target className="mr-1 h-3 w-3" /> 3 zorluk seviyesi
+   279→              </Badge>
+   280→            </div>
+   281→          </div>
+   282→        </motion.div>
+   283→
+   284→        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+   285→          {(Object.entries(MODE_CONFIG) as [DifficultyMode, (typeof MODE_CONFIG)[DifficultyMode]][]).map(
+   286→            ([key, cfg], idx) => (
+   287→              <motion.button
+   288→                key={key}
+   289→                initial={{ opacity: 0, y: 20 }}
+   290→                animate={{ opacity: 1, y: 0 }}
+   291→                transition={{ delay: idx * 0.08 }}
+   292→                onClick={() => startSession(key)}
+   293→                className="group relative overflow-hidden rounded-xl border border-gray-200 bg-white p-5 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-rose-200 hover:shadow-md"
+   294→              >
+   295→                <div
+   296→                  className={cn(
+   297→                    'flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow-sm',
+   298→                    cfg.color
+   299→                  )}
+   300→                >
+   301→                  <cfg.icon className="h-6 w-6" />
+   302→                </div>
+   303→                <div className="mt-3">
+   304→                  <h4 className="font-semibold text-gray-900">{cfg.label}</h4>
+   305→                  <p className="mt-1 text-xs text-muted-foreground">{cfg.desc}</p>
+   306→                </div>
+   307→                <Badge className={cn('mt-3 text-[10px]', cfg.badgeColor)}>{cfg.badge}</Badge>
+   308→              </motion.button>
+   309→            )
+   310→          )}
+   311→        </div>
+   312→
+   313→        <Card className="border-0 bg-rose-50 shadow-sm">
+   314→          <CardContent className="p-4">
+   315→            <div className="flex items-start gap-2">
+   316→              <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-rose-600" />
+   317→              <div className="text-sm text-rose-900">
+   318→                <p className="mb-1 font-semibold">İpuçları</p>
+   319→                <ul className="space-y-1 text-xs opacity-90 list-disc list-inside">
+   320→                  <li>Önce "Dinle" butonuna bas ve Almanca cümleyi dikkatlice dinle</li>
+   321→                  <li>Seçenekler dinledikten sonra görünecek — acele etme</li>
+   322→                  <li>Emin değilsen tekrar dinleyebilirsin</li>
+   323→                  <li>Her oturumda 15 soru vardır; ortalama yanıt süren takip edilir</li>
+   324→                  <li>Kolay modda seçenekler aynı kategoriden, zor modda benzer cümlelerden gelir</li>
+   325→                </ul>
+   326→              </div>
+   327→            </div>
+   328→          </CardContent>
+   329→        </Card>
+   330→
+   331→        <Card className="border-0 shadow-sm">
+   332→          <CardContent className="space-y-3 p-4">
+   333→            <div className="flex items-center gap-2">
+   334→              <Volume2 className="h-4 w-4 text-rose-600" />
+   335→              <h3 className="text-sm font-semibold">Kategori Filtresi</h3>
+   336→            </div>
+   337→            <CategoryFilter />
+   338→          </CardContent>
+   339→        </Card>
+   340→      </div>
+   341→    );
+   342→  }
+   343→
+   344→  // ── Play Screen ─────────────────────────────────────────────────
+   345→  if (screen === 'play' && currentWord) {
+   346→    const catColor = getCategoryColor(currentWord.category);
+   347→    const catName =
+   348→      categories.find((c) => c.id === currentWord.category)?.nameTr || currentWord.category;
+   349→    const answered = selectedId !== null;
+   350→    const isCorrectAnswer = answered && selectedId === currentWord.id;
+   351→
+   352→    return (
+   353→      <div className="space-y-4">
+   354→        <Button
+   355→          variant="ghost"
+   356→          size="sm"
+   357→          onClick={handleBack}
+   358→          className="text-muted-foreground hover:text-foreground"
+   359→        >
+   360→          <ArrowLeft className="mr-1 h-4 w-4" />
+   361→          Geri Dön
+   362→        </Button>
+   363→
+   364→        <div className="flex items-center justify-between">
+   365→          <div className="flex items-center gap-2">
+   366→            <Headphones className="h-5 w-5 text-rose-600" />
+   367→            <span className="text-sm font-medium">{MODE_CONFIG[mode].label}</span>
+   368→          </div>
+   369→          <div className="flex items-center gap-2">
+   370→            <Badge variant="outline">
+   371→              {currentIndex + 1} / {pool.length}
+   372→            </Badge>
+   373→            <Badge
+   374→              variant="outline"
+   375→              className={totalCorrect > 0 ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : ''}
+   376→            >
+   377→              {totalCorrect} doğru
+   378→            </Badge>
+   379→          </div>
+   380→        </div>
+   381→
+   382→        <Progress
+   383→          value={((currentIndex + 1) / pool.length) * 100}
+   384→          className="h-2 [&>div]:bg-rose-500"
+   385→        />
+   386→
+   387→        <AnimatePresence mode="wait">
+   388→          <motion.div
+   389→            key={currentWord.id}
+   390→            initial={{ opacity: 0, x: 30 }}
+   391→            animate={{ opacity: 1, x: 0 }}
+   392→            exit={{ opacity: 0, x: -30 }}
+   393→            transition={{ duration: 0.2 }}
+   394→          >
+   395→            <Card className="overflow-hidden border-0 shadow-sm">
+   396→              {/* Header with hidden/revealed German text */}
+   397→              <div className="bg-gradient-to-br from-rose-500 to-pink-600 p-6 text-center text-white">
+   398→                <div className="mb-3 flex items-center justify-center gap-2 text-xs text-rose-200">
+   399→                  <Volume2 className="h-4 w-4" />
+   400→                  <span>Dinle ve doğru çeviriyi seç</span>
+   401→                </div>
+   402→                <div className="flex min-h-[96px] items-center justify-center px-2">
+   403→                  {answered ? (
+   404→                    <motion.p
+   405→                      initial={{ opacity: 0, y: 8 }}
+   406→                      animate={{ opacity: 1, y: 0 }}
+   407→                      className="text-lg font-bold leading-snug sm:text-xl"
+   408→                      dir="auto"
+   409→                    >
+   410→                      {currentWord.german}
+   411→                    </motion.p>
+   412→                  ) : (
+   413→                    <div className="flex flex-col items-center gap-2">
+   414→                      <div className="text-5xl font-bold tracking-widest text-white/60">?</div>
+   415→                      <p className="text-xs text-rose-200">Almanca cümle gizli</p>
+   416→                    </div>
+   417→                  )}
+   418→                </div>
+   419→              </div>
+   420→
+   421→              <CardContent className="space-y-5 p-6">
+   422→                {/* Large Play button */}
+   423→                <div className="flex flex-col items-center gap-2">
+   424→                  {/* onClickCapture fires during the capture phase — before
+   425→                      SpeakButton's internal stopPropagation — so we can
+   426→                      detect the click and reveal the options. */}
+   427→                  <div
+   428→                    onClickCapture={() => setHasListened(true)}
+   429→                    className="relative flex h-24 w-24 cursor-pointer items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 shadow-lg transition-transform hover:scale-105"
+   430→                  >
+   431→                    <div className="absolute inset-2 rounded-full border-2 border-white/20" />
+   432→                    <span className="pointer-events-none absolute inset-0 rounded-full bg-white/0 transition-colors group-hover:bg-white/10" />
+   433→                    <SpeakButton
+   434→                      text={currentWord.german}
+   435→                      size="lg"
+   436→                      color="emerald"
+   437→                      label="Dinle"
+   438→                      className="relative z-10 text-white hover:bg-white/20"
+   439→                    />
+   440→                  </div>
+   441→                  <p className="text-sm font-semibold text-emerald-700">Dinle</p>
+   442→                  <p className="text-xs text-muted-foreground">
+   443→                    {hasListened
+   444→                      ? 'Tekrar dinleyebilir veya çeviriyi seçebilirsin'
+   445→                      : 'Önce dinle, sonra seçenekler görünecek'}
+   446→                  </p>
+   447→                </div>
+   448→
+   449→                {/* Category badge */}
+   450→                <div className="flex justify-center">
+   451→                  <Badge
+   452→                    variant="outline"
+   453→                    className={cn('gap-1', catColor.light, catColor.text, catColor.border)}
+   454→                  >
+   455→                    {catName}
+   456→                  </Badge>
+   457→                </div>
+   458→
+   459→                <Separator />
+   460→
+   461→                {/* Options — only after listening */}
+   462→                <AnimatePresence>
+   463→                  {hasListened ? (
+   464→                    <motion.div
+   465→                      initial={{ opacity: 0, y: 10 }}
+   466→                      animate={{ opacity: 1, y: 0 }}
+   467→                      exit={{ opacity: 0 }}
+   468→                      className="grid grid-cols-1 gap-2 sm:grid-cols-2"
+   469→                    >
+   470→                      {options.map((opt) => {
+   471→                        const isCorrectOpt = opt.id === currentWord.id;
+   472→                        const isSelected = opt.id === selectedId;
+   473→                        let stateClass =
+   474→                          'border-gray-200 hover:border-rose-300 hover:bg-rose-50';
+   475→                        if (answered) {
+   476→                          if (isCorrectOpt) {
+   477→                            stateClass = 'border-emerald-400 bg-emerald-50 text-emerald-900';
+   478→                          } else if (isSelected) {
+   479→                            stateClass = 'border-red-400 bg-red-50 text-red-900';
+   480→                          } else {
+   481→                            stateClass = 'border-gray-200 opacity-60';
+   482→                          }
+   483→                        }
+   484→                        return (
+   485→                          <Button
+   486→                            key={opt.id}
+   487→                            variant="outline"
+   488→                            disabled={answered}
+   489→                            onClick={() => handleSelect(opt)}
+   490→                            className={cn(
+   491→                              'h-auto justify-start whitespace-normal px-4 py-3 text-left leading-snug',
+   492→                              stateClass
+   493→                            )}
+   494→                          >
+   495→                            <span className="flex w-full items-center gap-2">
+   496→                              <span className="flex-1" dir="auto">
+   497→                                {opt.turkish}
+   498→                              </span>
+   499→                              {answered && isCorrectOpt && (
+   500→                                <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+   501→                              )}
+   502→                              {answered && isSelected && !isCorrectOpt && (
+   503→                                <XCircle className="h-4 w-4 shrink-0 text-red-600" />
+   504→                              )}
+   505→                            </span>
+   506→                          </Button>
+   507→                        );
+   508→                      })}
+   509→                    </motion.div>
+   510→                  ) : (
+   511→                    <motion.div
+   512→                      initial={{ opacity: 0 }}
+   513→                      animate={{ opacity: 1 }}
+   514→                      exit={{ opacity: 0 }}
+   515→                      className="rounded-lg border-2 border-dashed border-rose-200 p-6 text-center text-rose-500"
+   516→                    >
+   517→                      <Headphones className="mx-auto mb-2 h-6 w-6" />
+   518→                      <p className="text-sm">
+   519→                        Yukarıdaki "Dinle" butonuna basarak cümleyi dinle
+   520→                      </p>
+   521→                    </motion.div>
+   522→                  )}
+   523→                </AnimatePresence>
+   524→
+   525→                {/* Result message */}
+   526→                <AnimatePresence>
+   527→                  {answered && (
+   528→                    <motion.div
+   529→                      initial={{ opacity: 0, y: 8 }}
+   530→                      animate={{ opacity: 1, y: 0 }}
+   531→                      className={cn(
+   532→                        'rounded-lg p-3 text-center',
+   533→                        isCorrectAnswer ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-800'
+   534→                      )}
+   535→                    >
+   536→                      {isCorrectAnswer ? (
+   537→                        <p className="flex items-center justify-center gap-1 text-sm font-medium">
+   538→                          <CheckCircle2 className="h-4 w-4" /> Doğru! Sonraki soruya geçiliyor...
+   539→                        </p>
+   540→                      ) : (
+   541→                        <p className="flex flex-col items-center justify-center gap-0.5 text-sm font-medium">
+   542→                          <span className="flex items-center gap-1">
+   543→                            <XCircle className="h-4 w-4" /> Yanlış.
+   544→                          </span>
+   545→                          <span className="text-xs font-normal">
+   546→                            Doğru çeviri:{' '}
+   547→                            <span className="font-semibold" dir="auto">
+   548→                              {currentWord.turkish}
+   549→                            </span>
+   550→                          </span>
+   551→                        </p>
+   552→                      )}
+   553→                    </motion.div>
+   554→                  )}
+   555→                </AnimatePresence>
+   556→
+   557→                {/* Skip-wait button */}
+   558→                {answered && (
+   559→                  <div className="flex justify-center">
+   560→                    <Button
+   561→                      variant="ghost"
+   562→                      size="sm"
+   563→                      onClick={() => {
+   564→                        if (advanceTimerRef.current) {
+   565→                          clearTimeout(advanceTimerRef.current);
+   566→                          advanceTimerRef.current = null;
+   567→                        }
+   568→                        goToNext(isCorrectAnswer);
+   569→                      }}
+   570→                      className="text-muted-foreground"
+   571→                    >
+   572→                      Şimdi geç <ArrowLeft className="ml-1 h-3 w-3 rotate-180" />
+   573→                    </Button>
+   574→                  </div>
+   575→                )}
+   576→              </CardContent>
+   577→            </Card>
+   578→          </motion.div>
+   579→        </AnimatePresence>
+   580→      </div>
+   581→    );
+   582→  }
+   583→
+   584→  // ── Summary Screen ──────────────────────────────────────────────
+   585→  if (screen === 'summary') {
+   586→    const accuracy = totalAttempted > 0 ? Math.round((totalCorrect / totalAttempted) * 100) : 0;
+   587→    const wrong = totalAttempted - totalCorrect;
+   588→    const headerGradient =
+   589→      accuracy >= 80
+   590→        ? 'from-emerald-500 to-teal-600'
+   591→        : accuracy >= 50
+   592→          ? 'from-rose-500 to-pink-600'
+   593→          : 'from-red-500 to-rose-600';
+   594→    const accentClass =
+   595→      accuracy >= 80 ? 'text-emerald-600' : accuracy >= 50 ? 'text-amber-600' : 'text-red-600';
+   596→    const accentBg =
+   597→      accuracy >= 80
+   598→        ? '[&>div]:bg-emerald-500'
+   599→        : accuracy >= 50
+   600→          ? '[&>div]:bg-amber-500'
+   601→          : '[&>div]:bg-red-500';
+   602→    const praiseText =
+   603→      accuracy >= 80 ? 'Harika dinleme!' : accuracy >= 50 ? 'İyi gidiyorsun!' : 'Çalışmaya devam et!';
+   604→    const weakWords = sessionResults.filter((r) => !r.isCorrect);
+   605→
+   606→    return (
+   607→      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-4">
+   608→        <Card className="overflow-hidden border-0 shadow-sm">
+   609→          <div className={cn('bg-gradient-to-br p-6 text-center text-white', headerGradient)}>
+   610→            <Trophy className="mx-auto mb-3 h-12 w-12" />
+   611→            <h2 className="text-2xl font-bold">Dinleme Pratiği Tamamlandı!</h2>
+   612→            <p className="mt-1 text-sm text-white/90">{MODE_CONFIG[mode].label} modu</p>
+   613→          </div>
+   614→          <CardContent className="space-y-4 p-6">
+   615→            <div className="text-center">
+   616→              <p className={cn('text-5xl font-bold', accentClass)}>{accuracy}%</p>
+   617→              <p className={cn('text-sm font-semibold', accentClass)}>{praiseText}</p>
+   618→            </div>
+   619→
+   620→            <Progress value={accuracy} className={cn('h-2', accentBg)} />
+   621→
+   622→            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+   623→              <div className="rounded-lg bg-emerald-50 p-3 text-center">
+   624→                <CheckCircle2 className="mx-auto mb-1 h-5 w-5 text-emerald-600" />
+   625→                <div className="text-xl font-bold text-emerald-700">{totalCorrect}</div>
+   626→                <div className="text-xs text-emerald-600">Doğru</div>
+   627→              </div>
+   628→              <div className="rounded-lg bg-red-50 p-3 text-center">
+   629→                <XCircle className="mx-auto mb-1 h-5 w-5 text-red-600" />
+   630→                <div className="text-xl font-bold text-red-700">{wrong}</div>
+   631→                <div className="text-xs text-red-600">Yanlış</div>
+   632→              </div>
+   633→              <div className="rounded-lg bg-rose-50 p-3 text-center">
+   634→                <Target className="mx-auto mb-1 h-5 w-5 text-rose-600" />
+   635→                <div className="text-xl font-bold text-rose-700">{accuracy}%</div>
+   636→                <div className="text-xs text-rose-600">Başarı</div>
+   637→              </div>
+   638→              <div className="rounded-lg bg-amber-50 p-3 text-center">
+   639→                <Clock className="mx-auto mb-1 h-5 w-5 text-amber-600" />
+   640→                <div className="text-xl font-bold text-amber-700">{avgResponseTime}s</div>
+   641→                <div className="text-xs text-amber-600">Ort. Süre</div>
+   642→              </div>
+   643→            </div>
+   644→
+   645→            {weakWords.length > 0 && (
+   646→              <>
+   647→                <Separator />
+   648→                <div>
+   649→                  <h4 className="mb-2 text-sm font-semibold text-red-700">
+   650→                    Tekrar Çalışman Gerekenler ({weakWords.length})
+   651→                  </h4>
+   652→                  <div className="max-h-96 space-y-1 overflow-y-auto pr-1">
+   653→                    {weakWords.map((w) => (
+   654→                      <div
+   655→                        key={w.wordId}
+   656→                        className="flex items-center justify-between rounded-md bg-red-50 px-3 py-2"
+   657→                      >
+   658→                        <div className="min-w-0">
+   659→                          <p className="truncate text-sm font-medium text-gray-900" dir="auto">
+   660→                            {w.german}
+   661→                          </p>
+   662→                          <p className="truncate text-xs text-muted-foreground" dir="auto">
+   663→                            {w.turkish}
+   664→                          </p>
+   665→                        </div>
+   666→                        <Badge
+   667→                          variant="outline"
+   668→                          className="shrink-0 border-red-200 bg-red-50 text-red-700"
+   669→                        >
+   670→                          {(w.responseTime / 1000).toFixed(1)}s
+   671→                        </Badge>
+   672→                      </div>
+   673→                    ))}
+   674→                  </div>
+   675→                </div>
+   676→              </>
+   677→            )}
+   678→
+   679→            <div className="flex flex-col gap-2 sm:flex-row">
+   680→              <Button
+   681→                onClick={() => startSession(mode)}
+   682→                className="flex-1 bg-rose-600 text-white hover:bg-rose-700"
+   683→              >
+   684→                <RotateCcw className="mr-2 h-4 w-4" />
+   685→                Tekrar Dene
+   686→              </Button>
+   687→              <Button onClick={() => setScreen('topics')} variant="outline" className="flex-1">
+   688→                Ana Menüye Dön
+   689→              </Button>
+   690→            </div>
+   691→          </CardContent>
+   692→        </Card>
+   693→      </motion.div>
+   694→    );
+   695→  }
+   696→
+   697→  return null;
+   698→}
+   699→

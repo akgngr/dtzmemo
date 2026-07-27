@@ -15,12 +15,12 @@ import crypto from 'crypto';
 // for every TTS call.
 
 // Dev-only default keys — used when no key is provided in the request body.
-// In production, the client must send the user's own keys.
-const DEV_ELEVENLABS_API_KEY = 'sk_6c2fb452b6685fff6d61d0d5270467c1c0164475ea43fc99';
+// Falls back to environment variables, then to hardcoded defaults.
+const DEV_ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY || 'sk_6c2fb452b6685fff6d61d0d5270467c1c0164475ea43fc99';
 const ELEVENLABS_DEFAULT_VOICE_ID = 'Xb7hH8MSUJpSbSDYk0k2'; // "Alice"
 
 // Google Cloud TTS — 4M chars/month free on Standard tier
-const DEV_GOOGLE_TTS_API_KEY = 'AIzaSyDIy8sm5zg_qSzKliOBZU1WjjmOqz3fgdA';
+const DEV_GOOGLE_TTS_API_KEY = process.env.GOOGLE_TTS_API_KEY || 'AIzaSyDIy8sm5zg_qSzKliOBZU1WjjmOqz3fgdA';
 const GOOGLE_TTS_DEFAULT_VOICE = 'de-DE-Standard-A';
 
 // ============================================================
@@ -255,9 +255,8 @@ export async function POST(req: NextRequest) {
     // the sweet spot — most flashcards / chat messages are well under this.
     const truncated = text.slice(0, 500);
     // Resolve API keys: client-provided > dev default
-    const isDev = process.env.NODE_ENV !== 'production';
-    const elevenLabsApiKey = elevenLabsKey || (isDev ? DEV_ELEVENLABS_API_KEY : '');
-    const googleTtsApiKey = googleTtsKey || (isDev ? DEV_GOOGLE_TTS_API_KEY : '');
+    const elevenLabsApiKey = elevenLabsKey || DEV_ELEVENLABS_API_KEY;
+    const googleTtsApiKey = googleTtsKey || DEV_GOOGLE_TTS_API_KEY;
 
     const useElevenVoice = voiceId || ELEVENLABS_DEFAULT_VOICE_ID;
     const useGoogleVoice = googleVoice || GOOGLE_TTS_DEFAULT_VOICE;
