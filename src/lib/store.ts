@@ -28,6 +28,7 @@ interface ApiKeys {
   zhipuKey: string;
   elevenLabsKey: string;
   googleTtsKey: string;
+  googleAiKey: string;
 }
 
 export interface CustomWord {

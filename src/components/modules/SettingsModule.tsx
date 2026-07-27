@@ -320,15 +320,16 @@ export function SettingsModule() {
         <ApiKeyField label="ElevenLabs API Anahtarı" description="Yüksek kaliteli Almanca seslendirme (TTS) için." placeholder="sk_6c2fb452..." value={apiKeys.elevenLabsKey} onChange={(v) => setApiKey('elevenLabsKey', v)} testUrl="/api/tts" testBody={{ text: 'Hallo' } as Record<string, unknown>} testKeyField="elevenLabsKey" successHint="ElevenLabs API anahtarı geçerli." />
         <Separator />
         <ApiKeyField label="Google Cloud TTS API Anahtarı" description="Almanca seslendirme için yedek TTS sağlayıcısı." placeholder="AIzaSyDIy8..." value={apiKeys.googleTtsKey} onChange={(v) => setApiKey('googleTtsKey', v)} testUrl="/api/tts" testBody={{ text: 'Guten Tag' } as Record<string, unknown>} testKeyField="googleTtsKey" successHint="Google Cloud TTS API anahtarı geçerli." />
+        <Separator />
+        <ApiKeyField label="Google AI (Gemini) API Anahtarı" description="Zhipu yoksa sohbet için Google Gemini kullanılır. AI Studio'dan alabilirsiniz." placeholder="AIzaSy..." value={apiKeys.googleAiKey} onChange={(v) => setApiKey('googleAiKey', v)} testUrl="/api/chat" testBody={{ messages: [{ role: 'user', content: 'Hallo' }], systemPrompt: 'test' } as Record<string, unknown>} testKeyField="googleAiKey" successHint="Google AI API anahtarı geçerli." />
       </div>
       <Separator />
       <div className="space-y-2">
-        <span className="text-xs font-semibold uppercase text-muted-foreground">TTS Sağlayıcı Sırası</span>
+        <span className="text-xs font-semibold uppercase text-muted-foreground">Sohbet Sağlayıcı Sırası</span>
         <div className="space-y-2">
           {[
-            { name: 'ElevenLabs', desc: 'Birinci tercih · en yüksek kalite', active: !!apiKeys.elevenLabsKey },
-            { name: 'Google Cloud TTS', desc: 'İkinci tercih · 4M karakter/ay ücretsiz', active: !!apiKeys.googleTtsKey },
-            { name: 'Google Translate TTS', desc: 'Son çare · ücretsiz, düşük kalite', active: true },
+            { name: 'Zhipu (GLM-4-Flash)', desc: 'Birinci tercih · docs.z.ai / open.bigmodel.cn', active: !!apiKeys.zhipuKey },
+            { name: 'Google Gemini', desc: 'Yedek · Zhipu yoksa kullanılır', active: !!apiKeys.googleAiKey },
           ].map((p) => (
             <div key={p.name} className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2">
               <div className="flex items-center gap-2"><Volume2 className="h-4 w-4 text-slate-600" /><div><p className="text-sm font-medium">{p.name}</p><p className="text-xs text-muted-foreground">{p.desc}</p></div></div>
