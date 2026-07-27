@@ -27,7 +27,7 @@ import { StatisticsModule } from '@/components/modules/StatisticsModule';
 import { SettingsModule } from '@/components/modules/SettingsModule';
 import { SpacedRepetitionModule } from '@/components/modules/SpacedRepetitionModule';
 import { ListeningModule } from '@/components/modules/ListeningModule';
-import ReadingModule from '@/components/modules/ReadingModule';
+import { ReadingModule } from '@/components/modules/ReadingModule';
 import { QuizModule } from '@/components/modules/QuizModule';
 import { AchievementsModule } from '@/components/modules/AchievementsModule';
 
