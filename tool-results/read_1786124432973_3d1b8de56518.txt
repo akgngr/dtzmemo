@@ -1,0 +1,694 @@
+   180→    lastAiMessageRef.current = lastMsg;
+   181→
+   182→    // Browser-only TTS (SpeechSynthesis — Google's free Web Speech API)
+   183→    tts.speak(lastMsg.text).catch((e) =>
+   184→      console.warn('Browser TTS failed:', e)
+   185→    );
+   186→  }, [messages, tts]);
+   187→
+   188→  const fetchAiReply = useCallback(async (history: ChatMessage[]) => {
+   189→    setPhase('loading-ai');
+   190→    setError(null);
+   191→    try {
+   192→      const apiMessages = history
+   193→        .filter((m) => m.id !== 'opener')
+   194→        .map((m) => ({
+   195→          role: m.sender === 'user' ? 'user' : 'assistant',
+   196→          content: m.text,
+   197→        }));
+   198→      apiMessages.unshift({ role: 'assistant', content: topic.opener });
+   199→
+   200→      const userTurnIndex = history.filter((m) => m.sender === 'user').length;
+   201→
+   202→      const { zhipuKey, openaiKey, claudeKey, googleAiKey } = useAppStore.getState().apiKeys;
+   203→
+   204→      const response = await fetch('/api/chat', {
+   205→        method: 'POST',
+   206→        headers: { 'Content-Type': 'application/json' },
+   207→        body: JSON.stringify({
+   208→          systemPrompt:
+   209→            topic.systemPrompt +
+   210→            `\n\nBu konuşma ${MAX_TURNS} turdan oluşacak. ${
+   211→              userTurnIndex >= MAX_TURNS - 1
+   212→                ? 'Bu son tur — vedalaşarak bitir.'
+   213→                : ''
+   214→            }`,
+   215→          messages: apiMessages,
+   216→          temperature: 0.7,
+   217→          maxTokens: 400,
+   218→          zhipuKey: zhipuKey || undefined,
+   219→          openaiKey: openaiKey || undefined,
+   220→          claudeKey: claudeKey || undefined,
+   221→          googleAiKey: googleAiKey || undefined,
+   222→        }),
+   223→      });
+   224→      if (!response.ok) {
+   225→        const errData = await response.json().catch(() => ({}));
+   226→        throw new Error(errData.error || errData.detail || `HTTP ${response.status}`);
+   227→      }
+   228→      const data = await response.json() as { reply?: string; tip?: string; isEnding?: boolean; suggestions?: string[] };
+   229→      const aiMsg: ChatMessage = {
+   230→        id: `ai-${Date.now()}`,
+   231→        sender: 'ai',
+   232→        text: (data.reply || '').trim() || '...',
+   233→        tip: data.tip || '',
+   234→        isEnding: Boolean(data.isEnding) || userTurnIndex >= MAX_TURNS - 1,
+   235→        suggestions: Array.isArray(data.suggestions) && data.suggestions.length > 0 ? data.suggestions : undefined,
+   236→        timestamp: Date.now(),
+   237→      };
+   238→      setMessages((prev) => [...prev, aiMsg]);
+   239→
+   240→      if (aiMsg.isEnding) {
+   241→        setTimeout(() => setPhase('ended'), 1500);
+   242→      } else {
+   243→        setPhase('chatting');
+   244→      }
+   245→    } catch (err) {
+   246→      console.error('[ConversationChat] AI reply failed:', err);
+   247→      setError('Yanıt alınamadı: ' + (err as Error).message);
+   248→      setPhase('chatting');
+   249→    }
+   250→  }, [topic]);
+   251→
+   252→  // ===== Browser SpeechRecognition (Google's free STT) =====
+   253→  const startListening = useCallback(async () => {
+   254→    const ctor = getRecognitionCtor();
+   255→    if (!ctor) {
+   256→      setBrowserSupported(false);
+   257→      setError('Tarayıcı ses tanımayı desteklemiyor. Chrome veya Edge kullanın. Yazarak cevap verebilirsiniz.');
+   258→      return;
+   259→    }
+   260→
+   261→    // Quota check — if exhausted, refuse to start and tell user when it resets
+   262→    if (!hasSpeechQuota()) {
+   263→      setError(
+   264→        `Bu ayki ücretsiz Google Web Speech API kotan doldu (${speechUsage.monthlyLimit} tanıma). ` +
+   265→        `Kota her ayın 1'inde otomatik yenilenir. ${daysUntilReset} gün sonra tekrar kullanabilirsin. ` +
+   266→        `Bu süre içinde yazarak cevap vermeye devam edebilirsin.`
+   267→      );
+   268→      return;
+   269→    }
+   270→
+   271→    // Stop any playing audio before recording
+   272→    tts.stop();
+   273→    setError(null);
+   274→    setLiveTranscript('');
+   275→    finalTranscriptRef.current = '';
+   276→    manualStopRef.current = false;
+   277→
+   278→    // Stop any existing recognition
+   279→    if (recognitionRef.current) {
+   280→      try { recognitionRef.current.abort(); } catch {}
+   281→    }
+   282→
+   283→    const recognition = new ctor();
+   284→    recognition.lang = 'de-DE';
+   285→    recognition.continuous = true;
+   286→    recognition.interimResults = true;
+   287→    recognition.maxAlternatives = 1;
+   288→
+   289→    recognition.onstart = () => {
+   290→      setPhase('listening');
+   291→    };
+   292→
+   293→    recognition.onresult = (event: SpeechRecognitionEventLike) => {
+   294→      let interim = '';
+   295→      let final = finalTranscriptRef.current;
+   296→      for (let i = event.resultIndex; i < event.results.length; i++) {
+   297→        const result = event.results[i];
+   298→        const txt = result[0].transcript;
+   299→        if (result.isFinal) {
+   300→          final += txt + ' ';
+   301→        } else {
+   302→          interim += txt;
+   303→        }
+   304→      }
+   305→      finalTranscriptRef.current = final;
+   306→      setLiveTranscript((final + interim).trim());
+   307→    };
+   308→
+   309→    recognition.onerror = (e: any) => {
+   310→      console.error('[ConversationChat] SpeechRecognition error:', e);
+   311→      if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+   312→        setError('Mikrofon izni reddedildi. Tarayıcı ayarlarından izin verin.');
+   313→      } else if (e.error === 'no-speech') {
+   314→        if (!finalTranscriptRef.current.trim()) {
+   315→          setError('Ses algılanamadı. Tekrar deneyin veya yazarak cevap verin.');
+   316→        }
+   317→      } else if (e.error === 'network') {
+   318→        setError('Ağ hatası. İnternet bağlantınızı kontrol edin (Web Speech API internet gerektirir).');
+   319→      } else if (e.error === 'aborted') {
+   320→        // Manual abort — not an error
+   321→        return;
+   322→      } else {
+   323→        setError(`Tanıma hatası: ${e.error}`);
+   324→      }
+   325→      setPhase('chatting');
+   326→    };
+   327→
+   328→    recognition.onend = () => {
+   329→      if (maxDurationTimerRef.current) {
+   330→        clearTimeout(maxDurationTimerRef.current);
+   331→        maxDurationTimerRef.current = null;
+   332→      }
+   333→      const finalText = finalTranscriptRef.current.trim();
+   334→      if (finalText) {
+   335→        // Successful STT call — increment monthly counter
+   336→        incrementSpeechUsage();
+   337→
+   338→        // Add it as user message and fetch AI reply
+   339→        const userMsg: ChatMessage = {
+   340→          id: `user-${Date.now()}`,
+   341→          sender: 'user',
+   342→          text: finalText,
+   343→          timestamp: Date.now(),
+   344→        };
+   345→        setMessages((prev) => [...prev, userMsg]);
+   346→        setLiveTranscript('');
+   347→        // Trigger AI reply with the updated history
+   348→        fetchAiReply([...messages, userMsg]);
+   349→      } else if (manualStopRef.current) {
+   350→        // User stopped but no transcript — don't count this against quota
+   351→        setPhase('chatting');
+   352→      }
+   353→    };
+   354→
+   355→    recognitionRef.current = recognition;
+   356→
+   357→    try {
+   358→      recognition.start();
+   359→      // Auto-stop after 30 seconds to avoid runaway listening
+   360→      maxDurationTimerRef.current = setTimeout(() => {
+   361→        manualStopRef.current = true;
+   362→        try { recognition.stop(); } catch {}
+   363→      }, 30_000);
+   364→    } catch (err) {
+   365→      console.error('[ConversationChat] start failed:', err);
+   366→      setError('Dinleme başlatılamadı. Yazarak cevap verebilirsiniz.');
+   367→      setPhase('chatting');
+   368→    }
+   369→  }, [getRecognitionCtor, messages, tts, fetchAiReply, hasSpeechQuota, speechUsage.monthlyLimit, daysUntilReset, incrementSpeechUsage]);
+   370→
+   371→  const stopListening = useCallback(() => {
+   372→    manualStopRef.current = true;
+   373→    if (maxDurationTimerRef.current) {
+   374→      clearTimeout(maxDurationTimerRef.current);
+   375→      maxDurationTimerRef.current = null;
+   376→    }
+   377→    if (recognitionRef.current) {
+   378→      try { recognitionRef.current.stop(); } catch {}
+   379→    }
+   380→  }, []);
+   381→
+   382→  // Mic toggle
+   383→  const handleMicToggle = useCallback(async () => {
+   384→    if (phase === 'listening') {
+   385→      stopListening();
+   386→    } else if (phase === 'chatting') {
+   387→      await startListening();
+   388→    }
+   389→  }, [phase, startListening, stopListening]);
+   390→
+   391→  const handleSendText = useCallback(async () => {
+   392→    const text = textInput.trim();
+   393→    if (!text || phase !== 'chatting') return;
+   394→    setTextInput('');
+   395→    const userMsg: ChatMessage = {
+   396→      id: `user-${Date.now()}`,
+   397→      sender: 'user',
+   398→      text,
+   399→      timestamp: Date.now(),
+   400→    };
+   401→    setMessages((prev) => [...prev, userMsg]);
+   402→    await fetchAiReply([...messages, userMsg]);
+   403→  }, [textInput, phase, messages, fetchAiReply]);
+   404→
+   405→  const handleEndConversation = useCallback(() => {
+   406→    // Stop any active recognition
+   407→    if (recognitionRef.current) {
+   408→      try { recognitionRef.current.abort(); } catch {}
+   409→    }
+   410→    tts.stop();
+   411→    setPhase('ended');
+   412→  }, [tts]);
+   413→
+   414→  // Build and send the summary when phase becomes 'ended'
+   415→  useEffect(() => {
+   416→    if (phase !== 'ended') return;
+   417→    const userMessageCount = messages.filter((m) => m.sender === 'user').length;
+   418→    const tipsCount = messages.filter((m) => m.tip && m.tip.trim()).length;
+   419→    const summary: ConversationSummary = {
+   420→      topicId: topic.id,
+   421→      topicTitleDe: topic.titleDe,
+   422→      topicTitleTr: topic.titleTr,
+   423→      messageCount: messages.length,
+   424→      userMessageCount,
+   425→      tipsCount,
+   426→      durationSec: Math.round((Date.now() - startTimeRef.current) / 1000),
+   427→      messages,
+   428→    };
+   429→    onExit(summary);
+   430→  }, [phase, messages, topic, onExit]);
+   431→
+   432→  // Replay an AI message via browser TTS
+   433→  const replayMessage = useCallback((msg: ChatMessage) => {
+   434→    tts.speak(msg.text);
+   435→  }, [tts]);
+   436→
+   437→  // Get dynamic suggestions from the last AI message, or undefined to fall back to static phrases
+   438→  const lastAiMsg = [...messages].reverse().find((m) => m.sender === 'ai' && m.suggestions && m.suggestions.length > 0);
+   439→  const lastAiSuggestions = lastAiMsg?.suggestions;
+   440→
+   441→  const isBusy = phase === 'listening' || phase === 'loading-ai';
+   442→
+   443→  return (
+   444→    <div className="flex flex-col h-[calc(100vh-12rem)] md:h-[calc(100vh-8rem)]">
+   445→      {/* Topic header */}
+   446→      <div className={cn('rounded-xl p-3 text-white shadow-sm', topic.color)}>
+   447→        <div className="flex items-center justify-between gap-2">
+   448→          <div className="flex items-center gap-2 min-w-0">
+   449→            <span className="text-2xl">{topic.icon}</span>
+   450→            <div className="min-w-0">
+   451→              <h2 className="text-base font-bold leading-tight truncate">{topic.titleDe}</h2>
+   452→              <p className="text-xs opacity-90 truncate">{topic.titleTr} · {topic.difficulty}</p>
+   453→            </div>
+   454→          </div>
+   455→          <div className="flex items-center gap-1 shrink-0">
+   456→            <Button
+   457→              size="sm"
+   458→              variant="ghost"
+   459→              className="text-white hover:bg-white/20 h-8 px-2"
+   460→              onClick={() => setShowVocab((v) => !v)}
+   461→              aria-label="Kelime listesi"
+   462→            >
+   463→              <Lightbulb className="h-4 w-4" />
+   464→            </Button>
+   465→            <Button
+   466→              size="sm"
+   467→              variant="ghost"
+   468→              className="text-white hover:bg-white/20 h-8 px-2"
+   469→              onClick={() => setShowHints((v) => !v)}
+   470→              aria-label="Örnek cümleler"
+   471→            >
+   472→              <MessageCircle className="h-4 w-4" />
+   473→            </Button>
+   474→            <Button
+   475→              size="sm"
+   476→              variant="ghost"
+   477→              className="text-white hover:bg-white/20 h-8 px-2"
+   478→              onClick={handleEndConversation}
+   479→            >
+   480→              <X className="h-4 w-4" />
+   481→            </Button>
+   482→          </div>
+   483→        </div>
+   484→      </div>
+   485→
+   486→      {/* Vocabulary drawer (collapsible) */}
+   487→      <AnimatePresence>
+   488→        {showVocab && (
+   489→          <motion.div
+   490→            initial={{ opacity: 0, height: 0 }}
+   491→            animate={{ opacity: 1, height: 'auto' }}
+   492→            exit={{ opacity: 0, height: 0 }}
+   493→            className="overflow-hidden"
+   494→          >
+   495→            <Card className="border-0 shadow-sm mt-2">
+   496→              <CardContent className="p-3">
+   497→                <div className="flex items-center justify-between mb-2">
+   498→                  <span className="text-xs font-semibold uppercase text-muted-foreground">Önemli Kelimeler</span>
+   499→                  <button onClick={() => setShowVocab(false)} className="text-xs text-muted-foreground hover:text-foreground">
+   500→                    <X className="h-3 w-3" />
+   501→                  </button>
+   502→                </div>
+   503→                <div className="grid grid-cols-2 gap-1.5">
+   504→                  {topic.vocabulary.map((v, i) => (
+   505→                    <div key={i} className="rounded bg-amber-50 px-2 py-1 text-xs">
+   506→                      <span className="font-medium text-amber-900">{v.de}</span>
+   507→                      <span className="text-amber-700 ml-1">— {v.tr}</span>
+   508→                    </div>
+   509→                  ))}
+   510→                </div>
+   511→              </CardContent>
+   512→            </Card>
+   513→          </motion.div>
+   514→        )}
+   515→      </AnimatePresence>
+   516→
+   517→      {/* Sample phrases drawer — uses dynamic AI suggestions or falls back to static phrases */}
+   518→      <AnimatePresence>
+   519→        {showHints && (
+   520→          <motion.div
+   521→            initial={{ opacity: 0, height: 0 }}
+   522→            animate={{ opacity: 1, height: 'auto' }}
+   523→            exit={{ opacity: 0, height: 0 }}
+   524→            className="overflow-hidden"
+   525→          >
+   526→            <Card className="border-0 shadow-sm mt-2">
+   527→              <CardContent className="p-3">
+   528→                <div className="flex items-center justify-between mb-2">
+   529→                  <span className="text-xs font-semibold uppercase text-muted-foreground">
+   530→                    {lastAiSuggestions ? 'Önerilen Cevaplar' : 'Örnek Cümleler'}
+   531→                  </span>
+   532→                  <button onClick={() => setShowHints(false)} className="text-xs text-muted-foreground hover:text-foreground">
+   533→                    <X className="h-3 w-3" />
+   534→                  </button>
+   535→                </div>
+   536→                <div className="flex flex-wrap gap-1.5">
+   537→                  {(lastAiSuggestions || topic.samplePhrases).map((p, i) => (
+   538→                    <button
+   539→                      key={`${p}-${i}`}
+   540→                      onClick={() => { setTextInput(p); setShowHints(false); }}
+   541→                      className={cn(
+   542→                        "rounded-full px-2.5 py-1 text-xs transition-colors",
+   543→                        lastAiSuggestions
+   544→                          ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200 border border-emerald-200"
+   545→                          : "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+   546→                      )}
+   547→                    >
+   548→                      {p}
+   549→                    </button>
+   550→                  ))}
+   551→                </div>
+   552→              </CardContent>
+   553→            </Card>
+   554→          </motion.div>
+   555→        )}
+   556→      </AnimatePresence>
+   557→
+   558→      {/* Mode badge — Google free APIs */}
+   559→      <div className="mt-2 flex justify-center gap-2 flex-wrap">
+   560→        <Badge variant="outline" className="text-[10px] py-0.5 px-2 border-emerald-200 text-emerald-600 bg-emerald-50">
+   561→          🆓 Google Web Speech API · Ücretsiz tarayıcı ses tanıma + seslendirme
+   562→        </Badge>
+   563→        <Badge
+   564→          variant="outline"
+   565→          className={cn(
+   566→            'text-[10px] py-0.5 px-2',
+   567→            quotaExhausted
+   568→              ? 'border-red-200 text-red-600 bg-red-50'
+   569→              : quotaRemaining <= 10
+   570→              ? 'border-amber-200 text-amber-700 bg-amber-50'
+   571→              : 'border-slate-200 text-slate-600 bg-slate-50'
+   572→          )}
+   573→          title={
+   574→            quotaExhausted
+   575→              ? `Kota doldu — ${daysUntilReset} gün sonra yenilenecek (her ayın 1'inde)`
+   576→              : `Bu ay ${quotaRemaining} / ${speechUsage.monthlyLimit} tanıma hakkı kaldı. Kota her ayın 1'inde yenilenir.`
+   577→          }
+   578→        >
+   579→          {quotaExhausted
+   580→            ? `🔴 Kota doldu · ${daysUntilReset} gün sonra yenilenecek`
+   581→            : `🎤 Kota: ${quotaRemaining} / ${speechUsage.monthlyLimit} (bu ay)`}
+   582→        </Badge>
+   583→      </div>
+   584→
+   585→      {quotaExhausted && browserSupported && (
+   586→        <div className="mt-2 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-800 border border-red-200">
+   587→          <p className="font-semibold">⚠️ Bu ayki ücretsiz ses tanıma kotan doldu.</p>
+   588→          <p className="mt-1">
+   589→            Google Web Speech API kotası her ayın 1'inde otomatik yenilenir.{' '}
+   590→            <strong>{daysUntilReset} gün</strong> sonra tekrar mikrofonla konuşabilirsin.
+   591→            Bu süre içinde <strong>yazarak cevap vermeye</strong> devam edebilirsin — yazılı modda kota sınırlaması yoktur.
+   592→          </p>
+   593→        </div>
+   594→      )}
+   595→
+   596→      {!browserSupported && (
+   597→        <div className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800 border border-amber-200">
+   598→          Tarayıcınız Web Speech API'yi desteklemiyor. Lütfen <strong>Chrome</strong> veya <strong>Edge</strong> kullanın, ya da aşağıdan yazarak cevap verebilirsiniz.
+   599→        </div>
+   600→      )}
+   601→
+   602→      {/* Error display */}
+   603→      <AnimatePresence>
+   604→        {error && (
+   605→          <motion.div
+   606→            initial={{ opacity: 0, y: -10 }}
+   607→            animate={{ opacity: 1, y: 0 }}
+   608→            exit={{ opacity: 0, y: -10 }}
+   609→            className="mt-2 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700 flex items-start justify-between gap-2"
+   610→          >
+   611→            <div className="flex-1">
+   612→              <p className="font-medium">Hata:</p>
+   613→              <p className="mt-0.5">{error}</p>
+   614→              <p className="mt-1 opacity-80">Yazarak cevap vermeye devam edebilirsiniz.</p>
+   615→            </div>
+   616→            <button onClick={() => setError(null)} className="shrink-0"><X className="h-3 w-3" /></button>
+   617→          </motion.div>
+   618→        )}
+   619→      </AnimatePresence>
+   620→
+   621→      {/* Messages area */}
+   622→      <div className="flex-1 overflow-y-auto py-3 space-y-3 min-h-0">
+   623→        {messages.map((msg) => (
+   624→          <motion.div
+   625→            key={msg.id}
+   626→            initial={{ opacity: 0, y: 10 }}
+   627→            animate={{ opacity: 1, y: 0 }}
+   628→            className={cn(
+   629→              'flex gap-2',
+   630→              msg.sender === 'user' ? 'justify-end' : 'justify-start'
+   631→            )}
+   632→          >
+   633→            {msg.sender === 'ai' && (
+   634→              <div className={cn('shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold', topic.color)}>
+   635→                {topic.icon}
+   636→              </div>
+   637→            )}
+   638→            <div className={cn(
+   639→              'max-w-[80%] rounded-2xl px-4 py-2.5 shadow-sm',
+   640→              msg.sender === 'user'
+   641→                ? 'bg-emerald-600 text-white rounded-br-sm'
+   642→                : 'bg-white border border-gray-100 text-gray-800 rounded-bl-sm'
+   643→            )}>
+   644→              <p className="text-sm leading-relaxed" dir="auto">{msg.text}</p>
+   645→              {msg.sender === 'ai' && (
+   646→                <div className="mt-1.5 flex items-center gap-2">
+   647→                  <button
+   648→                    onClick={() => replayMessage(msg)}
+   649→                    className="text-xs text-emerald-600 hover:text-emerald-800 hover:underline flex items-center gap-0.5"
+   650→                  >
+   651→                    <Volume2 className="h-3 w-3" /> Tekrar dinle
+   652→                  </button>
+   653→                  <span className="text-[10px] text-emerald-400">Google TTS</span>
+   654→                </div>
+   655→              )}
+   656→              {msg.tip && msg.tip.trim() && (
+   657→                <div className="mt-2 rounded-lg bg-amber-50 px-2 py-1.5 text-xs text-amber-800 border border-amber-100">
+   658→                  <span className="font-semibold">💡 İpucu: </span>{msg.tip}
+   659→                </div>
+   660→              )}
+   661→              {/* Dynamic contextual suggestions — shown inline after AI message */}
+   662→              {msg.suggestions && msg.suggestions.length > 0 && phase === 'chatting' && (
+   663→                <div className="mt-2 flex flex-wrap gap-1">
+   664→                  {msg.suggestions.map((s, i) => (
+   665→                    <button
+   666→                      key={i}
+   667→                      onClick={() => { setTextInput(s); }}
+   668→                      className="rounded-full bg-emerald-50 border border-emerald-100 px-2 py-0.5 text-[11px] text-emerald-700 hover:bg-emerald-100 transition-colors"
+   669→                    >
+   670→                      {s}
+   671→                    </button>
+   672→                  ))}
+   673→                </div>
+   674→              )}
+   675→            </div>
+   676→            {msg.sender === 'user' && (
+   677→              <div className="shrink-0 w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm">
+   678→                🧑
+   679→              </div>
+   680→            )}
+   681→          </motion.div>
+   682→        ))}
+   683→
+   684→        {/* Live transcript while listening */}
+   685→        {phase === 'listening' && liveTranscript && (
+   686→          <motion.div
+   687→            initial={{ opacity: 0, y: 10 }}
+   688→            animate={{ opacity: 1, y: 0 }}
+   689→            className="flex justify-end gap-2"
+   690→          >
+   691→            <div className="bg-emerald-100 border border-emerald-200 rounded-2xl rounded-br-sm px-4 py-2.5 text-sm text-emerald-800 italic">
+   692→              {liveTranscript}
+   693→              <span className="inline-block w-1 h-4 ml-1 bg-emerald-500 animate-pulse align-middle" />
+   694→            </div>
+   695→            <div className="shrink-0 w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm">🧑</div>
+   696→          </motion.div>
+   697→        )}
+   698→
+   699→        {/* Loading AI */}
+   700→        {phase === 'loading-ai' && (
+   701→          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start gap-2">
+   702→            <div className={cn('shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white text-sm', topic.color)}>
+   703→              {topic.icon}
+   704→            </div>
+   705→            <div className="bg-white border border-gray-100 rounded-2xl rounded-bl-sm px-4 py-2.5 text-xs text-gray-500 flex items-center gap-2">
+   706→              <Loader2 className="h-3 w-3 animate-spin" />
+   707→              AI düşünüyor...
+   708→            </div>
+   709→          </motion.div>
+   710→        )}
+   711→
+   712→        {/* Typing hint — appears after 3s inactivity */}
+   713→        <AnimatePresence>
+   714→          {showTypingHint && phase === 'chatting' && !textInput.trim() && (
+   715→            <motion.div
+   716→              initial={{ opacity: 0, y: 10 }}
+   717→              animate={{ opacity: 1, y: 0 }}
+   718→              exit={{ opacity: 0, y: 10 }}
+   719→              className="flex justify-end gap-2"
+   720→            >
+   721→              <motion.button
+   722→                onClick={() => {
+   723→                  setShowTypingHint(false);
+   724→                  setShowHints(true);
+   725→                }}
+   726→                className="bg-gray-100 border border-gray-200 rounded-2xl rounded-br-sm px-4 py-2.5 text-xs text-gray-500 flex items-center gap-2 hover:bg-gray-150 hover:border-gray-300 transition-colors cursor-pointer"
+   727→                whileTap={{ scale: 0.97 }}
+   728→              >
+   729→                <span className="flex items-center gap-0.5">
+   730→                  {[0, 1, 2].map((i) => (
+   731→                    <motion.span
+   732→                      key={i}
+   733→                      className="inline-block w-1.5 rounded-full bg-emerald-400"
+   734→                      animate={{ opacity: [0.4, 1, 0.4], scale: [0.8, 1.1, 0.8] }}
+   735→                      transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
+   736→                    />
+   737→                  ))}
+   738→                </span>
+   739→                <span>Yanıt vermek ister misin? Tikla ve önerileri gör</span>
+   740→              </motion.button>
+   741→              <div className="shrink-0 w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm">🧑</div>
+   742→            </motion.div>
+   743→          )}
+   744→        </AnimatePresence>
+   745→
+   746→        <div ref={messagesEndRef} />
+   747→      </div>
+   748→
+   749→      {/* Listening indicator */}
+   750→      <AnimatePresence>
+   751→        {phase === 'listening' && (
+   752→          <motion.div
+   753→            initial={{ opacity: 0, y: 10 }}
+   754→            animate={{ opacity: 1, y: 0 }}
+   755→            exit={{ opacity: 0, y: 10 }}
+   756→            className="mb-2 flex items-center gap-3 rounded-xl bg-red-50 px-3 py-2"
+   757→          >
+   758→            <div className="flex items-center gap-1">
+   759→              {[0, 1, 2, 3, 4].map((i) => (
+   760→                <motion.span
+   761→                  key={i}
+   762→                  className="w-1 rounded-full bg-red-500"
+   763→                  animate={{
+   764→                    height: [4, 16 + i * 2, 4],
+   765→                  }}
+   766→                  transition={{
+   767→                    duration: 0.4 + i * 0.05,
+   768→                    repeat: Infinity,
+   769→                    repeatType: 'reverse',
+   770→                  }}
+   771→                  style={{ height: 4 }}
+   772→                />
+   773→              ))}
+   774→            </div>
+   775→            <span className="text-xs font-medium flex-1 text-red-700">
+   776→              🎤 Dinleniyor... Almanca konuş
+   777→            </span>
+   778→            <span className="text-xs text-red-500">
+   779→              Bitirmek için mikrofona tekrar bas
+   780→            </span>
+   781→          </motion.div>
+   782→        )}
+   783→      </AnimatePresence>
+   784→
+   785→      {/* Bottom input area */}
+   786→      <div className="border-t border-gray-100 pt-3 space-y-2">
+   787→        <div className="flex items-center gap-2">
+   788→          <input
+   789→            type="text"
+   790→            value={textInput}
+   791→            onChange={(e) => setTextInput(e.target.value)}
+   792→            onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendText(); } }}
+   793→            placeholder="Yazarak da cevap verebilirsin..."
+   794→            disabled={phase !== 'chatting'}
+   795→            className="flex-1 h-11 rounded-full border border-gray-200 bg-white px-4 text-sm focus:border-emerald-400 focus:outline-none disabled:opacity-50"
+   796→            dir="auto"
+   797→          />
+   798→          <Button
+   799→            onClick={handleSendText}
+   800→            disabled={!textInput.trim() || phase !== 'chatting'}
+   801→            className="h-11 w-11 p-0 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white"
+   802→            aria-label="Gönder"
+   803→          >
+   804→            <Send className="h-4 w-4" />
+   805→          </Button>
+   806→        </div>
+   807→
+   808→        <div className="flex items-center justify-center">
+   809→          <button
+   810→            onClick={handleMicToggle}
+   811→            disabled={
+   812→              !browserSupported ||
+   813→              quotaExhausted ||
+   814→              (phase !== 'chatting' && phase !== 'listening')
+   815→            }
+   816→            className={cn(
+   817→              'relative flex h-16 w-16 items-center justify-center rounded-full text-white shadow-lg transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed',
+   818→              phase === 'listening'
+   819→                ? 'bg-red-500 hover:bg-red-600'
+   820→                : quotaExhausted
+   821→                ? 'bg-slate-400 cursor-not-allowed'
+   822→                : 'bg-emerald-600 hover:bg-emerald-700'
+   823→            )}
+   824→            aria-label={phase === 'listening' ? 'Kaydı durdur' : 'Konuş'}
+   825→            title={
+   826→              quotaExhausted
+   827→                ? `Kota doldu — ${daysUntilReset} gün sonra yenilenecek`
+   828→                : phase === 'listening'
+   829→                ? 'Kaydı durdur'
+   830→                : 'Almanca konuş'
+   831→            }
+   832→          >
+   833→            {phase === 'listening' ? (
+   834→              <Square className="h-6 w-6" fill="currentColor" />
+   835→            ) : quotaExhausted ? (
+   836→              <Mic className="h-7 w-7 opacity-60" />
+   837→            ) : isBusy ? (
+   838→              <Loader2 className="h-6 w-6 animate-spin" />
+   839→            ) : (
+   840→              <Mic className="h-7 w-7" />
+   841→            )}
+   842→            {phase === 'listening' && (
+   843→              <>
+   844→                <motion.span
+   845→                  className="absolute inset-0 rounded-full border-2 border-white"
+   846→                  initial={{ opacity: 0.7, scale: 1 }}
+   847→                  animate={{ opacity: 0, scale: 1.8 }}
+   848→                  transition={{ duration: 1.2, repeat: Infinity }}
+   849→                />
+   850→                <motion.span
+   851→                  className="absolute inset-0 rounded-full border-2 border-white"
+   852→                  initial={{ opacity: 0.5, scale: 1 }}
+   853→                  animate={{ opacity: 0, scale: 2.2 }}
+   854→                  transition={{ duration: 1.5, repeat: Infinity, delay: 0.4 }}
+   855→                />
+   856→              </>
+   857→            )}
+   858→          </button>
+   859→        </div>
+   860→        <p className="text-center text-xs text-muted-foreground">
+   861→          {phase === 'listening'
+   862→            ? 'Konuşmayı bitirince tekrar bas'
+   863→            : quotaExhausted
+   864→            ? `🔒 Kota doldu — ${daysUntilReset} gün sonra yenilenecek. Yazarak devam edebilirsin.`
+   865→            : phase === 'chatting'
+   866→            ? `🎤 Almanca konuşmak için mikrofona bas (Bu ay ${quotaRemaining} / ${speechUsage.monthlyLimit} kalan)`
+   867→            : 'İşleniyor...'}
+   868→        </p>
+   869→      </div>
+   870→    </div>
+   871→  );
+   872→}
+   873→

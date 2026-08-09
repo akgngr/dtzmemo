@@ -1,1 +1,22 @@
-## Sorunun Sebebi ve Çözümü **Sorun:** Production ortamında TTS API route'u `isDev` kontrolü yapıyordu. Production'da `isDev = false` olduğu için ElevenLabs ve Google Cloud TTS key'leri boş string olarak set ediliyordu. Bu da her iki provider'ın da atlanıp doğrudan kalitesiz **Google Translate TTS**'e düşmesine sebep oluyordu. **Çözüm:** 1. `isDev` kontrolü kaldırıldı - artık her ortamda (dev+prod) default key'ler kullanılıyor 2. API key'ler artık `.env.local` dosyasından da okunabiliyor (environment variable desteği) 3. Key öncelik sırası: client gönderen > .env.local > hardcoded default 4. `.env.local` oluşturuldu ve gerekli key'ler eklendi **Dosyalar:** - `/home/z/my-project/src/app/api/tts/route.ts` - isDev kontrolü kaldırıldı, env var desteği eklendi - `/home/z/my-project/.env.local` - ELEVENLABS_API_KEY ve GOOGLE_TTS_API_KEY eklendi
+# Work Log
+
+---
+Task ID: 1
+Agent: Main
+Task: UI fixes + silence detection + suggestions improvement
+
+Work Log:
+- Read ConversationChat.tsx (1125 lines), route.ts, suggestion-engine.ts, suggestion-scenarios.ts
+- Removed auto-show hints useEffect (lastAutoShowMsgIdRef + useEffect block) — hints now ONLY open on button click
+- Added silenceTimerRef — 5-second silence auto-close mic (resets on every onresult, stops recognition after 5s idle)
+- Cleaned up silence timer in recognition.onend and stopListening
+- Moved mic button inline with text input + send button (was large centered button below)
+- Improved LLM fallback prompt: added topic detection (Farbe/Größe/Preis/...), stricter rules (independent complete sentences, 4-10 words), two concrete examples
+- Increased LLM suggestion max_tokens from 150 to 250
+- Build verified successfully
+
+Stage Summary:
+- Vector DB: Zhipu embedding-3 model + in-memory cosine similarity (already implemented from previous session)
+- Embedding: Zhipu's `embedding-3` model via `/api/paas/v4/embeddings`
+- 3 UI bugs fixed: no auto-open hints, mic inline with send, 5s silence auto-close
+- Suggestions prompt improved with topic hints + strict rules + examples

@@ -33,11 +33,19 @@ export function ConversationModule() {
   const [showIntro, setShowIntro] = useState(false);
   const tts = useTTS({ lang: 'de-DE' });
 
+  const vorstellungText = useAppStore((s) => s.vorstellungText);
+
   const handleSelectTopic = useCallback((topic: ConversationTopic) => {
+    // Guard: Vorstellung topic requires stored text
+    if (topic.id === 'b1-vorstellung' && !vorstellungText.trim()) {
+      // Scroll to or switch to settings — just show alert
+      alert('Önce Ayarlar > Genel sekmesinden B1 Vorstellung metninizi yazın.');
+      return;
+    }
     setActiveTopic(topic);
     setSummary(null);
     setScreen('chat');
-  }, []);
+  }, [vorstellungText]);
 
   const handleExitChat = useCallback((convSummary: ConversationSummary) => {
     setSummary(convSummary);
@@ -123,8 +131,14 @@ export function ConversationModule() {
                   </div>
                 </div>
                 <div className="mt-3 flex items-center gap-2 text-[11px] text-muted-foreground">
-                  <span className="flex items-center gap-0.5"><Mic className="h-3 w-3" /> {topic.vocabulary.length} kelime</span>
-                  <span className="flex items-center gap-0.5"><MessageSquare className="h-3 w-3" /> {topic.samplePhrases.length} örnek</span>
+                  {topic.id === 'b1-vorstellung' ? (
+                    <span className="flex items-center gap-0.5"><MessageSquare className="h-3 w-3" /> Özel metin</span>
+                  ) : (
+                    <>
+                      <span className="flex items-center gap-0.5"><Mic className="h-3 w-3" /> {topic.vocabulary.length} kelime</span>
+                      <span className="flex items-center gap-0.5"><MessageSquare className="h-3 w-3" /> {topic.samplePhrases.length} örnek</span>
+                    </>
+                  )}
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/0 via-purple-500/0 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
               </motion.button>

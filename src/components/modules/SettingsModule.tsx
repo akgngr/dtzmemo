@@ -116,7 +116,7 @@ function ApiKeyField({
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <label className="text-sm font-medium text-foreground">{label}</label>
-        {value.trim() ? (
+        {value?.trim() ? (
           <Badge variant="outline" className="border-emerald-200 text-emerald-700 bg-emerald-50 text-[10px]"><CheckCircle2 className="mr-1 h-3 w-3" /> Kayıtlı</Badge>
         ) : (
           <Badge variant="outline" className="border-gray-200 text-gray-500 text-[10px]">Girilmedi</Badge>
@@ -125,12 +125,12 @@ function ApiKeyField({
       <p className="text-xs text-muted-foreground">{description}</p>
       <div className="flex items-center gap-2">
         <div className="relative flex-1">
-          <input type={visible ? 'text' : 'password'} value={value} onChange={(e) => onChange(e.target.value)} className="w-full h-10 rounded-md border border-gray-200 px-3 pr-10 text-sm font-mono focus:border-emerald-400 focus:outline-none" placeholder={placeholder} autoComplete="off" />
+          <input type={visible ? 'text' : 'password'} value={value || ''} onChange={(e) => onChange(e.target.value)} className="w-full h-10 rounded-md border border-gray-200 px-3 pr-10 text-sm font-mono focus:border-emerald-400 focus:outline-none" placeholder={placeholder} autoComplete="off" />
           <button type="button" onClick={() => setVisible(!visible)} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
             {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
         </div>
-        <Button size="sm" variant="outline" onClick={handleTest} disabled={testing || !value.trim()} className="shrink-0">
+        <Button size="sm" variant="outline" onClick={handleTest} disabled={testing || !value?.trim()} className="shrink-0">
           {testing ? 'Test...' : 'Test Et'}
         </Button>
       </div>
@@ -163,6 +163,9 @@ export function SettingsModule() {
   const daysUntilSpeechReset = useAppStore((s) => s.daysUntilSpeechReset);
   const targetLanguage = useAppStore((s) => s.targetLanguage);
   const setTargetLanguage = useAppStore((s) => s.setTargetLanguage);
+  const vorstellungText = useAppStore((s) => s.vorstellungText);
+  const vorstellungChunks = useAppStore((s) => s.vorstellungChunks);
+  const setVorstellungText = useAppStore((s) => s.setVorstellungText);
   const apiKeys = useAppStore((s) => s.apiKeys);
   const setApiKey = useAppStore((s) => s.setApiKey);
   const customWordLists = useAppStore((s) => s.customWordLists);
@@ -284,6 +287,38 @@ export function SettingsModule() {
         </div>
       </div>
       <Separator />
+      {/* B1 Vorstellung */}
+      <div className="space-y-2">
+        <span className="text-xs font-semibold uppercase text-muted-foreground">B1 Sınav - Kendini Tanıtma (Vorstellung)</span>
+        <p className="text-xs text-muted-foreground">B1 sınavında kendini tanıtma metnini yaz. Konuşma modülünde bu metinle ezberleme pratiği yapabilirsin.</p>
+        <textarea
+          value={vorstellungText}
+          onChange={(e) => setVorstellungText(e.target.value)}
+          placeholder="z.B. Ich heiße Mehmet und komme aus der Türkei. Ich bin 28 Jahre alt und wohne seit zwei Jahren in Berlin. Ich arbeite als Ingenieur bei einer IT-Firma. In meiner Freizeit spiele ich gern Fußball und lerne Deutsch, weil ich in Deutschland leben möchte..."
+          className="w-full h-40 rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm leading-relaxed focus:border-emerald-400 focus:outline-none resize-y"
+          dir="auto"
+        />
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-muted-foreground">{vorstellungText.trim().length > 0 ? `${vorstellungText.trim().split(/\s+/).length} kelime · ${vorstellungChunks.length} parça` : 'Henüz metin yazılmadı'}</span>
+          {vorstellungText.trim().length > 0 && (
+            <Button size="sm" variant="ghost" className="text-xs text-red-500 hover:text-red-700" onClick={() => setVorstellungText('')}>
+              <Trash2 className="h-3 w-3 mr-1" /> Temizle
+            </Button>
+          )}
+        </div>
+        {vorstellungChunks.length > 0 && (
+          <div className="space-y-1.5 mt-2">
+            <span className="text-[10px] font-medium text-muted-foreground">Otomatik Parçalar (ezberleme için):</span>
+            {vorstellungChunks.map((chunk, i) => (
+              <div key={i} className="flex items-start gap-2 rounded-md bg-emerald-50 px-3 py-1.5">
+                <span className="text-[10px] font-bold text-emerald-600 mt-0.5 shrink-0">{i + 1}.</span>
+                <span className="text-xs text-emerald-800 leading-relaxed" dir="auto">{chunk}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <Separator />
       <div className="space-y-2">
         <span className="text-xs font-semibold uppercase text-muted-foreground">Hızlı Erişim</span>
         <div className="grid grid-cols-2 gap-2">
@@ -315,21 +350,36 @@ export function SettingsModule() {
       </div>
       <Separator />
       <div className="space-y-5">
-        <ApiKeyField label="Zhipu BigModel API Anahtarı" description="GLM-4.5-Air (sohbet) ve GLM-4-Voice (sesli konuşma) için." placeholder="51d6b2bb..." value={apiKeys.zhipuKey} onChange={(v) => setApiKey('zhipuKey', v)} testUrl="/api/chat" testBody={{ messages: [], systemPrompt: 'test' } as Record<string, unknown>} testKeyField="zhipuKey" successHint="Zhipu API anahtarı geçerli." />
+        <div className="space-y-1 mb-2">
+          <span className="text-xs font-semibold uppercase text-muted-foreground">Sohbet (Chat) API&apos;leri</span>
+          <p className="text-xs text-muted-foreground">Birden fazla anahtar girerseniz, sırayla denenir. İlk başarılı yanıt kullanılır.</p>
+        </div>
+        <ApiKeyField label="Zhipu BigModel API Anahtarı" description="GLM-4-Flash sohbet modeli için. docs.z.ai / open.bigmodel.cn" placeholder="51d6b2bb..." value={apiKeys.zhipuKey} onChange={(v) => setApiKey('zhipuKey', v)} testUrl="/api/chat" testBody={{ messages: [{ role: 'user', content: 'Hallo' }], systemPrompt: 'test' } as Record<string, unknown>} testKeyField="zhipuKey" successHint="Zhipu API anahtarı geçerli." />
         <Separator />
+        <ApiKeyField label="OpenAI API Anahtarı" description="GPT-4o-mini sohbet modeli için. platform.openai.com" placeholder="sk-proj-..." value={apiKeys.openaiKey} onChange={(v) => setApiKey('openaiKey', v)} testUrl="/api/chat" testBody={{ messages: [{ role: 'user', content: 'Hallo' }], systemPrompt: 'test' } as Record<string, unknown>} testKeyField="openaiKey" successHint="OpenAI API anahtarı geçerli." />
+        <Separator />
+        <ApiKeyField label="Anthropic (Claude) API Anahtarı" description="Claude Sonnet 4 sohbet modeli için. console.anthropic.com" placeholder="sk-ant-..." value={apiKeys.claudeKey} onChange={(v) => setApiKey('claudeKey', v)} testUrl="/api/chat" testBody={{ messages: [{ role: 'user', content: 'Hallo' }], systemPrompt: 'test' } as Record<string, unknown>} testKeyField="claudeKey" successHint="Claude API anahtarı geçerli." />
+        <Separator />
+        <ApiKeyField label="Google AI (Gemini) API Anahtarı" description="Gemini 2.0 Flash sohbet modeli için. AI Studio&apos;dan alabilirsiniz." placeholder="AIzaSy..." value={apiKeys.googleAiKey} onChange={(v) => setApiKey('googleAiKey', v)} testUrl="/api/chat" testBody={{ messages: [{ role: 'user', content: 'Hallo' }], systemPrompt: 'test' } as Record<string, unknown>} testKeyField="googleAiKey" successHint="Google AI API anahtarı geçerli." />
+      </div>
+      <Separator />
+      <div className="space-y-1 mb-2">
+        <span className="text-xs font-semibold uppercase text-muted-foreground">Seslendirme (TTS) API&apos;leri</span>
+      </div>
+      <div className="space-y-5">
         <ApiKeyField label="ElevenLabs API Anahtarı" description="Yüksek kaliteli Almanca seslendirme (TTS) için." placeholder="sk_6c2fb452..." value={apiKeys.elevenLabsKey} onChange={(v) => setApiKey('elevenLabsKey', v)} testUrl="/api/tts" testBody={{ text: 'Hallo' } as Record<string, unknown>} testKeyField="elevenLabsKey" successHint="ElevenLabs API anahtarı geçerli." />
         <Separator />
         <ApiKeyField label="Google Cloud TTS API Anahtarı" description="Almanca seslendirme için yedek TTS sağlayıcısı." placeholder="AIzaSyDIy8..." value={apiKeys.googleTtsKey} onChange={(v) => setApiKey('googleTtsKey', v)} testUrl="/api/tts" testBody={{ text: 'Guten Tag' } as Record<string, unknown>} testKeyField="googleTtsKey" successHint="Google Cloud TTS API anahtarı geçerli." />
-        <Separator />
-        <ApiKeyField label="Google AI (Gemini) API Anahtarı" description="Zhipu yoksa sohbet için Google Gemini kullanılır. AI Studio'dan alabilirsiniz." placeholder="AIzaSy..." value={apiKeys.googleAiKey} onChange={(v) => setApiKey('googleAiKey', v)} testUrl="/api/chat" testBody={{ messages: [{ role: 'user', content: 'Hallo' }], systemPrompt: 'test' } as Record<string, unknown>} testKeyField="googleAiKey" successHint="Google AI API anahtarı geçerli." />
       </div>
       <Separator />
       <div className="space-y-2">
         <span className="text-xs font-semibold uppercase text-muted-foreground">Sohbet Sağlayıcı Sırası</span>
         <div className="space-y-2">
           {[
-            { name: 'Zhipu (GLM-4-Flash)', desc: 'Birinci tercih · docs.z.ai / open.bigmodel.cn', active: !!apiKeys.zhipuKey },
-            { name: 'Google Gemini', desc: 'Yedek · Zhipu yoksa kullanılır', active: !!apiKeys.googleAiKey },
+            { name: 'Zhipu (GLM-4-Flash)', desc: '1. tercih · docs.z.ai', active: !!apiKeys.zhipuKey },
+            { name: 'OpenAI (GPT-4o-mini)', desc: '2. tercih · platform.openai.com', active: !!apiKeys.openaiKey },
+            { name: 'Claude (Sonnet 4)', desc: '3. tercih · console.anthropic.com', active: !!apiKeys.claudeKey },
+            { name: 'Google Gemini', desc: '4. tercih · AI Studio', active: !!apiKeys.googleAiKey },
           ].map((p) => (
             <div key={p.name} className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2">
               <div className="flex items-center gap-2"><Volume2 className="h-4 w-4 text-slate-600" /><div><p className="text-sm font-medium">{p.name}</p><p className="text-xs text-muted-foreground">{p.desc}</p></div></div>

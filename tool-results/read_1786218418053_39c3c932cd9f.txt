@@ -1,0 +1,296 @@
+     1→// ============================================================
+     2→// Pre-defined conversation scenarios per topic.
+     3→// Each scenario has a trigger (what the AI might say)
+     4→// and 3 suggestions (what the user should say next).
+     5→// These are embedded at runtime and matched via cosine similarity.
+     6→// ============================================================
+     7→
+     8→import type { Scenario, TopicScenarioSet } from './suggestion-engine';
+     9→
+    10→export const allTopicScenarios: TopicScenarioSet[] = [
+    11→  // ==================== BEGRÜSSUNG ====================
+    12→  {
+    13→    topicId: 'begruessung',
+    14→    scenarios: [
+    15→      { trigger: 'Wie heißt du und woher kommst du?', suggestions: ['Ich heiße Ali, ich komme aus der Türkei.', 'Mein Name ist Ayşe, aus Istanbul.', 'Ich bin Mehmet und komme aus Ankara.'] },
+    16→      { trigger: 'Woher kommst du genau?', suggestions: ['Ich komme aus der Türkei, aus Istanbul.', 'Ich bin aus Berlin geboren.', 'Ich komme ursprünglich aus Izmir.'] },
+    17→      { trigger: 'Und, wo wohnst du jetzt?', suggestions: ['Ich wohne in Berlin, in Neukölln.', 'Ich wohne seit zwei Jahren hier.', 'Ich wohne bei meiner Familie in Hamburg.'] },
+    18→      { trigger: 'Was bist du von Beruf?', suggestions: ['Ich bin Ingenieur von Beruf.', 'Ich arbeite als Lehrer.', 'Ich bin Student und studiere Informatik.'] },
+    19→      { trigger: 'Wie lange lernst du schon Deutsch?', suggestions: ['Ich lerne seit einem Jahr Deutsch.', 'Seit sechs Monaten, aber noch nicht so gut.', 'Schon zwei Jahre, aber Sprechen ist schwer.'] },
+    20→      { trigger: 'Warum lernst du Deutsch?', suggestions: ['Ich brauche Deutsch für die Arbeit.', 'Ich möchte in Deutschland leben.', 'Ich finde die deutsche Sprache schön.'] },
+    21→      { trigger: 'Wie gefällt dir Deutschland?', suggestions: ['Es gefällt mir sehr gut hier.', 'Die Leute sind sehr freundlich.', 'Das Wetter ist manchmal schwierig für mich.'] },
+    22→      { trigger: 'Hast du Geschwister?', suggestions: ['Ja, ich habe einen Bruder und eine Schwester.', 'Nein, ich bin Einzelkind.', 'Ja, zwei Schwestern, sie sind jünger.'] },
+    23→      { trigger: 'Was machst du in deiner Freizeit?', suggestions: ['Ich spiele gern Fußball mit Freunden.', 'Ich lese gern Bücher und koche.', 'Ich gehe gern spazieren und höre Musik.'] },
+    24→      { trigger: 'Schön, dich kennenzulernen!', suggestions: ['Schön, dich auch kennenzulernen!', 'Danke, gleichfalls!', 'Freut mich auch!'] },
+    25→    ],
+    26→  },
+    27→
+    28→  // ==================== RESTAURANT ====================
+    29→  {
+    30→    topicId: 'restaurant',
+    31→    scenarios: [
+    32→      { trigger: 'Haben Sie reserviert?', suggestions: ['Ja, ich habe auf den Namen Müller reserviert.', 'Nein, haben Sie noch einen Tisch frei?', 'Nein, ist hier noch Platz für zwei Personen?'] },
+    33→      { trigger: 'Was darf ich Ihnen bringen?', suggestions: ['Die Speisekarte bitte.', 'Haben Sie auch eine Getränkekarte?', 'Was empfehlen Sie heute?'] },
+    34→      { trigger: 'Was möchten Sie bestellen?', suggestions: ['Ich hätte gern ein Schnitzel mit Pommes.', 'Ich nehme die Pasta mit Tomatensoße.', 'Haben Sie auch vegetarische Gerichte?'] },
+    35→      { trigger: 'Möchten Sie etwas trinken?', suggestions: ['Ich hätte gern ein Wasser, bitte.', 'Eine Cola, danke.', 'Haben Sie auch deutsche Weine?'] },
+    36→      { trigger: 'Schmeckt es Ihnen?', suggestions: ['Ja, es schmeckt sehr gut, danke!', 'Es ist etwas zu salzig für mich.', 'Sehr lecker, mein Kompliment an den Koch!'] },
+    37→      { trigger: 'Möchten Sie noch etwas?', suggestions: ['Nein danke, ich bin satt.', 'Ja, noch ein Stück Kuchen bitte.', 'Eine Tasse Kaffee hätte ich noch gern.'] },
+    38→      { trigger: 'Möchten Sie die Rechnung?', suggestions: ['Ja, die Rechnung bitte.', 'Kann ich mit Karte zahlen?', 'Zusammen bitte, nicht getrennt.'] },
+    39→      { trigger: 'Das macht zusammen 24 Euro 50.', suggestions: ['Hier, stimmt so.', 'Haben Sie Kleingeld für 25 Euro?', 'Kann ich mit Kreditkarte zahlen?'] },
+    40→      { trigger: 'Was empfehlen Sie?', suggestions: ['Das Schnitzel ist sehr gut hier.', 'Haben Sie etwas Typisch Deutsches?', 'Was ist heute die Tagesempfehlung?'] },
+    41→      { trigger: 'Haben Sie eine Allergie?', suggestions: ['Nein, keine Allergien.', 'Ja, ich vertrage kein Laktose.', 'Ich bin vegetarier, kein Fleisch bitte.'] },
+    42→      { trigger: 'Einen Moment bitte, es dauert noch etwas.', suggestions: ['Kein Problem, ich habe Zeit.', 'Können Sie mir etwas Brot bringen?', 'Das ist völlig in Ordnung.'] },
+    43→      { trigger: 'Kommen Sie gerne wieder!', suggestions: ['Danke, das Essen war wunderbar!', 'Auf Wiedersehen, bis zum nächsten Mal!', 'Vielen Dank, es war sehr schön hier.'] },
+    44→    ],
+    45→  },
+    46→
+    47→  // ==================== EINKAUFEN ====================
+    48→  {
+    49→    topicId: 'einkaufen',
+    50→    scenarios: [
+    51→      { trigger: 'Kann ich Ihnen helfen? Suchen Sie etwas Bestimmtes?', suggestions: ['Ich suche einen Pullover für den Winter.', 'Ich brauche ein Geschenk für meine Mutter.', 'Ich möchte mir Schuhe ansehen.'] },
+    52→      { trigger: 'Was für eine Farbe bevorzugen Sie?', suggestions: ['Ich möchte etwas in Dunkelblau.', 'Etwas Helles bitte, vielleicht Weiß.', 'Haben Sie das auch in Rot oder Grün?'] },
+    53→      { trigger: 'Welche Größe brauchen Sie?', suggestions: ['Ich brauche Größe M, oder vielleicht L.', 'Ich bin mir nicht sicher, kann ich messen?', 'Haben Sie das in Größe 40?'] },
+    54→      { trigger: 'Möchten Sie das anprobieren?', suggestions: ['Ja, wo ist die Umkleidekabine?', 'Gerne, kann ich das anprobieren?', 'Wo kann ich mich umziehen?'] },
+    55→      { trigger: 'Wie gefällt Ihnen die Größe?', suggestions: ['Es passt perfekt, danke.', 'Das ist etwas zu eng an den Ärmeln.', 'Haben Sie das eine Nummer größer?'] },
+    56→      { trigger: 'Das kostet 39 Euro 90.', suggestions: ['Das ist etwas teuer, haben Sie etwas Günstigeres?', 'Akzeptieren Sie auch Kreditkarte?', 'Gibt es einen Rabatt, wenn ich zwei nehme?'] },
+    57→      { trigger: 'Sonst noch etwas?', suggestions: ['Nein danke, das ist alles für heute.', 'Haben Sie noch eine Schal dazu?', 'Ja, ich brauche auch noch eine Hose.'] },
+    58→      { trigger: 'Für wen ist das?', suggestions: ['Das ist für mich selbst.', 'Das ist ein Geschenk für meinen Bruder.', 'Ich suche etwas für meine Frau.'] },
+    59→      { trigger: 'Möchten Sie mit Bargeld oder Karte zahlen?', suggestions: ['Ich bezahle mit Karte, bitte.', 'Per Handy wäre am besten.', 'Haben Sie auch Apple Pay?'] },
+    60→      { trigger: 'Haben Sie eine bestimmte Marke bevorzugt?', suggestions: ['Keine bestimmte Marke, es muss gut aussehen.', 'Ich mag Nike oder Adidas gern.', 'Etwas von einem deutschen Markenname wäre schön.'] },
+    61→      { trigger: 'Das gefällt mir nicht so, haben Sie was anderes?', suggestions: ['Zeigen Sie mir mal das da in der Ecke.', 'Haben Sie etwas Ähnliches in Blau?', 'Kann ich mir auch die Jacke dort ansehen?'] },
+    62→      { trigger: 'Möchten Sie eine Quittung?', suggestions: ['Ja, bitte mit Quittung.', 'Nein, das ist nicht nötig.', 'Ja, ich brauche das für die Rückgabe.'] },
+    63→    ],
+    64→  },
+    65→
+    66→  // ==================== REISEN ====================
+    67→  {
+    68→    topicId: 'reisen',
+    69→    scenarios: [
+    70→      { trigger: 'Wohin möchten Sie reisen?', suggestions: ['Ich möchte nach München reisen.', 'Ich plane eine Reise nach Österreich.', 'Ich würde gern an die Ostsee fahren.'] },
+    71→      { trigger: 'Wie lange möchten Sie bleiben?', suggestions: ['Eine Woche, von Samstag zu Samstag.', 'Nur ein Wochenende, zwei Nächte.', 'Zwei Wochen, vom 1. bis zum 15. August.'] },
+    72→      { trigger: 'Wie viele Personen sind Sie?', suggestions: ['Wir sind zwei Erwachsene und ein Kind.', 'Ich reise allein.', 'Zu viert, mit der ganzen Familie.'] },
+    73→      { trigger: 'Brauchen Sie ein Hotel oder eine Ferienwohnung?', suggestions: ['Ein Hotel mit Frühstück wäre schön.', 'Eine Ferienwohnung mit Küche, bitte.', 'Ein Hostel, ich habe ein kleines Budget.'] },
+    74→      { trigger: 'Das kostet 85 Euro pro Nacht.', suggestions: ['Haben Sie etwas Günstigeres?', 'Das ist in Ordnung, ich nehme es.', 'Gibt es einen Rabatt für eine Woche?'] },
+    75→      { trigger: 'Brauchen Sie einen Transfer vom Flughafen?', suggestions: ['Ja, kann ein Taxi organisieren?', 'Nein, ich nehme die S-Bahn.', 'Gibt es einen Shuttle-Service?'] },
+    76→      { trigger: 'Möchten Sie auch eine Stadtrundfahrt buchen?', suggestions: ['Ja, das klingt interessant!', 'Nein danke, ich kenne die Stadt schon.', 'Was kostet die Stadtrundfahrt?'] },
+    77→      { trigger: 'Wann möchten Sie abreisen?', suggestions: ['Am Freitagmorgen, frühzeitig.', 'Am Sonntagabend, nach dem Abendessen.', 'Flexibel, wann ist am günstigsten?'] },
+    78→    ],
+    79→  },
+    80→
+    81→  // ==================== ARZT ====================
+    82→  {
+    83→    topicId: 'arzt',
+    84→    scenarios: [
+    85→      { trigger: 'Was führt Sie zu mir?', suggestions: ['Ich habe seit drei Tagen Kopfschmerzen.', 'Ich fühle mich nicht wohl und habe Fieber.', 'Ich habe Husten und eine laufende Nase.'] },
+    86→      { trigger: 'Seit wann haben Sie diese Beschwerden?', suggestions: ['Seit ungefähr einer Woche.', 'Seit gestern Abend.', 'Die Schmerzen kommen und gehen seit Monaten.'] },
+    87→      { trigger: 'Nehmen Sie irgendwelche Medikamente?', suggestions: ['Ja, ich nehme Ibuprofen, aber es hilft nicht.', 'Nein, ich nehme keine Medikamente.', 'Ich habe gestern eine Tablette genommen.'] },
+    88→      { trigger: 'Haben Sie Allergien?', suggestions: ['Ja, ich bin allergisch gegen Penicillin.', 'Nein, keine bekannten Allergien.', 'Ja, gegen Aspirin. Ich habe einen Ausweis.'] },
+    89→      { trigger: 'Ich verschreibe Ihnen ein Medikament.', suggestions: ['Wie oft soll ich es einnehmen?', 'Gibt es Nebenwirkungen?', 'Muss ich das auf nüchternen Magen nehmen?'] },
+    90→      { trigger: 'Soll ich Sie krankschreiben?', suggestions: ['Ja, bitte für drei Tage.', 'Nein, das ist nicht nötig.', 'Ja, für heute und morgen bitte.'] },
+    91→      { trigger: 'Kommen Sie in einer Woche wieder zur Kontrolle.', suggestions: ['Alles klar, gleichen Termin bitte.', 'Kann ich auch früher kommen?', 'Ja, danke, bis nächste Woche.'] },
+    92→      { trigger: 'Haben Sie in der letzten Zeit Gewicht verloren?', suggestions: ['Ja, etwa zwei Kilo in letzter Zeit.', 'Nein, mein Gewicht ist normal.', 'Ich habe sogar zugenommen.'] },
+    93→    ],
+    94→  },
+    95→
+    96→  // ==================== SMALLTALK ====================
+    97→  {
+    98→    topicId: 'smalltalk',
+    99→    scenarios: [
+   100→      { trigger: 'Wie geht es Ihnen heute?', suggestions: ['Mir geht es gut, danke der Nachfrage!', 'Es könnte besser sein, ich bin etwas müde.', 'Sehr gut, heute ist ein schöner Tag!'] },
+   101→      { trigger: 'Schönes Wetter heute, nicht wahr?', suggestions: ['Ja, endlich mal Sonnenschein!', 'Leider regnet es wieder.', 'Genau, perfekt für einen Spaziergang.'] },
+   102→      { trigger: 'Haben Sie schon Pläne für das Wochenende?', suggestions: ['Ich gehe mit Freunden essen.', 'Ich möchte ausschlafen und entspannen.', 'Noch keine Pläne, haben Sie einen Vorschlag?'] },
+   103→      { trigger: 'Was machen Sie beruflich?', suggestions: ['Ich arbeite in der IT-Branche.', 'Ich bin Lehrer an einer Grundschule.', 'Ich studiere noch, im dritten Semester.'] },
+   104→      { trigger: 'Können Sie sich an Ihren ersten Tag hier erinnern?', suggestions: ['Ja, ich war sehr nervös!', 'Nein, das ist schon lange her.', 'Ja, alles war neu und aufregend.'] },
+   105→      { trigger: 'Haben Sie Haustiere?', suggestions: ['Ja, ich habe eine Katze, sie heißt Mimi.', 'Nein, aber ich möchte gern einen Hund.', 'Ja, einen Hund und zwei Fische.'] },
+   106→      { trigger: 'Was kochen Sie am liebsten?', suggestions: ['Türkische Küche, besonders Lahmacun.', 'Ich koche gern Pasta mit Gemüse.', 'Eigentlich bestelle ich meistens Pizza.'] },
+   107→      { trigger: 'Welche Musik hören Sie gern?', suggestions: ['Ich höre gern Pop und Rock.', 'Türkische Musik, natürlich!', 'Alles, je nach Stimmung.'] },
+   108→    ],
+   109→  },
+   110→
+   111→  // ==================== BERUF ====================
+   112→  {
+   113→    topicId: 'beruf',
+   114→    scenarios: [
+   115→      { trigger: 'Erzählen Sie mir etwas über sich.', suggestions: ['Ich bin 28 Jahre alt und komme aus der Türkei.', 'Ich habe Informatik studiert.', 'Ich habe fünf Jahre Berufserfahrung.'] },
+   116→      { trigger: 'Warum möchten Sie bei uns arbeiten?', suggestions: ['Ihr Unternehmen gefällt mir sehr.', 'Die Stelle passt perfekt zu meinen Fähigkeiten.', 'Ich möchte mich beruflich weiterentwickeln.'] },
+   117→      { trigger: 'Was sind Ihre Stärken?', suggestions: ['Ich bin teamfähig und lerne schnell.', 'Ich bin sehr zuverlässig und pünktlich.', 'Ich habe gute Kommunikationsfähigkeiten.'] },
+   118→      { trigger: 'Was sind Ihre Schwächen?', suggestions: ['Ich bin manchmal etwas zu perfektionistisch.', 'Ich sage manchmal zu schnell ja.', 'Ich arbeite manchmal zu viel.'] },
+   119→      { trigger: 'Wie gehen Sie mit Stress um?', suggestions: ['Ich mache Sport und gehe spazieren.', 'Ich plane meine Aufgaben gut.', 'Ich spreche mit Kollegen darüber.'] },
+   120→      { trigger: 'Wo sehen Sie sich in fünf Jahren?', suggestions: ['Ich möchte Teamleiter werden.', 'Ich möchte mehr Verantwortung übernehmen.', 'Ich möchte mich weiter qualifizieren.'] },
+   121→      { trigger: 'Was erwarten Sie vom Gehalt?', suggestions: ['Ich erwarte etwa 4000 Euro brutto.', 'Ich bin flexibel, lassen Sie uns verhandeln.', 'Das Gehalt ist nicht das Wichtigste für mich.'] },
+   122→      { trigger: 'Haben Sie noch Fragen an uns?', suggestions: ['Wie sind die Arbeitszeiten genau?', 'Gibt es eine Einarbeitungsphase?', 'Wann darf ich mit einer Antwort rechnen?'] },
+   123→    ],
+   124→  },
+   125→
+   126→  // ==================== WOHNUNG ====================
+   127→  {
+   128→    topicId: 'wohnung',
+   129→    scenarios: [
+   130→      { trigger: 'Suchen Sie eine Wohnung oder ein Zimmer?', suggestions: ['Ich suche eine Einzimmerwohnung.', 'Ich brauche ein Zimmer in einer WG.', 'Wir suchen eine Dreizimmerwohnung.'] },
+   131→      { trigger: 'Wie groß soll die Wohnung sein?', suggestions: ['Mindestens 50 Quadratmeter bitte.', 'Zwei Zimmer, für mich und mein Kind.', 'Nicht zu groß, 30 bis 40 Quadratmeter.'] },
+   132→      { trigger: 'Was ist Ihr Budget?', suggestions: ['Maximal 600 Euro warm.', 'Bis 800 Euro wäre möglich.', 'Ich suche etwas Günstiges, unter 500.'] },
+   133→      { trigger: 'Die Kaltmiete beträgt 550 Euro.', suggestions: ['Ist das mit Heizung und Strom?', 'Das ist etwas über meinem Budget.', 'Gibt es eine Kaution?'] },
+   134→      { trigger: 'Möchten Sie die Wohnung besichtigen?', suggestions: ['Ja, wann wäre es möglich?', 'Gerne! Am Wochenende wäre am besten.', 'Kann ich morgen Nachmittag kommen?'] },
+   135→      { trigger: 'Die Wohnung ist ab dem 1. März frei.', suggestions: ['Das passt mir sehr gut.', 'Kann ich auch schon früher einziehen?', 'Leider brauche ich es schon ab Februar.'] },
+   136→      { trigger: 'Gibt es noch etwas, das Sie wissen möchten?', suggestions: ['Wie ist die Anbindung an den ÖPNV?', 'Gibt es einen Balkon oder einen Garten?', 'Sind Haustiere erlaubt?'] },
+   137→    ],
+   138→  },
+   139→
+   140→  // ==================== APOTHEKE ====================
+   141→  {
+   142→    topicId: 'apotheke',
+   143→    scenarios: [
+   144→      { trigger: 'Was können wir für Sie tun?', suggestions: ['Ich brauche etwas gegen Kopfschmerzen.', 'Ich möchte ein Rezept einlösen.', 'Haben Sie etwas gegen Husten?'] },
+   145→      { trigger: 'Brauchen Sie das rezeptfrei oder haben Sie ein Rezept?', suggestions: ['Ich habe ein Rezept vom Arzt.', 'Etwas Rezeptfreies bitte.', 'Kann ich hier auch ohne Rezept etwas bekommen?'] },
+   146→      { trigger: 'Haben Sie Nebenwirkungen oder Allergien?', suggestions: ['Nein, keine Allergien.', 'Ja, ich vertrage kein Aspirin.', 'Ich bin allergisch gegen Penicillin.'] },
+   147→      { trigger: 'Nehmen Sie noch andere Medikamente?', suggestions: ['Nein, sonst nichts.', 'Ja, ich nehme Blutrucktabletten.', 'Nur Vitamin D, sonst nichts.'] },
+   148→      { trigger: 'Das macht 12 Euro 50.', suggestions: ['Akzeptieren Sie auch Karte?', 'Hier bitte, stimmt so.', 'Kann ich das auch in Raten zahlen?'] },
+   149→      { trigger: 'Nehmen Sie dreimal täglich eine Tablette.', suggestions: ['Vor oder nach dem Essen?', 'Wie lange soll ich das nehmen?', 'Was mache ich, wenn ich eine vergesse?'] },
+   150→    ],
+   151→  },
+   152→
+   153→  // ==================== BAHN ====================
+   154→  {
+   155→    topicId: 'bahn',
+   156→    scenarios: [
+   157→      { trigger: 'Wohin möchten Sie fahren?', suggestions: ['Ich möchte nach München bitte.', 'Einmal hin und zurück nach Hamburg.', 'Nach Köln, bitte.'] },
+   158→      { trigger: 'Wann möchten Sie fahren?', suggestions: ['Morgen früh, um 8 Uhr.', 'Am Freitagabend bitte.', 'So bald wie möglich.'] },
+   159→      { trigger: 'Einzel oder Hin- und Zurück?', suggestions: ['Hin und zurück bitte.', 'Nur eine Fahrt, eine Richtung.', 'Hin und zurück, zweite Klasse.'] },
+   160→      { trigger: 'Das macht 45 Euro.', suggestions: ['Haben Sie einen Bahncard-Rabatt?', 'Gibt es ein Sparangebot?', 'Ist das der Preis mit Sparpreis?'] },
+   161→      { trigger: 'Der Zug fährt von Gleis 3 ab.', suggestions: ['Vielen Dank, wo ist Gleis 3?', 'Haben Sie auch Umstiegsinformationen?', 'Pünktlich ab Gleis 3, danke.'] },
+   162→      { trigger: 'Leider ist Ihr Zug Verspätet.', suggestions: ['Wie lange dauert die Verspätung?', 'Bekomme ich mein Geld zurück?', 'Gibt es einen Ersatzzug?'] },
+   163→      { trigger: 'Möchten Sie einen Sitzplatz reservieren?', suggestions: ['Ja, gern am Fenster.', 'Nein, ich suche mir selbst einen Platz.', 'Ja, in der Nähe des Ausstiegs bitte.'] },
+   164→    ],
+   165→  },
+   166→
+   167→  // ==================== BEHÖRDE ====================
+   168→  {
+   169→    topicId: 'behörde',
+   170→    scenarios: [
+   171→      { trigger: 'Was kann ich für Sie tun?', suggestions: ['Ich möchte einen Termin für die Ausländerbehörde.', 'Ich brauche eine Anmeldebescheinigung.', 'Ich möchte meinen Aufenthaltstitel verlängern.'] },
+   172→      { trigger: 'Haben Sie alle Unterlagen dabei?', suggestions: ['Ja, hier sind meine Dokumente.', 'Welche Unterlagen brauche ich genau?', 'Ich habe meinen Pass und den Mietvertrag.'] },
+   173→      { trigger: 'Ich brauche noch Ihren Pass und ein biometrisches Foto.', suggestions: ['Das Foto habe ich hier, ist das okay?', 'Kann ich das Foto hier machen lassen?', 'Mein Pass ist zu Hause, kann ich kommen zurück?'] },
+   174→      { trigger: 'Der Termin kostet 100 Euro.', suggestions: ['Akzeptieren Sie auch EC-Karte?', 'Kann ich auch bar zahlen?', 'Das ist teuer, gibt es eine Ermäßigung?'] },
+   175→      { trigger: 'Ihr Dokument ist in drei Wochen fertig.', suggestions: ['Kann ich es per Post zugeschickt bekommen?', 'Kann ich auch früher abholen?', 'Wie erfahre ich, wann es da ist?'] },
+   176→      { trigger: 'Bitte füllen Sie dieses Formular aus.', suggestions: ['Haben Sie auch einen Stift für mich?', 'Einige Felder verstehe ich nicht.', 'Wie lange darf ich dafür brauchen?'] },
+   177→    ],
+   178→  },
+   179→
+   180→  // ==================== NACHBAR ====================
+   181→  {
+   182→    topicId: 'nachbar',
+   183→    scenarios: [
+   184→      { trigger: 'Hallo, ich bin Ihr neuer Nachbar!', suggestions: ['Schön Sie kennenzulernen, willkommen!', 'Ich bin die Lisa, wohne nebenan.', 'Willkommen im Haus!'] },
+   185→      { trigger: 'Haben Sie schon alles eingerichtet?', suggestions: ['Noch nicht ganz, es fehlt noch viel.', 'Ja, fast fertig, nur noch Bücherregale.', 'Die Möbel kommen erst nächste Woche.'] },
+   186→      { trigger: 'Die Mülltrennung ist hier wichtig.', suggestions: ['Danke für den Hinweis, wo steht die Tonne?', 'In der Türkei gibt es das nicht so.', 'Welcher Müll kommt in welche Tonne?'] },
+   187→      { trigger: 'Wir machen eine Party am Samstag, ist das okay?', suggestions: ['Ja, kein Problem, bis wann?', 'Bitte nicht zu laut nach 22 Uhr.', 'Leider arbeite ich am Wochenende.'] },
+   188→      { trigger: 'Können Sie ab und zu auf meine Katze aufpassen?', suggestions: ['Ja, sehr gerne!', 'Leider habe ich eine Hundeallergie.', 'Natürlich, wann genau?'] },
+   189→      { trigger: 'Ist das Ihr Auto vor dem Haus?', suggestions: ['Ja, tut mir leid, ist das ein Problem?', 'Nein, mein Auto steht in der Tiefgarage.', 'Ja, soll ich es woanders parken?'] },
+   190→    ],
+   191→  },
+   192→
+   193→  // ==================== TELEFON ====================
+   194→  {
+   195→    topicId: 'telefon',
+   196→    scenarios: [
+   197→      { trigger: 'Hallo, mit wem spreche ich?', suggestions: ['Hier ist Mehmet Yılmaz.', 'Guten Tag, mein Name ist Ali.', 'Mit Sarah, guten Tag.'] },
+   198→      { trigger: 'Was ist Ihr Anliegen?', suggestions: ['Ich möchte einen Termin vereinbaren.', 'Ich habe eine Frage zu meiner Rechnung.', 'Ich möchte mein Abo kündigen.'] },
+   199→      { trigger: 'Können Sie sich kurz halten, ich habe wenig Zeit?', suggestions: ['Ja natürlich, es geht um meine Rechnung.', 'Soll ich zurückrufen? Wann passt es?', 'Nur eine kurze Frage bitte.'] },
+   200→      { trigger: 'Am Freitag um 10 Uhr, passt das?', suggestions: ['Ja, das passt mir sehr gut.', 'Leider nein, geht auch um 14 Uhr?', 'Freitag ist schwierig, Montag bitte.'] },
+   201→      { trigger: 'Ich verbinde Sie jetzt.', suggestions: ['Danke, ich warte.', 'Bitte nicht auflegen!', 'Wie lange dauert es etwa?'] },
+   202→      { trigger: 'Leider ist der Moment ungünstig.', suggestions: ['Wann kann ich zurückrufen?', 'Soll ich in einer Stunde nochmal anrufen?', 'Können Sie mich anrufen? Meine Nummer ist...'] },
+   203→    ],
+   204→  },
+   205→
+   206→  // ==================== BANK ====================
+   207→  {
+   208→    topicId: 'bank',
+   209→    scenarios: [
+   210→      { trigger: 'Was kann ich für Sie tun?', suggestions: ['Ich möchte ein Girokonto eröffnen.', 'Ich brauche einen Überweisungsschein.', 'Ich möchte Geld wechseln.'] },
+   211→      { trigger: 'Haben Sie Ihren Ausweis dabei?', suggestions: ['Ja, hier ist mein Personalausweis.', 'Ich habe nur meinen Reisepass, reicht das?', 'Ja, und mein Meldebescheinigung.'] },
+   212→      { trigger: 'Welches Konto möchten Sie eröffnen?', suggestions: ['Ein Girokonto mit EC-Karte bitte.', 'Ein studentisches Konto, wenn möglich.', 'Ein Tagesgeldkonto mit guter Verzinsung.'] },
+   213→      { trigger: 'Möchten Sie auch Online-Banking einrichten?', suggestions: ['Ja, das wäre sehr praktisch.', 'Nein, ich bevorzuge die Filiale.', 'Was kostet der Online-Zugang?'] },
+   214→      { trigger: 'Die Kontoführungsgebühr beträgt 5 Euro monatlich.', suggestions: ['Gibt es ein kostenloses Konto?', 'Das ist teuer für ein Student.', 'Kann ich die Gebühren senken?'] },
+   215→      { trigger: 'Bitte unterschreiben Sie hier.', suggestions: ['Hier unten, richtig?', 'Soll ich mit schwarzem oder blauem Stift?', 'Alles klar, ist das alles?'] },
+   216→    ],
+   217→  },
+   218→
+   219→  // ==================== SPORT ====================
+   220→  {
+   221→    topicId: 'sport',
+   222→    scenarios: [
+   223→      { trigger: 'Welchen Sport treiben Sie gern?', suggestions: ['Ich spiele gern Fußball.', 'Ich gehe dreimal pro Woche ins Fitnessstudio.', 'Ich laufe gern joggen im Park.'] },
+   224→      { trigger: 'Möchten Sie Mitglied in unserem Verein werden?', suggestions: ['Was kostet die Mitgliedschaft?', 'Gibt es eine Probestunde?', 'Ja, wo ist das Anmeldeformular?'] },
+   225→      { trigger: 'Der Kurs kostet 30 Euro im Monat.', suggestions: ['Gibt es einen Studentenrabatt?', 'Kann ich monatlich kündigen?', 'Ist eine Probetraining möglich?'] },
+   226→      { trigger: 'Wann möchten Sie zum Training kommen?', suggestions: ['Dienstag und Donnerstag Abend.', 'Am Wochenende, Samstagvormittag.', 'Morgen um 18 Uhr, wenn möglich.'] },
+   227→      { trigger: 'Haben Sie vorher Sport gemacht?', suggestions: ['Ja, in der Türkei habe ich viel Fußball gespielt.', 'Nein, das ist mein erstes Mal.', 'Als Kind habe ich geschwommen.'] },
+   228→      { trigger: 'Wir haben auch eine Mannschaft.', suggestions: ['Kann ich dabeisein?', 'Wann findet das nächste Spiel statt?', 'Welche Liga spielt die Mannschaft?'] },
+   229→    ],
+   230→  },
+   231→
+   232→  // ==================== MIETPROBLEME ====================
+   233→  {
+   234→    topicId: 'mietprobleme',
+   235→    scenarios: [
+   236→      { trigger: 'Was ist das Problem?', suggestions: ['Die Heizung funktioniert schon seit Wochen nicht.', 'Wasser tropft aus der Küche-Decke.', 'Das Fenster lässt sich nicht mehr schließen.'] },
+   237→      { trigger: 'Haben Sie das schon dem Vermieter gesagt?', suggestions: ['Ja, vor zwei Wochen, aber nichts passiert.', 'Nein, das ist mein erster Versuch.', 'Ich habe eine E-Mail geschrieben, keine Antwort.'] },
+   238→      { trigger: 'Ich schicke einen Handwerker am Freitag.', suggestions: ['Kann ich einen genauen Termin bekommen?', 'Muss ich da anwesend sein?', 'Was kostet mich das als Mieter?'] },
+   239→      { trigger: 'Die Miete soll ab nächsten Monat erhöht werden.', suggestions: ['Das ist zu viel, ich kann nicht mehr zahlen!', 'Ist die Erhöhung überhaupt erlaubt?', 'Haben Sie das schriftlich mitgeteilt?'] },
+   240→      { trigger: 'Sie sind mit der Miete im Rückstand.', suggestions: ['Ich zahle nächste Woche alles.', 'Kann ich in Raten zahlen?', 'Ich habe momentan finanzielle Schwierigkeiten.'] },
+   241→      { trigger: 'Möchten Sie die Wohnung kündigen?', suggestions: ['Ja, die Kündigungsfrist bitte.', 'Nein, ich möchte bleiben, aber das Problem muss gelöst werden.', 'Was ist die Kündigungsfrist?'] },
+   242→    ],
+   243→  },
+   244→
+   245→  // ==================== GEBURTSTAG ====================
+   246→  {
+   247→    topicId: 'geburstag',
+   248→    scenarios: [
+   249→      { trigger: 'Alles Gute zum Geburtstag!', suggestions: ['Danke schön!', 'Vielen Dank, das ist sehr nett!', 'Danke! Haben Sie auch etwas mitgebracht?'] },
+   250→      { trigger: 'Wie alt wirst du denn?', suggestions: ['Ich bin heute 25 Jahre alt geworden.', 'Das sage ich nicht, eine Dame verrät ihr Alter nicht!', 'Ich bin jetzt eine Jahr älter als gestern.'] },
+   251→      { trigger: 'Was wünschst du dir?', suggestions: ['Ein gutes Deutsch-Buch!', 'Ich wünsche mir Gesundheit für meine Familie.', 'Eine Reise nach Istanbul wäre schön.'] },
+   252→      { trigger: 'Hast du schon Pläne für heute Abend?', suggestions: ['Ja, ich lade Freunde zum Essen ein.', 'Noch nicht, hast du einen Vorschlag?', 'Wir gehen ins Restaurant, kommst du mit?'] },
+   253→      { trigger: 'Ich habe ein kleines Geschenk für dich.', suggestions: ['Oh danke! Darf ich aufmachen?', 'Das ist aber lieb von dir!', 'Du hast wirklich nicht etwas mitbringen müssen!'] },
+   254→      { trigger: 'Möchtest du Kuchen oder Torten haben?', suggestions: ['Schokoladenkuchen wäre wunderbar!', 'Ich mag Erdbeertorte gern.', 'Meine Mutter hat einen türkischen Kuchen gebacken.'] },
+   255→    ],
+   256→  },
+   257→
+   258→  // ==================== WEGBESCHREIBUNG ====================
+   259→  {
+   260→    topicId: 'wegbeschreibung',
+   261→    scenarios: [
+   262→      { trigger: 'Können Sie mir den Weg zum Bahnhof erklären?', suggestions: ['Ja, geradeaus und dann die zweite Links.', 'Ja, aber es ist einfacher mit der U-Bahn.', 'Leider kenne ich mich hier auch nicht gut aus.'] },
+   263→      { trigger: 'Suchen Sie etwas Bestimmtes?', suggestions: ['Ich suche die nächste Apotheke.', 'Wo ist hier ein Geldautomat?', 'Ich suche ein Café mit WLAN.'] },
+   264→      { trigger: 'Gehen Sie geradeaus bis zur Ampel.', suggestions: ['Und dann links oder rechts?', 'Wie weit ist das etwa?', 'Soll ich an der Ampel warten?'] },
+   265→      { trigger: 'Es ist etwa zehn Minuten zu Fuß.', suggestions: ['Gibt es auch eine Busverbindung?', 'Kann man auch mit dem Fahrrad fahren?', 'Danke, das ist nicht weit.'] },
+   266→      { trigger: 'Die U-Bahn-Station ist gleich um die Ecke.', suggestions: ['Welche Linie muss ich nehmen?', 'In welche Richtung fährt der Zug?', 'Gibt es auch einen Fahrstuhl dort?'] },
+   267→      { trigger: 'Sie sind auf dem falschen Weg.', suggestions: ['Oh, danke für den Hinweis!', 'Können Sie mich dorthin bringen?', 'Wie komme ich dann zum Bahnhof zurück?'] },
+   268→    ],
+   269→  },
+   270→
+   271→  // ==================== ARZTTERMIN ====================
+   272→  {
+   273→    topicId: 'arzttermin',
+   274→    scenarios: [
+   275→      { trigger: 'Was kann ich für Sie tun?', suggestions: ['Ich möchte einen Termin vereinbaren.', 'Ich habe Schmerzen und brauche schnell einen Termin.', 'Ich möchte meinen Termin verschieben.'] },
+   276→      { trigger: 'Wann hätte Sie denn Zeit?', suggestions: ['Morgen früh wäre am besten.', 'Übermorgen Nachmittag bitte.', 'Diese Woche noch, wann immer möglich.'] },
+   277→      { trigger: 'Herr Doktor hat am Donnerstag um 15 Uhr Zeit.', suggestions: ['Das passt mir sehr gut, danke.', 'Leider nein, geht auch Freitag?', 'Kann ich auch eine Stunde später kommen?'] },
+   278→      { trigger: 'Sind Sie schon einmal bei uns gewesen?', suggestions: ['Nein, das ist mein erster Besuch.', 'Ja, ich war vor drei Monaten hier.', 'Ja, ich bin Stamm-Patient von Frau Dr. Müller.'] },
+   279→      { trigger: 'Ich brauche Ihre Krankenversichertenkarte.', suggestions: ['Hier ist meine TK-Karte.', 'Ich habe eine private Versicherung.', 'Kann ich die Karte auch nachreichen?'] },
+   280→      { trigger: 'Leider ist diese Woche kein Termin mehr frei.', suggestions: ['Wann ist der nächste freie Termin?', 'Kann ich in einen Notfall-Termin kommen?', 'Können Sie mich benachrichtigen, wenn jemand absagt?'] },
+   281→    ],
+   282→  },
+   283→
+   284→  // ==================== RESTAURANT BESCHWERDE ====================
+   285→  {
+   286→    topicId: 'restaurant-beschwerde',
+   287→    scenarios: [
+   288→      { trigger: 'Was kann ich für Sie tun?', suggestions: ['Ich möchte mich beschweren, bitte.', 'Das Essen ist kalt angekommen.', 'Ich habe eine Stunde auf mein Essen gewartet.'] },
+   289→      { trigger: 'Was genau war das Problem?', suggestions: ['Die Suppe war versalzen.', 'In meinem Essen war ein Haar.', 'Die Portion war viel zu klein.'] },
+   290→      { trigger: 'Es tut mir leid, was kann ich tun?', suggestions: ['Ich hätte gern einen Rabatt.', 'Bitte bringen Sie ein neues Essen.', 'Ich möchte mit dem Chef sprechen.'] },
+   291→      { trigger: 'Wir können Ihnen ein Dessert anbieten.', suggestions: ['Das ist nicht genug, ich möchte einen Preisnachlass.', 'Ja, das wäre eine gute Lösung.', 'Nein, ich möchte die Rechnung um 50% reduziert haben.'] },
+   292→      { trigger: 'Das wird nicht noch einmal vorkommen.', suggestions: ['Ich hoffe das, danke.', 'Ich komme wahrscheinlich nicht wieder.', 'Gut, danke für Ihre Mühe.'] },
+   293→      { trigger: 'Möchten Sie die Rechnung jetzt?', suggestions: ['Ja, mit Rabatt bitte.', 'Nein, ich möchte erst mit dem Manager sprechen.', 'Ja, und bitte eine Quittung.'] },
+   294→    ],
+   295→  },
+   296→];

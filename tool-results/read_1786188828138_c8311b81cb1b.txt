@@ -1,0 +1,671 @@
+   453→    } else if (phase === 'chatting') {
+   454→      await startListening();
+   455→    }
+   456→  }, [phase, startListening, stopListening]);
+   457→
+   458→  const handleSendText = useCallback(async () => {
+   459→    const text = textInput.trim();
+   460→    if (!text || phase !== 'chatting') return;
+   461→    setTextInput('');
+   462→    // Close hints in middle/high mode (basic keeps them visible)
+   463→    const diff = hintDifficultyRef.current;
+   464→    if (diff !== 'basic') {
+   465→      setShowHints(false);
+   466→      userClosedHintsRef.current = true;
+   467→    }
+   468→    const userMsg: ChatMessage = {
+   469→      id: `user-${Date.now()}`,
+   470→      sender: 'user',
+   471→      text,
+   472→      timestamp: Date.now(),
+   473→    };
+   474→    setMessages((prev) => [...prev, userMsg]);
+   475→    await fetchAiReply([...messages, userMsg]);
+   476→  }, [textInput, phase, messages, fetchAiReply]);
+   477→
+   478→  const handleEndConversation = useCallback(() => {
+   479→    // Stop any active recognition
+   480→    if (recognitionRef.current) {
+   481→      try { recognitionRef.current.abort(); } catch {}
+   482→    }
+   483→    tts.stop();
+   484→    setPhase('ended');
+   485→  }, [tts]);
+   486→
+   487→  // Build and send the summary when phase becomes 'ended'
+   488→  useEffect(() => {
+   489→    if (phase !== 'ended') return;
+   490→    const userMessageCount = messages.filter((m) => m.sender === 'user').length;
+   491→    const tipsCount = messages.filter((m) => m.tip && m.tip.trim()).length;
+   492→    const summary: ConversationSummary = {
+   493→      topicId: topic.id,
+   494→      topicTitleDe: topic.titleDe,
+   495→      topicTitleTr: topic.titleTr,
+   496→      messageCount: messages.length,
+   497→      userMessageCount,
+   498→      tipsCount,
+   499→      durationSec: Math.round((Date.now() - startTimeRef.current) / 1000),
+   500→      hintDifficulty: hintDifficulty || 'unknown',
+   501→      messages,
+   502→    };
+   503→    onExit(summary);
+   504→  }, [phase, messages, topic, onExit]);
+   505→
+   506→  // Replay an AI message via browser TTS
+   507→  const replayMessage = useCallback((msg: ChatMessage) => {
+   508→    tts.speak(msg.text);
+   509→  }, [tts]);
+   510→
+   511→  // Get dynamic suggestions from the LAST AI message only (not older ones — prevents stale context)
+   512→  const lastMsg = messages[messages.length - 1];
+   513→  const lastAiSuggestions = (lastMsg?.sender === 'ai' && lastMsg.suggestions?.length) ? lastMsg.suggestions : undefined;
+   514→
+   515→  // Apply hint difficulty filtering
+   516→  // Priority: AI suggestions (dynamic) > static samplePhrases (fallback)
+   517→  const rawHints = lastAiSuggestions || (effectiveTopic.samplePhrases.length > 0 ? effectiveTopic.samplePhrases : undefined);
+   518→  const inlineHints = (() => {
+   519→    if (!rawHints || !hintDifficulty) return rawHints;
+   520→    if (hintDifficulty === 'high') return makeStablePartialHints(rawHints);
+   521→    return rawHints; // basic & middle: full hints
+   522→  })();
+   523→  const hasAiSuggestions = !!lastAiSuggestions;
+   524→
+   525→  // Whether hints should be visible in current phase based on difficulty
+   526→  const hintsVisibleNow = hintDifficulty === 'basic'
+   527→    ? (phase === 'chatting' || phase === 'listening' || phase === 'loading-ai')
+   528→    : (phase === 'chatting');
+   529→
+   530→  // Start conversation after difficulty is chosen
+   531→  const startConversation = useCallback((difficulty: HintDifficulty) => {
+   532→    setHintDifficulty(difficulty);
+   533→    setMessages([{
+   534→      id: 'opener',
+   535→      sender: 'ai',
+   536→      text: effectiveTopic.opener,
+   537→      timestamp: Date.now(),
+   538→    }]);
+   539→    startTimeRef.current = Date.now();
+   540→  }, [effectiveTopic]);
+   541→
+   542→  const isBusy = phase === 'listening' || phase === 'loading-ai';
+   543→
+   544→  // Show difficulty selection if not yet chosen
+   545→  if (!hintDifficulty) {
+   546→    return (
+   547→      <div className="flex flex-col h-[calc(100vh-12rem)] md:h-[calc(100vh-8rem)]">
+   548→        {/* Topic header */}
+   549→        <div className={cn('rounded-xl p-3 text-white shadow-sm', topic.color)}>
+   550→          <div className="flex items-center justify-between gap-2">
+   551→            <div className="flex items-center gap-2 min-w-0">
+   552→              <span className="text-2xl">{topic.icon}</span>
+   553→              <div className="min-w-0">
+   554→                <h2 className="text-base font-bold leading-tight truncate">{topic.titleDe}</h2>
+   555→                <p className="text-xs opacity-90 truncate">{topic.titleTr} · {topic.difficulty}</p>
+   556→              </div>
+   557→            </div>
+   558→            <Button
+   559→              size="sm"
+   560→              variant="ghost"
+   561→              className="text-white hover:bg-white/20 h-8 px-2"
+   562→              onClick={handleEndConversation}
+   563→              aria-label="Geri dön"
+   564→              title="Geri dön"
+   565→            >
+   566→              <ArrowLeft className="h-4 w-4" />
+   567→            </Button>
+   568→          </div>
+   569→        </div>
+   570→
+   571→        {/* Difficulty selection screen */}
+   572→        <div className="flex-1 flex items-center justify-center p-4">
+   573→          <motion.div
+   574→            initial={{ opacity: 0, y: 20 }}
+   575→            animate={{ opacity: 1, y: 0 }}
+   576→            className="w-full max-w-md space-y-6 text-center"
+   577→          >
+   578→            <div>
+   579→              <div className="text-4xl mb-3">🎯</div>
+   580→              <h3 className="text-lg font-bold text-gray-800">İpucu Zorluğunu Seç</h3>
+   581→              <p className="text-sm text-gray-500 mt-2">Sohbet sırasında ne kadar yardım almak istersin?</p>
+   582→            </div>
+   583→
+   584→            <div className="space-y-3">
+   585→              {/* Basic */}
+   586→              <motion.button
+   587→                whileHover={{ scale: 1.02 }}
+   588→                whileTap={{ scale: 0.98 }}
+   589→                onClick={() => startConversation('basic')}
+   590→                className="w-full rounded-2xl border-2 border-emerald-200 bg-white p-4 text-left hover:border-emerald-400 hover:shadow-md transition-all cursor-pointer"
+   591→              >
+   592→                <div className="flex items-center gap-3">
+   593→                  <div className="shrink-0 w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center text-2xl">🟢</div>
+   594→                  <div className="flex-1 min-w-0">
+   595→                    <div className="flex items-center gap-2">
+   596→                      <span className="font-bold text-emerald-700">Basic</span>
+   597→                      <span className="text-xs text-emerald-500 bg-emerald-50 px-1.5 py-0.5 rounded-full">Başlangıç</span>
+   598→                    </div>
+   599→                    <p className="text-xs text-gray-500 mt-1">
+   600→                      Örnek cümleler her zaman görünür. Mikrofon açıkken bile kalır.
+   601→                      Cümleler tam olarak yazılır, tıklayarak doğrudan kullanabilirsin.
+   602→                    </p>
+   603→                  </div>
+   604→                  <span className="text-emerald-300 text-xl">›</span>
+   605→                </div>
+   606→              </motion.button>
+   607→
+   608→              {/* Middle */}
+   609→              <motion.button
+   610→                whileHover={{ scale: 1.02 }}
+   611→                whileTap={{ scale: 0.98 }}
+   612→                onClick={() => startConversation('middle')}
+   613→                className="w-full rounded-2xl border-2 border-amber-200 bg-white p-4 text-left hover:border-amber-400 hover:shadow-md transition-all cursor-pointer"
+   614→              >
+   615→                <div className="flex items-center gap-3">
+   616→                  <div className="shrink-0 w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center text-2xl">🟡</div>
+   617→                  <div className="flex-1 min-w-0">
+   618→                    <div className="flex items-center gap-2">
+   619→                      <span className="font-bold text-amber-700">Middle</span>
+   620→                      <span className="text-xs text-amber-500 bg-amber-50 px-1.5 py-0.5 rounded-full">Orta</span>
+   621→                    </div>
+   622→                    <p className="text-xs text-gray-500 mt-1">
+   623→                      Örnek cümleler yazarken görünür ama mikrofona basınca kaybolur.
+   624→                      Cümleler tam olarak yazılır, kendin konuşman gerekir.
+   625→                    </p>
+   626→                  </div>
+   627→                  <span className="text-amber-300 text-xl">›</span>
+   628→                </div>
+   629→              </motion.button>
+   630→
+   631→              {/* High */}
+   632→              <motion.button
+   633→                whileHover={{ scale: 1.02 }}
+   634→                whileTap={{ scale: 0.98 }}
+   635→                onClick={() => startConversation('high')}
+   636→                className="w-full rounded-2xl border-2 border-red-200 bg-white p-4 text-left hover:border-red-400 hover:shadow-md transition-all cursor-pointer"
+   637→              >
+   638→                <div className="flex items-center gap-3">
+   639→                  <div className="shrink-0 w-12 h-12 rounded-xl bg-red-100 flex items-center justify-center text-2xl">🔴</div>
+   640→                  <div className="flex-1 min-w-0">
+   641→                    <div className="flex items-center gap-2">
+   642→                      <span className="font-bold text-red-700">High</span>
+   643→                      <span className="text-xs text-red-500 bg-red-50 px-1.5 py-0.5 rounded-full">İleri</span>
+   644→                    </div>
+   645→                    <p className="text-xs text-gray-500 mt-1">
+   646→                      Cümlelerin sadece bir kısmı gösterilir (başlangıç, orta veya sonu).
+   647→                      Geri kalanını hatırlayıp kendin tamamlaman gerekir.
+   648→                    </p>
+   649→                  </div>
+   650→                  <span className="text-red-300 text-xl">›</span>
+   651→                </div>
+   652→              </motion.button>
+   653→            </div>
+   654→          </motion.div>
+   655→        </div>
+   656→      </div>
+   657→    );
+   658→  }
+   659→
+   660→  return (
+   661→    <div className="flex flex-col h-[calc(100vh-12rem)] md:h-[calc(100vh-8rem)]">
+   662→      {/* Topic header */}
+   663→      <div className={cn('rounded-xl p-3 text-white shadow-sm', topic.color)}>
+   664→        <div className="flex items-center justify-between gap-2">
+   665→          <div className="flex items-center gap-2 min-w-0">
+   666→            <span className="text-2xl">{topic.icon}</span>
+   667→            <div className="min-w-0">
+   668→              <h2 className="text-base font-bold leading-tight truncate">{topic.titleDe}</h2>
+   669→              <p className="text-xs opacity-90 truncate">{topic.titleTr} · {topic.difficulty}</p>
+   670→            </div>
+   671→          </div>
+   672→          <div className="flex items-center gap-1 shrink-0">
+   673→            {/* Back button */}
+   674→            <Button
+   675→              size="sm"
+   676→              variant="ghost"
+   677→              className="text-white hover:bg-white/20 h-8 px-2"
+   678→              onClick={handleEndConversation}
+   679→              aria-label="Geri dön"
+   680→              title="Konuşmayı bitir ve geri dön"
+   681→            >
+   682→              <ArrowLeft className="h-4 w-4" />
+   683→            </Button>
+   684→            {/* Difficulty badge */}
+   685→            <span className={cn(
+   686→              'text-[10px] font-bold px-1.5 py-0.5 rounded-full',
+   687→              hintDifficulty === 'basic' && 'bg-emerald-400/30 text-white',
+   688→              hintDifficulty === 'middle' && 'bg-amber-400/30 text-white',
+   689→              hintDifficulty === 'high' && 'bg-red-400/30 text-white',
+   690→            )}>
+   691→              {hintDifficulty === 'basic' ? '🟢' : hintDifficulty === 'middle' ? '🟡' : '🔴'}
+   692→            </span>
+   693→            <Button
+   694→              size="sm"
+   695→              variant="ghost"
+   696→              className="text-white hover:bg-white/20 h-8 px-2"
+   697→              onClick={() => setShowVocab((v) => !v)}
+   698→              aria-label="Kelime listesi"
+   699→            >
+   700→              <Lightbulb className="h-4 w-4" />
+   701→            </Button>
+   702→            <Button
+   703→              size="sm"
+   704→              variant="ghost"
+   705→              className="text-white hover:bg-white/20 h-8 px-2"
+   706→              onClick={() => {
+   707→                const next = !showHints;
+   708→                setShowHints(next);
+   709→                if (!next) userClosedHintsRef.current = true;
+   710→                else userClosedHintsRef.current = false;
+   711→              }}
+   712→              aria-label="Örnek cümleler"
+   713→              title="Örnek cümleleri sohbette göster/gizle"
+   714→            >
+   715→              <MessageCircle className={cn('h-4 w-4', showHints && 'fill-white')} />
+   716→            </Button>
+   717→            <Button
+   718→              size="sm"
+   719→              variant="ghost"
+   720→              className="text-white hover:bg-white/20 h-8 px-2"
+   721→              onClick={handleEndConversation}
+   722→            >
+   723→              <X className="h-4 w-4" />
+   724→            </Button>
+   725→          </div>
+   726→        </div>
+   727→      </div>
+   728→
+   729→      {/* Vocabulary drawer (collapsible) */}
+   730→      <AnimatePresence>
+   731→        {showVocab && (
+   732→          <motion.div
+   733→            initial={{ opacity: 0, height: 0 }}
+   734→            animate={{ opacity: 1, height: 'auto' }}
+   735→            exit={{ opacity: 0, height: 0 }}
+   736→            className="overflow-hidden"
+   737→          >
+   738→            <Card className="border-0 shadow-sm mt-2">
+   739→              <CardContent className="p-3">
+   740→                <div className="flex items-center justify-between mb-2">
+   741→                  <span className="text-xs font-semibold uppercase text-muted-foreground">Önemli Kelimeler</span>
+   742→                  <button onClick={() => setShowVocab(false)} className="text-xs text-muted-foreground hover:text-foreground">
+   743→                    <X className="h-3 w-3" />
+   744→                  </button>
+   745→                </div>
+   746→                <div className="grid grid-cols-2 gap-1.5">
+   747→                  {topic.vocabulary.map((v, i) => (
+   748→                    <div key={i} className="rounded bg-amber-50 px-2 py-1 text-xs">
+   749→                      <span className="font-medium text-amber-900">{v.de}</span>
+   750→                      <span className="text-amber-700 ml-1">— {v.tr}</span>
+   751→                    </div>
+   752→                  ))}
+   753→                </div>
+   754→              </CardContent>
+   755→            </Card>
+   756→          </motion.div>
+   757→        )}
+   758→      </AnimatePresence>
+   759→
+   760→      {/* Hints toggle removed from top — now shown inline in chat */}
+   761→
+   762→      {/* Mode badge — Google free APIs */}
+   763→      <div className="mt-2 flex justify-center gap-2 flex-wrap">
+   764→        <Badge variant="outline" className="text-[10px] py-0.5 px-2 border-emerald-200 text-emerald-600 bg-emerald-50">
+   765→          🆓 Google Web Speech API · Ücretsiz tarayıcı ses tanıma + seslendirme
+   766→        </Badge>
+   767→        <Badge
+   768→          variant="outline"
+   769→          className={cn(
+   770→            'text-[10px] py-0.5 px-2',
+   771→            quotaExhausted
+   772→              ? 'border-red-200 text-red-600 bg-red-50'
+   773→              : quotaRemaining <= 10
+   774→              ? 'border-amber-200 text-amber-700 bg-amber-50'
+   775→              : 'border-slate-200 text-slate-600 bg-slate-50'
+   776→          )}
+   777→          title={
+   778→            quotaExhausted
+   779→              ? `Kota doldu — ${daysUntilReset} gün sonra yenilenecek (her ayın 1'inde)`
+   780→              : `Bu ay ${quotaRemaining} / ${speechUsage.monthlyLimit} tanıma hakkı kaldı. Kota her ayın 1'inde yenilenir.`
+   781→          }
+   782→        >
+   783→          {quotaExhausted
+   784→            ? `🔴 Kota doldu · ${daysUntilReset} gün sonra yenilenecek`
+   785→            : `🎤 Kota: ${quotaRemaining} / ${speechUsage.monthlyLimit} (bu ay)`}
+   786→        </Badge>
+   787→      </div>
+   788→
+   789→      {quotaExhausted && browserSupported && (
+   790→        <div className="mt-2 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-800 border border-red-200">
+   791→          <p className="font-semibold">⚠️ Bu ayki ücretsiz ses tanıma kotan doldu.</p>
+   792→          <p className="mt-1">
+   793→            Google Web Speech API kotası her ayın 1'inde otomatik yenilenir.{' '}
+   794→            <strong>{daysUntilReset} gün</strong> sonra tekrar mikrofonla konuşabilirsin.
+   795→            Bu süre içinde <strong>yazarak cevap vermeye</strong> devam edebilirsin — yazılı modda kota sınırlaması yoktur.
+   796→          </p>
+   797→        </div>
+   798→      )}
+   799→
+   800→      {!browserSupported && (
+   801→        <div className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800 border border-amber-200">
+   802→          Tarayıcınız Web Speech API'yi desteklemiyor. Lütfen <strong>Chrome</strong> veya <strong>Edge</strong> kullanın, ya da aşağıdan yazarak cevap verebilirsiniz.
+   803→        </div>
+   804→      )}
+   805→
+   806→      {/* Error display */}
+   807→      <AnimatePresence>
+   808→        {error && (
+   809→          <motion.div
+   810→            initial={{ opacity: 0, y: -10 }}
+   811→            animate={{ opacity: 1, y: 0 }}
+   812→            exit={{ opacity: 0, y: -10 }}
+   813→            className="mt-2 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700 flex items-start justify-between gap-2"
+   814→          >
+   815→            <div className="flex-1">
+   816→              <p className="font-medium">Hata:</p>
+   817→              <p className="mt-0.5">{error}</p>
+   818→              <p className="mt-1 opacity-80">Yazarak cevap vermeye devam edebilirsiniz.</p>
+   819→            </div>
+   820→            <button onClick={() => setError(null)} className="shrink-0"><X className="h-3 w-3" /></button>
+   821→          </motion.div>
+   822→        )}
+   823→      </AnimatePresence>
+   824→
+   825→      {/* Messages area */}
+   826→      <div className="flex-1 overflow-y-auto py-3 space-y-3 min-h-0">
+   827→        {messages.map((msg) => (
+   828→          <motion.div
+   829→            key={msg.id}
+   830→            initial={{ opacity: 0, y: 10 }}
+   831→            animate={{ opacity: 1, y: 0 }}
+   832→            className={cn(
+   833→              'flex gap-2',
+   834→              msg.sender === 'user' ? 'justify-end' : 'justify-start'
+   835→            )}
+   836→          >
+   837→            {msg.sender === 'ai' && (
+   838→              <div className={cn('shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold', topic.color)}>
+   839→                {topic.icon}
+   840→              </div>
+   841→            )}
+   842→            <div className={cn(
+   843→              'max-w-[80%] rounded-2xl px-4 py-2.5 shadow-sm',
+   844→              msg.sender === 'user'
+   845→                ? 'bg-emerald-600 text-white rounded-br-sm'
+   846→                : 'bg-white border border-gray-100 text-gray-800 rounded-bl-sm'
+   847→            )}>
+   848→              <p className="text-sm leading-relaxed" dir="auto">{msg.text}</p>
+   849→              {msg.sender === 'ai' && (
+   850→                <div className="mt-1.5 flex items-center gap-2">
+   851→                  <button
+   852→                    onClick={() => replayMessage(msg)}
+   853→                    className="text-xs text-emerald-600 hover:text-emerald-800 hover:underline flex items-center gap-0.5"
+   854→                  >
+   855→                    <Volume2 className="h-3 w-3" /> Tekrar dinle
+   856→                  </button>
+   857→                  <span className="text-[10px] text-emerald-400">Google TTS</span>
+   858→                </div>
+   859→              )}
+   860→              {msg.tip && msg.tip.trim() && (
+   861→                <div className="mt-2 rounded-lg bg-amber-50 px-2 py-1.5 text-xs text-amber-800 border border-amber-100">
+   862→                  <span className="font-semibold">💡 İpucu: </span>{msg.tip}
+   863→                </div>
+   864→              )}
+   865→              {/* Dynamic contextual suggestions — shown inline after AI message, respects hint difficulty */}
+   866→              {msg.suggestions && msg.suggestions.length > 0 && hintsVisibleNow && (
+   867→                <div className="mt-2 flex flex-wrap gap-1">
+   868→                  {(hintDifficulty === 'high' ? makeStablePartialHints(msg.suggestions) : msg.suggestions).map((s, i) => (
+   869→                    <button
+   870→                      key={i}
+   871→                      onClick={() => { setTextInput(s); }}
+   872→                      className="rounded-full bg-emerald-50 border border-emerald-100 px-2 py-0.5 text-[11px] text-emerald-700 hover:bg-emerald-100 transition-colors"
+   873→                    >
+   874→                      {s}
+   875→                    </button>
+   876→                  ))}
+   877→                </div>
+   878→              )}
+   879→            </div>
+   880→            {msg.sender === 'user' && (
+   881→              <div className="shrink-0 w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm">
+   882→                🧑
+   883→              </div>
+   884→            )}
+   885→          </motion.div>
+   886→        ))}
+   887→
+   888→        {/* Live transcript while listening */}
+   889→        {phase === 'listening' && liveTranscript && (
+   890→          <motion.div
+   891→            initial={{ opacity: 0, y: 10 }}
+   892→            animate={{ opacity: 1, y: 0 }}
+   893→            className="flex justify-end gap-2"
+   894→          >
+   895→            <div className="bg-emerald-100 border border-emerald-200 rounded-2xl rounded-br-sm px-4 py-2.5 text-sm text-emerald-800 italic">
+   896→              {liveTranscript}
+   897→              <span className="inline-block w-1 h-4 ml-1 bg-emerald-500 animate-pulse align-middle" />
+   898→            </div>
+   899→            <div className="shrink-0 w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm">🧑</div>
+   900→          </motion.div>
+   901→        )}
+   902→
+   903→        {/* Loading AI */}
+   904→        {phase === 'loading-ai' && (
+   905→          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start gap-2">
+   906→            <div className={cn('shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white text-sm', topic.color)}>
+   907→              {topic.icon}
+   908→            </div>
+   909→            <div className="bg-white border border-gray-100 rounded-2xl rounded-bl-sm px-4 py-2.5 text-xs text-gray-500 flex items-center gap-2">
+   910→              <Loader2 className="h-3 w-3 animate-spin" />
+   911→              AI düşünüyor...
+   912→            </div>
+   913→          </motion.div>
+   914→        )}
+   915→
+   916→        {/* Typing hint — appears after 3s inactivity */}
+   917→        <AnimatePresence>
+   918→          {showTypingHint && phase === 'chatting' && !textInput.trim() && (
+   919→            <motion.div
+   920→              initial={{ opacity: 0, y: 10 }}
+   921→              animate={{ opacity: 1, y: 0 }}
+   922→              exit={{ opacity: 0, y: 10 }}
+   923→              className="flex justify-end gap-2"
+   924→            >
+   925→              <motion.button
+   926→                onClick={() => {
+   927→                  setShowTypingHint(false);
+   928→                  userClosedHintsRef.current = false;
+   929→                  setShowHints(true);
+   930→                }}
+   931→                className="bg-gray-100 border border-gray-200 rounded-2xl rounded-br-sm px-4 py-2.5 text-xs text-gray-500 flex items-center gap-2 hover:bg-gray-150 hover:border-gray-300 transition-colors cursor-pointer"
+   932→                whileTap={{ scale: 0.97 }}
+   933→              >
+   934→                <span className="flex items-center gap-0.5">
+   935→                  {[0, 1, 2].map((i) => (
+   936→                    <motion.span
+   937→                      key={i}
+   938→                      className="inline-block w-1.5 rounded-full bg-emerald-400"
+   939→                      animate={{ opacity: [0.4, 1, 0.4], scale: [0.8, 1.1, 0.8] }}
+   940→                      transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
+   941→                    />
+   942→                  ))}
+   943→                </span>
+   944→                <span>Yanıt vermek ister misin? Tikla ve önerileri gör</span>
+   945→              </motion.button>
+   946→              <div className="shrink-0 w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm">🧑</div>
+   947→            </motion.div>
+   948→          )}
+   949→        </AnimatePresence>
+   950→
+   951→        {/* Inline hints bubble — sample phrases & AI suggestions inside the chat */}
+   952→        <AnimatePresence>
+   953→          {showHints && hintsVisibleNow && inlineHints && inlineHints.length > 0 && (
+   954→            <motion.div
+   955→              initial={{ opacity: 0, y: 10 }}
+   956→              animate={{ opacity: 1, y: 0 }}
+   957→              exit={{ opacity: 0, y: 10 }}
+   958→              className="flex justify-start gap-2"
+   959→            >
+   960→              <div className={cn('shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white text-sm', topic.color)}>
+   961→                💡
+   962→              </div>
+   963→              <div className="max-w-[85%] rounded-2xl rounded-bl-sm bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 px-4 py-3 shadow-sm">
+   964→                <div className="flex items-center justify-between mb-2">
+   965→                  <span className="text-xs font-semibold text-emerald-700">
+   966→                    {hasAiSuggestions
+   967→                      ? (hintDifficulty === 'high' ? '🧩 Kısmi Öneriler' : '✨ Önerilen Cevaplar')
+   968→                      : (hintDifficulty === 'high' ? '🧩 Kısmi İpuçları' : '📝 Örnek Cümleler')}
+   969→                  </span>
+   970→                  <button onClick={() => { setShowHints(false); userClosedHintsRef.current = true; }} className="text-xs text-emerald-400 hover:text-emerald-600">
+   971→                    <X className="h-3 w-3" />
+   972→                  </button>
+   973→                </div>
+   974→                <div className="flex flex-wrap gap-1.5">
+   975→                  {inlineHints.map((p, i) => (
+   976→                    <button
+   977→                      key={`${p}-${i}`}
+   978→                      onClick={() => { setTextInput(p); setShowHints(false); userClosedHintsRef.current = true; }}
+   979→                      className={cn(
+   980→                        "rounded-full px-2.5 py-1 text-xs transition-all hover:scale-105",
+   981→                        lastAiSuggestions
+   982→                          ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200 border border-emerald-200"
+   983→                          : "bg-white text-emerald-700 hover:bg-emerald-100 border border-emerald-100 shadow-sm"
+   984→                      )}
+   985→                    >
+   986→                      {p}
+   987→                    </button>
+   988→                  ))}
+   989→                </div>
+   990→                <p className="mt-2 text-[10px] text-emerald-400">Tıklayarak cevabı yazıya ekleyebilirsin</p>
+   991→              </div>
+   992→            </motion.div>
+   993→          )}
+   994→        </AnimatePresence>
+   995→
+   996→        <div ref={messagesEndRef} />
+   997→      </div>
+   998→
+   999→      {/* Listening indicator */}
+  1000→      <AnimatePresence>
+  1001→        {phase === 'listening' && (
+  1002→          <motion.div
+  1003→            initial={{ opacity: 0, y: 10 }}
+  1004→            animate={{ opacity: 1, y: 0 }}
+  1005→            exit={{ opacity: 0, y: 10 }}
+  1006→            className="mb-2 flex items-center gap-3 rounded-xl bg-red-50 px-3 py-2"
+  1007→          >
+  1008→            <div className="flex items-center gap-1">
+  1009→              {[0, 1, 2, 3, 4].map((i) => (
+  1010→                <motion.span
+  1011→                  key={i}
+  1012→                  className="w-1 rounded-full bg-red-500"
+  1013→                  animate={{
+  1014→                    height: [4, 16 + i * 2, 4],
+  1015→                  }}
+  1016→                  transition={{
+  1017→                    duration: 0.4 + i * 0.05,
+  1018→                    repeat: Infinity,
+  1019→                    repeatType: 'reverse',
+  1020→                  }}
+  1021→                  style={{ height: 4 }}
+  1022→                />
+  1023→              ))}
+  1024→            </div>
+  1025→            <span className="text-xs font-medium flex-1 text-red-700">
+  1026→              🎤 Dinleniyor... Almanca konuş
+  1027→            </span>
+  1028→            <span className="text-xs text-red-500">
+  1029→              Bitirmek için mikrofona tekrar bas
+  1030→            </span>
+  1031→          </motion.div>
+  1032→        )}
+  1033→      </AnimatePresence>
+  1034→
+  1035→      {/* Bottom input area */}
+  1036→      <div className="border-t border-gray-100 pt-3 space-y-2">
+  1037→        <div className="flex items-center gap-2">
+  1038→          <input
+  1039→            type="text"
+  1040→            value={textInput}
+  1041→            onChange={(e) => setTextInput(e.target.value)}
+  1042→            onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendText(); } }}
+  1043→            placeholder="Yazarak da cevap verebilirsin..."
+  1044→            disabled={phase !== 'chatting'}
+  1045→            className="flex-1 h-11 rounded-full border border-gray-200 bg-white px-4 text-sm focus:border-emerald-400 focus:outline-none disabled:opacity-50"
+  1046→            dir="auto"
+  1047→          />
+  1048→          <Button
+  1049→            onClick={handleSendText}
+  1050→            disabled={!textInput.trim() || phase !== 'chatting'}
+  1051→            className="h-11 w-11 p-0 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white"
+  1052→            aria-label="Gönder"
+  1053→          >
+  1054→            <Send className="h-4 w-4" />
+  1055→          </Button>
+  1056→        </div>
+  1057→
+  1058→        <div className="flex items-center justify-center">
+  1059→          <button
+  1060→            onClick={handleMicToggle}
+  1061→            disabled={
+  1062→              !browserSupported ||
+  1063→              quotaExhausted ||
+  1064→              (phase !== 'chatting' && phase !== 'listening')
+  1065→            }
+  1066→            className={cn(
+  1067→              'relative flex h-16 w-16 items-center justify-center rounded-full text-white shadow-lg transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed',
+  1068→              phase === 'listening'
+  1069→                ? 'bg-red-500 hover:bg-red-600'
+  1070→                : quotaExhausted
+  1071→                ? 'bg-slate-400 cursor-not-allowed'
+  1072→                : 'bg-emerald-600 hover:bg-emerald-700'
+  1073→            )}
+  1074→            aria-label={phase === 'listening' ? 'Kaydı durdur' : 'Konuş'}
+  1075→            title={
+  1076→              quotaExhausted
+  1077→                ? `Kota doldu — ${daysUntilReset} gün sonra yenilenecek`
+  1078→                : phase === 'listening'
+  1079→                ? 'Kaydı durdur'
+  1080→                : 'Almanca konuş'
+  1081→            }
+  1082→          >
+  1083→            {phase === 'listening' ? (
+  1084→              <Square className="h-6 w-6" fill="currentColor" />
+  1085→            ) : quotaExhausted ? (
+  1086→              <Mic className="h-7 w-7 opacity-60" />
+  1087→            ) : isBusy ? (
+  1088→              <Loader2 className="h-6 w-6 animate-spin" />
+  1089→            ) : (
+  1090→              <Mic className="h-7 w-7" />
+  1091→            )}
+  1092→            {phase === 'listening' && (
+  1093→              <>
+  1094→                <motion.span
+  1095→                  className="absolute inset-0 rounded-full border-2 border-white"
+  1096→                  initial={{ opacity: 0.7, scale: 1 }}
+  1097→                  animate={{ opacity: 0, scale: 1.8 }}
+  1098→                  transition={{ duration: 1.2, repeat: Infinity }}
+  1099→                />
+  1100→                <motion.span
+  1101→                  className="absolute inset-0 rounded-full border-2 border-white"
+  1102→                  initial={{ opacity: 0.5, scale: 1 }}
+  1103→                  animate={{ opacity: 0, scale: 2.2 }}
+  1104→                  transition={{ duration: 1.5, repeat: Infinity, delay: 0.4 }}
+  1105→                />
+  1106→              </>
+  1107→            )}
+  1108→          </button>
+  1109→        </div>
+  1110→        <p className="text-center text-xs text-muted-foreground">
+  1111→          {phase === 'listening'
+  1112→            ? 'Konuşmayı bitirince tekrar bas'
+  1113→            : quotaExhausted
+  1114→            ? `🔒 Kota doldu — ${daysUntilReset} gün sonra yenilenecek. Yazarak devam edebilirsin.`
+  1115→            : phase === 'chatting'
+  1116→            ? `🎤 Almanca konuşmak için mikrofona bas (Bu ay ${quotaRemaining} / ${speechUsage.monthlyLimit} kalan)`
+  1117→            : 'İşleniyor...'}
+  1118→        </p>
+  1119→      </div>
+  1120→    </div>
+  1121→  );
+  1122→}
+  1123→

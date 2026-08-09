@@ -26,9 +26,11 @@ interface ExerciseHistoryEntry {
 
 interface ApiKeys {
   zhipuKey: string;
+  openaiKey: string;
+  claudeKey: string;
+  googleAiKey: string;
   elevenLabsKey: string;
   googleTtsKey: string;
-  googleAiKey: string;
 }
 
 export interface CustomWord {
@@ -154,11 +156,16 @@ interface AppState {
   deleteCustomWordList: (id: string) => void;
   updateCustomWordList: (id: string, updates: Partial<CustomWordList>) => void;
 
+  // ===== Vorstellung (B1 Exam Self-Introduction) =====
+  vorstellungText: string;
+  vorstellungChunks: string[];
+  setVorstellungText: (text: string) => void;
+
   // ===== Target Language =====
   targetLanguage: TargetLanguage;
   setTargetLanguage: (lang: TargetLanguage) => void;
 
-  // Clear all data (preserves API keys + custom words)
+  // Clear all data (preserves API keys + custom words + vorstellung)
   clearAllData: () => void;
 }
 
@@ -176,6 +183,46 @@ function getCurrentMonth(): string {
 // 300 is well within Google's practical free-tier tolerance for individual
 // users; user can adjust in Settings.
 const DEFAULT_SPEECH_MONTHLY_LIMIT = 300;
+
+// Split a Vorstellung text into meaningful chunks (2-4 sentences each)
+function splitVorstellungIntoChunks(text: string): string[] {
+  // Split on sentence endings, keeping the delimiter
+  const sentences = text
+    .split(/(?<=[.!?])\s+/)
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0);
+
+  if (sentences.length === 0) return [];
+
+  // Group sentences into chunks of 2-3, or 1-2 for short sentences
+  const chunks: string[] = [];
+  let current = '';
+  let sentenceCount = 0;
+
+  for (const sentence of sentences) {
+    const isShort = sentence.split(' ').length <= 5;
+    const maxSentences = isShort ? 3 : 2;
+
+    if (current) {
+      current += ' ' + sentence;
+      sentenceCount++;
+    } else {
+      current = sentence;
+      sentenceCount = 1;
+    }
+
+    if (sentenceCount >= maxSentences) {
+      chunks.push(current.trim());
+      current = '';
+      sentenceCount = 0;
+    }
+  }
+  if (current.trim()) {
+    chunks.push(current.trim());
+  }
+
+  return chunks;
+}
 
 let historyCounter = 0;
 
@@ -398,6 +445,9 @@ export const useAppStore = create<AppState>()(
       // ===== API Keys =====
       apiKeys: {
         zhipuKey: '',
+        openaiKey: '',
+        claudeKey: '',
+        googleAiKey: '',
         elevenLabsKey: '',
         googleTtsKey: '',
       },
@@ -414,7 +464,7 @@ export const useAppStore = create<AppState>()(
 
       clearApiKeys: () =>
         set({
-          apiKeys: { zhipuKey: '', elevenLabsKey: '', googleTtsKey: '' },
+          apiKeys: { zhipuKey: '', openaiKey: '', claudeKey: '', googleAiKey: '', elevenLabsKey: '', googleTtsKey: '' },
         }),
 
       // ===== Custom Reading Exercises =====
@@ -450,6 +500,17 @@ export const useAppStore = create<AppState>()(
           ),
         })),
 
+      // ===== Vorstellung (B1 Exam Self-Introduction) =====
+      vorstellungText: '',
+      vorstellungChunks: [],
+
+      setVorstellungText: (text) => {
+        const chunks = text.trim()
+          ? splitVorstellungIntoChunks(text.trim())
+          : [];
+        set({ vorstellungText: text, vorstellungChunks: chunks });
+      },
+
       // ===== Target Language =====
       targetLanguage: 'tr' as TargetLanguage,
 
@@ -477,7 +538,7 @@ export const useAppStore = create<AppState>()(
     }),
     {
       name: "deutsch-memo-storage",
-      version: 6,
+      version: 8,
       migrate: (persistedState: any, version: number) => {
         if (version === 0 || version === 1) {
           const oldCategory = persistedState.selectedCategory;
@@ -517,6 +578,26 @@ export const useAppStore = create<AppState>()(
           return {
             ...persistedState,
             customReadingExercises: persistedState.customReadingExercises || [],
+          };
+        }
+        if (version === 6) {
+          return {
+            ...persistedState,
+            apiKeys: {
+              zhipuKey: persistedState.apiKeys?.zhipuKey || '',
+              openaiKey: '',
+              claudeKey: '',
+              googleAiKey: persistedState.apiKeys?.googleAiKey || '',
+              elevenLabsKey: persistedState.apiKeys?.elevenLabsKey || '',
+              googleTtsKey: persistedState.apiKeys?.googleTtsKey || '',
+            },
+          };
+        }
+        if (version === 7) {
+          return {
+            ...persistedState,
+            vorstellungText: persistedState.vorstellungText || '',
+            vorstellungChunks: persistedState.vorstellungChunks || [],
           };
         }
         return persistedState;

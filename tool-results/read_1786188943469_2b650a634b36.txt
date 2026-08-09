@@ -1,0 +1,722 @@
+     1→// Pre-defined conversation topics for the German speaking practice module.
+     2→// Each topic sets up a realistic scenario where the AI plays a role
+     3→// (waiter, doctor, interviewer, etc.) and the user practices responding in German.
+     4→
+     5→export type ConversationDifficulty = 'A2' | 'B1' | 'B2';
+     6→
+     7→export interface ConversationTopic {
+     8→  id: string;
+     9→  icon: string; // emoji
+    10→  titleDe: string;
+    11→  titleTr: string;
+    12→  description: string;
+    13→  difficulty: ConversationDifficulty;
+    14→  /** German vocabulary list for the topic — shown as hints */
+    15→  vocabulary: { de: string; tr: string }[];
+    16→  /** Sample phrases the user can try */
+    17→  samplePhrases: string[];
+    18→  /** AI's opening message — sent at conversation start */
+    19→  opener: string;
+    20→  /** Full system prompt sent to the chat model */
+    21→  systemPrompt: string;
+    22→  /** Accent color (Tailwind class) for the topic card */
+    23→  color: string;
+    24→  /** Optional: short label for the AI's role (used by voice-chat mode) */
+    25→  aiRole?: string;
+    26→}
+    27→
+    28→const baseRules = `
+    29→ALLGEMEINE REGELN:
+    30→- Antworte IMMER auf Deutsch, natürlich und freundlich.
+    31→- Verwende B1-Sprache: nicht zu komplex, aber auch nicht kindisch.
+    32→- Bleibe konsequent in deiner Rolle.
+    33→- Stelle am Ende deiner Antwort EINE Frage, um das Gespräch am Laufen zu halten.
+    34→- Wenn der Lernende einen Grammatik- oder Wortschatzfehler macht, gib im "tip"-Feld einen kurzen, ermutigenden Tipp auf Türkisch (oder Deutsch, wenn es klarer ist).
+    35→- Wenn das Gespräch nach 8+ Nachrichten natürlich enden sollte, setze "isEnding" auf true.
+    36→- Schreibe kurze Antworten (1-3 Sätze). Kein Roman.
+    37→- Verwende "du" (informal) mit Freunden/Bekannten, "Sie" (formal) im Geschäft, beim Arzt, im Vorstellungsgespräch.
+    38→
+    39→ANTWORTFORMAT (KRITISCH: Deine GESAMTE Antwort MUSS ein einziges gültiges JSON-Objekt sein!):
+    40→Kein Markdown. Kein Code-Block. Kein Text vor oder nach dem JSON. Nur das JSON und sonst NICHTS.
+    41→
+    42→{"reply": "Deine deutsche Antwort.", "tip": "Kurzer Tipp oder leer", "isEnding": false, "suggestions": ["Vorschlag 1", "Vorschlag 2", "Vorschlag 3"]}
+    43→
+    44→WICHTIG zu "suggestions": Dies ist die ALLERWICHTIGSTE Regel!
+    45→- Du MUSS immer genau 3 kurze Vorschläge geben (3-8 Wörter pro Vorschlag).
+    46→- Die Vorschläge MÜSSEN direkte ANTWORTEN auf deine LETZTE Frage/Aussage sein.
+    47→- Die Vorschläge MÜSSEN sich JEDE Runde ÄNDERN, basierend auf dem aktuellen Gespräch!
+    48→- KEINE generischen Vorschläge! Verbiete dir Sätze wie "Mir geht es gut" oder "Danke".
+    49→- BEISPIEL: Du fragst "Was machst du in der Freizeit?" → Vorschläge: "Ich spiele gern Fußball", "Ich lese viel Bücher", "Ich koche gern am Wochenende"
+    50→- BEISPIEL: Du fragst "Welches Zimmer möchten Sie?" → Vorschläge: "Ein Einzelzimmer bitte", "Was kostet das Doppelzimmer?", "Haben Sie ein ruhiges Zimmer?"
+    51→- BEISPIEL: Du fragst "Und, wie gefällt dir Deutschland?" → Vorschläge: "Es gefällt mir sehr gut hier", "Das Wetter ist manchmal schwierig", "Die Leute sind sehr freundlich"
+    52→- Die Vorschläge müssen auf Deutsch sein und zum B1-Niveau passen.
+    53→`.trim();
+    54→
+    55→export const conversationTopics: ConversationTopic[] = [
+    56→  {
+    57→    id: 'begruessung',
+    58→    icon: '👋',
+    59→    titleDe: 'Begrüßung & Vorstellung',
+    60→    titleTr: 'Selamlaşma & Tanışma',
+    61→    description: 'Yeni biriyle tanış, kendini tanıt',
+    62→    difficulty: 'A2',
+    63→    color: 'bg-emerald-500',
+    64→    vocabulary: [
+    65→      { de: 'heißen', tr: 'adı ... olmak' },
+    66→      { de: 'kommen aus', tr: '...den gelmek' },
+    67→      { de: 'wohnen', tr: 'yaşamak' },
+    68→      { de: 'arbeiten als', tr: '...olarak çalışmak' },
+    69→      { de: 'kennenlernen', tr: 'tanışmak' },
+    70→      { de: 'schön, dich zu treffen', tr: 'seninle tanışmak güzel' },
+    71→    ],
+    72→    samplePhrases: [
+    73→      'Hallo, ich heiße...',
+    74→      'Ich komme aus der Türkei.',
+    75→      'Ich wohne in Berlin.',
+    76→      'Ich arbeite als Ingenieur.',
+    77→      'Schön, dich kennenzulernen!',
+    78→    ],
+    79→    opener: 'Hallo! Schön, dich kennenzulernen. Ich bin Anna. Wie heißt du und woher kommst du?',
+    80→    systemPrompt: `Du bist Anna, eine freundliche Kollegin auf der Arbeit. Du triffst zum ersten Mal eine neue Kollegin / einen neuen Kollegen und stellst dich vor.
+    81→
+    82→KONTEXT: Büro-Einführungstag, Mittagspause in der Kantine.
+    83→
+    84→${baseRules}`,
+    85→  },
+    86→  {
+    87→    id: 'restaurant',
+    88→    icon: '🍽️',
+    89→    titleDe: 'Im Restaurant',
+    90→    titleTr: 'Restoranda',
+    91→    description: 'Sipariş ver, yemek önerisi iste, hesap öde',
+    92→    difficulty: 'B1',
+    93→    color: 'bg-amber-500',
+    94→    vocabulary: [
+    95→      { de: 'die Speisekarte', tr: 'menü' },
+    96→      { de: 'empfehlen', tr: 'önermek' },
+    97→      { de: 'bestellen', tr: 'sipariş vermek' },
+    98→      { de: 'die Rechnung', tr: 'hesap' },
+    99→      { de: 'das Trinkgeld', tr: 'bahşiş' },
+   100→      { de: 'Ich hätte gern...', tr: '...alacağım, lütfen' },
+   101→      { de: 'Kann ich zahlen, bitte?', tr: 'Ödeyebilir miyim, lütfen?' },
+   102→    ],
+   103→    samplePhrases: [
+   104→      'Die Speisekarte, bitte.',
+   105→      'Was empfehlen Sie?',
+   106→      'Ich hätte gern ein Schnitzel.',
+   107→      'Kann ich die Rechnung haben, bitte?',
+   108→      'Das schmeckt sehr gut!',
+   109→    ],
+   110→    opener: 'Guten Abend! Willkommen im Restaurant Sonnenblume. Haben Sie reserviert? Was darf ich Ihnen bringen?',
+   111→    systemPrompt: `Du bist ein freundlicher Kellner / eine freundliche Kellnerin im Restaurant "Sonnenblume". Du bedienst höflich mit "Sie".
+   112→
+   113→KONTEXT: Deutsches Restaurant, Abendessen. Du nimmst die Bestellung auf, empfiehlst Gerichte und bringst am Ende die Rechnung.
+   114→
+   115→${baseRules}`,
+   116→  },
+   117→  {
+   118→    id: 'einkaufen',
+   119→    icon: '🛍️',
+   120→    titleDe: 'Einkaufen',
+   121→    titleTr: 'Alışveriş',
+   122→    description: 'Mağazada kıyafet dene, fiyat sor',
+   123→    difficulty: 'B1',
+   124→    color: 'bg-pink-500',
+   125→    vocabulary: [
+   126→      { de: 'die Größe', tr: 'beden' },
+   127→      { de: 'anprobieren', tr: 'denemek (kıyafet)' },
+   128→      { de: 'kosten', tr: 'mal olmak, fiyatı ...' },
+   129→      { de: 'umtauschen', tr: 'değiştirmek (ürün)' },
+   130→      { de: 'die Kasse', tr: 'kasa' },
+   131→      { de: 'Kann ich das anprobieren?', tr: 'Bunu deneyebilir miyim?' },
+   132→      { de: 'Wie viel kostet das?', tr: 'Bu ne kadar?' },
+   133→    ],
+   134→    samplePhrases: [
+   135→      'Ich suche einen Pullover.',
+   136→      'Haben Sie das in Größe M?',
+   137→      'Kann ich das anprobieren?',
+   138→      'Wie viel kostet das?',
+   139→      'Ich nehme es.',
+   140→    ],
+   141→    opener: 'Hallo, kann ich Ihnen helfen? Suchen Sie etwas Bestimmtes?',
+   142→    systemPrompt: `Du bist ein hilfsbereiter Verkäufer / eine hilfsbereite Verkäuferin in einem Bekleidungsgeschäft. Du sprichst die Kunden höflich mit "Sie" an.
+   143→
+   144→KONTEXT: Modegeschäft in einer Einkaufsstraße. Du hilfst bei der Größenauswahl, empfiehlst Kleidung und gehst zur Kasse.
+   145→
+   146→${baseRules}`,
+   147→  },
+   148→  {
+   149→    id: 'reisen',
+   150→    icon: '✈️',
+   151→    titleDe: 'Reisen & Hotel',
+   152→    titleTr: 'Seyahat & Otel',
+   153→    description: 'Otele giriş yap, bilgi al',
+   154→    difficulty: 'B1',
+   155→    color: 'bg-blue-500',
+   156→    vocabulary: [
+   157→      { de: 'reservieren', tr: 'rezerve etmek' },
+   158→      { de: 'das Einzelzimmer', tr: 'tek kişilik oda' },
+   159→      { de: 'das Doppelzimmer', tr: 'çift kişilik oda' },
+   160→      { de: 'das Frühstück', tr: 'kahvaltı' },
+   161→      { de: 'die Bushaltestelle', tr: 'otobüs durağı' },
+   162→      { de: 'die Fahrkarte', tr: 'bilet' },
+   163→      { de: 'Ich habe reserviert.', tr: 'Rezervasyonum var.' },
+   164→    ],
+   165→    samplePhrases: [
+   166→      'Ich habe ein Zimmer reserviert.',
+   167→      'Haben Sie noch ein Zimmer frei?',
+   168→      'Ist das Frühstück inklusive?',
+   169→      'Wo ist die nächste Bushaltestelle?',
+   170→      'Wann gibt es Frühstück?',
+   171→    ],
+   172→    opener: 'Guten Tag! Willkommen im Hotel Berlin. Wie kann ich Ihnen helfen? Haben Sie reserviert?',
+   173→    systemPrompt: `Du bist ein freundlicher Rezeptionist / eine freundliche Rezeptionistin im Hotel "Berlin". Du sprichst die Gäste höflich mit "Sie" an.
+   174→
+   175→KONTEXT: Hotelrezeption, Check-in. Du nimmst Gäste auf, erklärst das Frühstück, gibst Auskünfte zur Umgebung.
+   176→
+   177→${baseRules}`,
+   178→  },
+   179→  {
+   180→    id: 'arzt',
+   181→    icon: '🩺',
+   182→    titleDe: 'Beim Arzt',
+   183→    titleTr: 'Doktorda',
+   184→    description: 'Hastalığını anlat, reçete al',
+   185→    difficulty: 'B1',
+   186→    color: 'bg-red-500',
+   187→    vocabulary: [
+   188→      { de: 'die Schmerzen', tr: 'ağrılar' },
+   189→      { de: 'das Fieber', tr: 'ateş' },
+   190→      { de: 'verschreiben', tr: 'reçete yazmak' },
+   191→      { de: 'der Termin', tr: 'randevu' },
+   192→      { de: 'das Rezept', tr: 'reçete' },
+   193→      { de: 'Mir tut ... weh', tr: '...im ağrıyor' },
+   194→      { de: 'Ich bin seit ... krank', tr: '...dir beri hastayım' },
+   195→    ],
+   196→    samplePhrases: [
+   197→      'Mir tut der Kopf weh.',
+   198→      'Ich habe seit drei Tagen Fieber.',
+   199→      'Können Sie mir ein Rezept verschreiben?',
+   200→      'Wann soll ich wieder kommen?',
+   201→      'Ich fühle mich nicht gut.',
+   202→    ],
+   203→    opener: 'Guten Tag. Was fehlt Ihnen? Wo haben Sie Schmerzen und seit wann?',
+   204→    systemPrompt: `Du bist ein erfahrener Arzt / eine erfahrene Ärztin in einer Hausarztpraxis. Du sprichst Patienten ruhig und professionell mit "Sie" an.
+   205→
+   206→KONTEXT: Arztpraxis, Sprechstunde. Du fragst nach Symptomen, gibst Ratschläge und verschreibst bei Bedarf ein Rezept.
+   207→
+   208→${baseRules}`,
+   209→  },
+   210→  {
+   211→    id: 'smalltalk',
+   212→    icon: '💬',
+   213→    titleDe: 'Small Talk & Hobbys',
+   214→    titleTr: 'Sohbet & Hobiler',
+   215→    description: 'Partide sohbet et, hobilerinden bahset',
+   216→    difficulty: 'A2',
+   217→    color: 'bg-purple-500',
+   218→    vocabulary: [
+   219→      { de: 'die Hobbys', tr: 'hobiler' },
+   220→      { de: 'gern machen', tr: 'hoşlanarak yapmak' },
+   221→      { de: 'am Wochenende', tr: 'hafta sonu' },
+   222→      { de: 'sich interessieren für', tr: '...ilgilenmek' },
+   223→      { de: 'treffen', tr: 'buluşmak' },
+   224→      { de: 'Ich spiele gern...', tr: '...oynamayı severim' },
+   225→      { de: 'Was machst du gern?', tr: 'Ne yapmaktan hoşlanırsın?' },
+   226→    ],
+   227→    samplePhrases: [
+   228→      'Was machst du gern in deiner Freizeit?',
+   229→      'Ich spiele gern Fußball.',
+   230→      'Am Wochenende treffe ich Freunde.',
+   231→      'Ich interessiere mich für Musik.',
+   232→      'Hast du am Wochenende etwas vor?',
+   233→    ],
+   234→    opener: 'Hi! Hier ist ja ganz schön viel los, oder? Ich bin übrigens Tom. Was machst du gern in deiner Freizeit?',
+   235→    systemPrompt: `Du bist Tom, ein freundlicher Bekannter auf einer Party. Du sprichst locker mit "du" und führst eine entspannte Smalltalk-Unterhaltung über Hobbys, Wochenende und Interessen.
+   236→
+   237→KONTEXT: Hausparty am Samstagabend. Du lernst jemanden neu kennen und unterhältst dich über Freizeit, Hobbys und Pläne.
+   238→
+   239→${baseRules}`,
+   240→  },
+   241→  {
+   242→    id: 'beruf',
+   243→    icon: '💼',
+   244→    titleDe: 'Vorstellungsgespräch',
+   245→    titleTr: 'İş Görüşmesi',
+   246→    description: 'İş görüşmesinde soruları cevapla',
+   247→    difficulty: 'B2',
+   248→    color: 'bg-slate-600',
+   249→    vocabulary: [
+   250→      { de: 'der Beruf', tr: 'meslek' },
+   251→      { de: 'die Erfahrung', tr: 'deneyim' },
+   252→      { de: 'die Stärken', tr: 'güçlü yönler' },
+   253→      { de: 'sich bewerben', tr: 'başvurmak' },
+   254→      { de: 'seit ... arbeiten', tr: '...dir çalışmak' },
+   255→      { de: 'verantwortlich für', tr: '...den sorumlu' },
+   256→      { de: 'Warum möchten Sie bei uns arbeiten?', tr: 'Neden bizimle çalışmak istiyorsunuz?' },
+   257→    ],
+   258→    samplePhrases: [
+   259→      'Ich arbeite seit fünf Jahren als...',
+   260→      'Meine Stärken sind...',
+   261→      'Ich möchte mich weiterentwickeln.',
+   262→      'In meiner jetzigen Position bin ich verantwortlich für...',
+   263→      'Ich bewerbe mich, weil...',
+   264→    ],
+   265→    opener: 'Guten Tag, schön, dass Sie da sind. Erzählen Sie doch kurz etwas über sich und Ihre berufliche Erfahrung.',
+   266→    systemPrompt: `Du bist Frau Müller, eine professionelle HR-Managerin in einem mittelständischen Unternehmen. Du führst ein Vorstellungsgespräch und sprichst die Bewerberin / den Bewerber formell mit "Sie" an.
+   267→
+   268→KONTEXT: Vorstellungsgespräch in einem Unternehmen. Du stellst typische Fragen: Vorstellung, Erfahrung, Stärken, Motivation. Nach 6-8 Fragen kannst du das Gespräch abschließen.
+   269→
+   270→${baseRules}`,
+   271→  },
+   272→  {
+   273→    id: 'wohnung',
+   274→    icon: '🏠',
+   275→    titleDe: 'Wohnungssuche',
+   276→    titleTr: 'Ev Arama',
+   277→    description: 'Ev ilanı hakkında bilgi al, görüntüleme ayarla',
+   278→    difficulty: 'B1',
+   279→    color: 'bg-indigo-500',
+   280→    vocabulary: [
+   281→      { de: 'die Wohnung', tr: 'daire' },
+   282→      { de: 'die Miete', tr: 'kira' },
+   283→      { de: 'die Kaution', tr: 'depozito' },
+   284→      { de: 'das Zimmer', tr: 'oda' },
+   285→      { de: 'ansehen', tr: 'görmek (ev)' },
+   286→      { de: 'Wie viel ist die Miete?', tr: 'Kira ne kadar?' },
+   287→      { de: 'Wann kann ich die Wohnung ansehen?', tr: 'Evi ne zaman görebilirim?' },
+   288→    ],
+   289→    samplePhrases: [
+   290→      'Ich rufe wegen der Wohnung an.',
+   291→      'Wie viel ist die Miete?',
+   292→      'Wie viele Zimmer hat die Wohnung?',
+   293→      'Ist die Kaution hoch?',
+   294→      'Wann kann ich die Wohnung ansehen?',
+   295→    ],
+   296→    opener: 'Hallo, hier ist Müller. Sie haben sich für die Wohnung interessiert? Was möchten Sie wissen?',
+   297→    systemPrompt: `Du bist Herr Müller, ein Vermieter, der eine Wohnung zu vermieten hat. Du sprichst mit potenziellen Mietern freundlich mit "Sie".
+   298→
+   299→KONTEXT: Telefonat über eine Wohnungsanzeige. Du beantwortest Fragen zur Miete, Zimmeranzahl, Lage und machst bei Bedarf einen Besichtigungstermin aus.
+   300→
+   301→${baseRules}`,
+   302→  },
+   303→  {
+   304→    id: 'apotheke',
+   305→    icon: '💊',
+   306→    titleDe: 'In der Apotheke',
+   307→    titleTr: 'Eczanede',
+   308→    description: 'İlaç sor, belirtileri anlat, tavsiye al',
+   309→    difficulty: 'B1',
+   310→    color: 'bg-teal-500',
+   311→    vocabulary: [
+   312→      { de: 'das Medikament', tr: 'ilaç' },
+   313→      { de: 'die Tablette', tr: 'tablet' },
+   314→      { de: 'rezeptfrei', tr: 'reçetesiz' },
+   315→      { de: 'die Nebenwirkung', tr: 'yan etki' },
+   316→      { de: 'einnehmen', tr: 'almak (ilaç)' },
+   317→      { de: 'Ich brauche etwas gegen...', tr: '...için birşey lazım' },
+   318→      { de: 'Haben Sie etwas rezeptfrei?', tr: 'Reçetesiz birşey var mı?' },
+   319→    ],
+   320→    samplePhrases: [
+   321→      'Ich brauche etwas gegen Kopfschmerzen.',
+   322→      'Haben Sie etwas rezeptfrei?',
+   323→      'Wie oft soll ich das einnehmen?',
+   324→      'Gibt es Nebenwirkungen?',
+   325→      'Können Sie mir etwas empfehlen?',
+   326→    ],
+   327→    opener: 'Guten Tag, willkommen in der Apotheke. Was kann ich für Sie tun?',
+   328→    systemPrompt: `Du bist ein freundlicher Apotheker / eine freundliche Apothekerin. Du sprichst die Kunden höflich mit "Sie" an.
+   329→
+   330→KONTEXT: Apotheke in einer deutschen Stadt. Du berätst zu rezeptfreien Medikamenten, erklärst die Einnahme und fragst nach Symptomen.
+   331→
+   332→${baseRules}`,
+   333→  },
+   334→  {
+   335→    id: 'bahn',
+   336→    icon: '🚂',
+   337→    titleDe: 'Am Bahnhof',
+   338→    titleTr: 'Tren İstasyonunda',
+   339→    description: 'Bilet al, yön sor, sefer bilgisi öğren',
+   340→    difficulty: 'B1',
+   341→    color: 'bg-cyan-600',
+   342→    vocabulary: [
+   343→      { de: 'die Fahrkarte', tr: 'bilet' },
+   344→      { de: 'der Gleis', tr: 'peron' },
+   345→      { de: 'die Abfahrt', tr: 'kalkış' },
+   346→      { de: 'die Ankunft', tr: 'varış' },
+   347→      { de: 'der Umstieg', tr: 'aktarma' },
+   348→      { de: 'Einfach oder hin und zurück?', tr: 'Tek yön mü gidiş-dönüş mü?' },
+   349→      { de: 'Von welchem Gleis fährt der Zug?', tr: 'Tren hangi perondan kalkıyor?' },
+   350→    ],
+   351→    samplePhrases: [
+   352→      'Ich möchte eine Fahrkarte nach München.',
+   353→      'Einfach oder hin und zurück?',
+   354→      'Von welchem Gleis fährt der Zug?',
+   355→      'Wann kommt der Zug an?',
+   356→      'Muss ich umsteigen?',
+   357→    ],
+   358→    opener: 'Guten Tag, am DB ServicePoint. Wohin möchten Sie fahren?',
+   359→    systemPrompt: `Du bist ein DB-Mitarbeiter / eine DB-Mitarbeiterin am Schalter. Du sprichst höflich mit "Sie".
+   360→
+   361→KONTEXT: Bahnhof in Deutschland. Du verkaufst Fahrkarten, gibst Auskunft zu Abfahrtzeiten, Gleisen und Umstiegen.
+   362→
+   363→${baseRules}`,
+   364→  },
+   365→  {
+   366→    id: 'behörde',
+   367→    icon: '🏛️',
+   368→    titleDe: 'Bei der Behörde',
+   369→    titleTr: 'Devlet Dairesinde',
+   370→    description: 'Form doldur, randevu al, bilgi ver',
+   371→    difficulty: 'B2',
+   372→    color: 'bg-stone-600',
+   373→    vocabulary: [
+   374→      { de: 'der Termin', tr: 'randevu' },
+   375→      { de: 'das Formular', tr: 'form' },
+   376→      { de: 'die Ausländerbehörde', tr: 'yabancılar müdürlüğü' },
+   377→      { de: 'der Aufenthaltstitel', tr: 'ikamet izni' },
+   378→      { de: 'das Visum', tr: 'vize' },
+   379→      { de: 'Ich möchte einen Termin vereinbaren.', tr: 'Randevu almak istiyorum.' },
+   380→      { de: 'Welche Unterlagen brauche ich?', tr: 'Hangi belgelere ihtiyacım var?' },
+   381→    ],
+   382→    samplePhrases: [
+   383→      'Ich möchte einen Termin vereinbaren.',
+   384→      'Welche Unterlagen brauche ich?',
+   385→      'Ich habe meinen Pass dabei.',
+   386→      'Wie lange dauert die Bearbeitung?',
+   387→      'Wann kann ich den Aufenthaltstitel abholen?',
+   388→    ],
+   389→    opener: 'Guten Tag, Sie sind bei der Ausländerbehörde. Was kann ich für Sie tun?',
+   390→    systemPrompt: `Du bist ein Beamter / eine Beamtin bei der Ausländerbehörde. Du sprichst formell mit "Sie", bist sachlich aber hilfsbereit.
+   391→
+   392→KONTEXT: Ausländerbehörde in Deutschland. Du bearbeitest Anfragen zu Terminen, Aufenthaltstiteln, Formularen und Unterlagen.
+   393→
+   394→${baseRules}`,
+   395→  },
+   396→  {
+   397→    id: 'nachbar',
+   398→    icon: '🏡',
+   399→    titleTr: 'Komşuluk',
+   400→    titleDe: 'Nachbarn kennenlernen',
+   401→    description: 'Yeni komşunla tanış, binayı hakkında bilgi al',
+   402→    difficulty: 'A2',
+   403→    color: 'bg-orange-500',
+   404→    vocabulary: [
+   405→      { de: 'der Nachbar', tr: 'komşu' },
+   406→      { de: 'das Stockwerk', tr: 'kat' },
+   407→      { de: 'der Müll', tr: 'çöp' },
+   408→      { de: 'die Hausordnung', tr: 'apartman kuralları' },
+   409→      { de: 'der Aufzug', tr: 'asansör' },
+   410→      { de: 'Ich bin neu hier.', tr: 'Buraya yeniden geldim.' },
+   411→      { de: 'In welchem Stockwerk wohnen Sie?', tr: 'Hangi katta oturuyorsunuz?' },
+   412→    ],
+   413→    samplePhrases: [
+   414→      'Hallo, ich bin neu hier im Haus.',
+   415→      'Ich wohne im dritten Stock.',
+   416→      'Wann wird der Müll abgeholt?',
+   417→      'Gibt es eine Hausordnung?',
+   418→      'Schön, Sie kennenzulernen!',
+   419→    ],
+   420→    opener: 'Oh, hallo! Sie sind neu hier, oder? Ich bin Frau Schmidt, wohne direkt über Ihnen. Willkommen im Haus!',
+   421→    systemPrompt: `Du bist Frau Schmidt, eine freundliche Nachbarin in einem Mehrfamilienhaus. Du sprichst anfangs formell mit "Sie", bietest aber an, zum "du" zu wechseln.
+   422→
+   423→KONTEXT: Treppenhaus in einem deutschen Mietshaus. Du begrüßt den neuen Nachbarn, erklärst Hausregeln und erzählst von der Nachbarschaft.
+   424→
+   425→${baseRules}`,
+   426→  },
+   427→  {
+   428→    id: 'telefon',
+   429→    icon: '📞',
+   430→    titleDe: 'Telefonanruf',
+   431→    titleTr: 'Telefon Görüşmesi',
+   432→    description: 'Telefonda randevu ayarla, bilgi al',
+   433→    difficulty: 'B1',
+   434→    color: 'bg-violet-500',
+   435→    vocabulary: [
+   436→      { de: 'das Telefonat', tr: 'telefon görüşmesi' },
+   437→      { de: 'zurückrufen', tr: 'geri aramak' },
+   438→      { de: 'verbinden', tr: 'bağlamak (telefon)' },
+   439→      { de: 'der Anschluss', tr: 'hat' },
+   440→      { de: 'Ich rufe an wegen...', tr: '...için arıyorum' },
+   441→      { de: 'Können Sie mich verbinden?', tr: 'Beni bağlayabilir misiniz?' },
+   442→      { de: 'Wann erreichbar?', tr: 'Ne zaman ulaşılabilir?' },
+   443→    ],
+   444→    samplePhrases: [
+   445→      'Guten Tag, ich rufe an wegen eines Termins.',
+   446→      'Können Sie mich mit Herrn Müller verbinden?',
+   447→      'Er ist leider nicht da. Sollen Sie zurückrufen?',
+   448→      'Wann ist er am besten erreichbar?',
+   449→      'Ich rufe später nochmal an.',
+   450→    ],
+   451→    opener: 'Firma Meier, Müller am Apparat. Was kann ich für Sie tun?',
+   452→    systemPrompt: `Du bist Herr Müller, der Empfang bei einer Firma. Du nimmst Anrufe entgegen, verbindest durch und nimmst Nachrichten auf.
+   453→
+   454→KONTEXT: Bürotelefon einer deutschen Firma. Du beantwortest Anrufe professionell, verbindest zur richtigen Abteilung und nimmst Terminvereinbarungen auf.
+   455→
+   456→${baseRules}`,
+   457→  },
+   458→  {
+   459→    id: 'bank',
+   460→    icon: '🏦',
+   461→    titleDe: 'Bei der Bank',
+   462→    titleTr: 'Bankada',
+   463→    description: 'Hesap aç, para transferi yap, bilgi al',
+   464→    difficulty: 'B1',
+   465→    color: 'bg-yellow-600',
+   466→    vocabulary: [
+   467→      { de: 'das Girokonto', tr: 'vadesiz hesap' },
+   468→      { de: 'die Überweisung', tr: 'havale' },
+   469→      { de: 'die PIN', tr: 'şifre' },
+   470→      { de: 'der Geldautomat', tr: 'bankamatik' },
+   471→      { de: 'das Sparkonto', tr: 'tasarruf hesabı' },
+   472→      { de: 'Ich möchte ein Konto eröffnen.', tr: 'Hesap açmak istiyorum.' },
+   473→      { de: 'Wie viel kostet eine Überweisung?', tr: 'Bir havale ne kadar?' },
+   474→    ],
+   475→    samplePhrases: [
+   476→      'Ich möchte ein Girokonto eröffnen.',
+   477→      'Welche Unterlagen brauche ich?',
+   478→      'Wie viel kostet eine Überweisung?',
+   479→      'Kann ich online banking nutzen?',
+   480→      'Ich möchte Geld überweisen.',
+   481→    ],
+   482→    opener: 'Guten Tag, willkommen bei der Berliner Sparkasse. Was kann ich für Sie tun?',
+   483→    systemPrompt: `Du bist ein Bankmitarbeiter / eine Bankmitarbeiterin bei der Berliner Sparkasse. Du sprichst die Kunden formell mit "Sie" an.
+   484→
+   485→KONTEXT: Bankschalter in Berlin. Du eröffnest Konten, erklärst Gebühren und hilfst bei Überweisungen.
+   486→
+   487→${baseRules}`,
+   488→  },
+   489→  {
+   490→    id: 'sport',
+   491→    icon: '⚽',
+   492→    titleDe: 'Im Sportverein',
+   493→    titleTr: 'Spor Kulübünde',
+   494→    description: 'Kulübe kayıt ol, antrenman bilgisi al',
+   495→    difficulty: 'B1',
+   496→    color: 'bg-lime-600',
+   497→    vocabulary: [
+   498→      { de: 'der Verein', tr: 'kulüp' },
+   499→      { de: 'die Mitgliedschaft', tr: 'üyelik' },
+   500→      { de: 'der Beitrag', tr: 'aidat' },
+   501→      { de: 'das Training', tr: 'antrenman' },
+   502→      { de: 'die Anmeldung', tr: 'kayıt' },
+   503→      { de: 'Ich möchte Mitglied werden.', tr: 'Üye olmak istiyorum.' },
+   504→      { de: 'Wie oft ist das Training?', tr: 'Antrenman ne sıklıkta?' },
+   505→    ],
+   506→    samplePhrases: [
+   507→      'Ich möchte Mitglied werden.',
+   508→      'Wie oft ist das Training?',
+   509→      'Wie viel ist der monatliche Beitrag?',
+   510→      'Kann ich erst mal probetrainieren?',
+   511→      'Welche Sportarten bieten Sie an?',
+   512→    ],
+   513→    opener: 'Hallo! Willkommen beim FC Berlin. Möchtest du Mitglied werden oder erst mal beim Training zuschauen?',
+   514→    systemPrompt: `Du bist Markus, der Vorsitzende eines lokalen Sportvereins. Du sprichst locker mit "du".
+   515→
+   516→KONTEXT: Sportverein in einer deutschen Stadt. Du erklärst Trainingszeiten, Mitgliedsbeiträge und bietest ein Probetraining an.
+   517→
+   518→${baseRules}`,
+   519→  },
+   520→  {
+   521→    id: 'mietprobleme',
+   522→    icon: '🔧',
+   523→    titleDe: 'Mietprobleme melden',
+   524→    titleTr: 'Kira Sorunları Bildirmek',
+   525→    description: 'Evde arıza bildir, tamirci ayarla',
+   526→    difficulty: 'B1',
+   527→    color: 'bg-rose-600',
+   528→    vocabulary: [
+   529→      { de: 'die Heizung', tr: 'kalorifer' },
+   530→      { de: 'das Rohr', tr: 'boru' },
+   531→      { de: 'undicht', tr: 'sızıntılı' },
+   532→      { de: 'der Handwerker', tr: 'tamirci' },
+   533→      { de: 'die Reparatur', tr: 'tamir' },
+   534→      { de: 'Die Heizung funktioniert nicht.', tr: 'Kalorifer çalışmıyor.' },
+   535→      { de: 'Wann kann ein Handwerker kommen?', tr: 'Tamirci ne zaman gelebilir?' },
+   536→    ],
+   537→    samplePhrases: [
+   538→      'Die Heizung funktioniert nicht.',
+   539→      'Es gibt ein Leck in der Küche.',
+   540→      'Das Fenster lässt sich nicht öffnen.',
+   541→      'Wann kann ein Handwerker kommen?',
+   542→      'Das Problem besteht seit einer Woche.',
+   543→    ],
+   544→    opener: 'Hausverwaltung Schneider, was kann ich für Sie tun?',
+   545→    systemPrompt: `Du bist Herr Schneider, der Hausverwalter. Du sprichst mit Mietern formell mit "Sie" und nimmst Probleme ernst.
+   546→
+   547→KONTEXT: Hausverwaltungsbüro. Du notierst Mängel, versendest Handwerker und informing über Reparaturtermine.
+   548→
+   549→${baseRules}`,
+   550→  },
+   551→  {
+   552→    id: 'geburstag',
+   553→    icon: '🎂',
+   554→    titleDe: 'Geburtstagsparty',
+   555→    titleTr: 'Doğum Günü Partisi',
+   556→    description: 'Partiye davet et, hediye al, kutla',
+   557→    difficulty: 'A2',
+   558→    color: 'bg-fuchsia-500',
+   559→    vocabulary: [
+   560→      { de: 'der Geburtstag', tr: 'doğum günü' },
+   561→      { de: 'das Geschenk', tr: 'hediye' },
+   562→      { de: 'die Einladung', tr: 'davetiye' },
+   563→      { de: 'der Kuchen', tr: 'pasta' },
+   564→      { de: 'feiern', tr: 'kutlamak' },
+   565→      { de: 'Alles Gute zum Geburtstag!', tr: 'Doğum günün kutlu olsun!' },
+   566→      { de: 'Ich habe eine kleine Überraschung.', tr: 'Küçük bir sürprizim var.' },
+   567→    ],
+   568→    samplePhrases: [
+   569→      'Herzlichen Glückwunsch zum Geburtstag!',
+   570→      'Alles Gute zum Geburtstag!',
+   571→      'Ich habe dir ein kleines Geschenk mitgebracht.',
+   572→      'Der Kuchen schmeckt lecker!',
+   573→      'Wie alt wirst du heute?',
+   574→    ],
+   575→    opener: 'Hallo, komm rein! Schön, dass du da bist! Hast du was mitgebracht? Setz dich doch hier hin.',
+   576→    systemPrompt: `Du bist Lisa, die Geburtstagskind bei ihrer Party. Du sprichst mit "du".
+   577→
+   578→KONTEXT: Geburtstagsparty in Lisas Wohnung. Gäste kommen an, bringen Geschenke und ihr feiert zusammen.
+   579→
+   580→${baseRules}`,
+   581→  },
+   582→  {
+   583→    id: 'wegbeschreibung',
+   584→    icon: '🗺️',
+   585→    titleDe: 'Nach dem Weg fragen',
+   586→    titleTr: 'Yol Soru',
+   587→    description: 'Sokakta yön sor, yol tarifi al',
+   588→    difficulty: 'A2',
+   589→    color: 'bg-sky-500',
+   590→    vocabulary: [
+   591→      { de: 'die Straße', tr: 'sokak' },
+   592→      { de: 'die Ampel', tr: 'trafik ışığı' },
+   593→      { de: 'die Ecke', tr: 'köşe' },
+   594→      { de: 'geradeaus', tr: 'düz ileri' },
+   595→      { de: 'links / rechts', tr: 'sol / sağ' },
+   596→      { de: 'Wo ist der nächste Bahnhof?', tr: 'En yakın tren istasyonu nerede?' },
+   597→      { de: 'Wie komme ich zum...?', tr: '...ye nasıl giderim?' },
+   598→    ],
+   599→    samplePhrases: [
+   600→      'Entschuldigung, wie komme ich zum Marktplatz?',
+   601→      'Ist es weit von hier?',
+   602→      'Soll ich links oder rechts abbiegen?',
+   603→      'Gibt es eine Karte in der Nähe?',
+   604→      'Zu Fuß oder mit dem Bus?',
+   605→    ],
+   606→    opener: 'Entschuldigung, können Sie mir helfen? Ich suche das Stadtmuseum. Wissen Sie, wie ich da hin komme?',
+   607→    systemPrompt: `Du bist ein freundlicher Passant / eine freundliche Passantin auf der Straße in einer deutschen Stadt. Du sprichst mit "Sie" und hilfst bei Wegbeschreibungen.
+   608→
+   609→KONTEXT: Fußgängerzone in einer deutschen Stadt. Jemand fragt nach dem Weg und du erklärst die Richtung mit Landmarken.
+   610→
+   611→${baseRules}`,
+   612→  },
+   613→  {
+   614→    id: 'arzttermin',
+   615→    icon: '📋',
+   616→    titleDe: 'Termin vereinbaren',
+   617→    titleTr: 'Randevu Ayarla',
+   618→    description: 'Telefonda doktora randevu al',
+   619→    difficulty: 'B1',
+   620→    color: 'bg-red-600',
+   621→    vocabulary: [
+   622→      { de: 'der Sprechstunde', tr: 'muayene saati' },
+   623→      { de: 'der Notfall', tr: 'acil durum' },
+   624→      { de: 'die Krankenkasse', tr: 'sağlık sigortası' },
+   625→      { de: 'die Versicherungskarte', tr: 'sigorta kartı' },
+   626→      { de: 'Haben Sie einen Termin frei?', tr: 'Boş randevunuz var mı?' },
+   627→      { de: 'Ich brauche dringend einen Termin.', tr: 'Acil randevuya ihtiyacım var.' },
+   628→      { de: 'Kann ich nächste Woche kommen?', tr: 'Gelecek hafta gelebilir miyim?' },
+   629→    ],
+   630→    samplePhrases: [
+   631→      'Ich möchte einen Termin vereinbaren.',
+   632→      'Haben Sie nächste Woche einen Termin frei?',
+   633→      'Ich habe starke Kopfschmerzen seit zwei Tagen.',
+   634→      'Ich bin bei der TK versichert.',
+   635→      'Kann ich morgen Vormittag kommen?',
+   636→    ],
+   637→    opener: 'Praxis Dr. Weber, Guten Tag. Wie kann ich Ihnen helfen?',
+   638→    systemPrompt: `Du bist die Sprechstundenhilfe in der Arztpraxis Dr. Weber. Du sprichst höflich mit "Sie".
+   639→
+   640→KONTEXT: Arzthelferin am Telefon. Du nimmst Termine auf, fragst nach Symptomen und Versicherung, und teilst verfügbare Zeiten mit.
+   641→
+   642→${baseRules}`,
+   643→  },
+   644→  {
+   645→    id: 'restaurant-beschwerde',
+   646→    icon: '😤',
+   647→    titleDe: 'Im Restaurant beschweren',
+   648→    titleTr: 'Restoranda Şikayet',
+   649→    description: 'Yemekten memnun kalmama, hesap itirazı',
+   650→    difficulty: 'B2',
+   651→    color: 'bg-orange-700',
+   652→    vocabulary: [
+   653→      { de: 'die Beschwerde', tr: 'şikayet' },
+   654→      { de: 'kalt', tr: 'soğuk (yiyecek)' },
+   655→      { de: 'die Bestellung', tr: 'sipariş' },
+   656→      { de: 'es hat zu lange gedauert', tr: 'çok uzun sürdü' },
+   657→      { de: 'Ich habe nicht das bestellt.', tr: 'Bunu sipariş etmedim.' },
+   658→      { de: 'Das ist nicht, was ich bestellt habe.', tr: 'Bu benim siparişim değil.' },
+   659→      { de: 'Könnten Sie das bitte austauschen?', tr: 'Değiştirebilir misiniz?' },
+   660→    ],
+   661→    samplePhrases: [
+   662→      'Entschuldigung, aber das Essen ist kalt.',
+   663→      'Ich habe schon vor 30 Minuten bestellt.',
+   664→      'Das ist nicht, was ich bestellt habe.',
+   665→      'Könnten Sie das bitte austauschen?',
+   666→      'Ich möchte mit dem Manager sprechen.',
+   667→    ],
+   668→    opener: 'Guten Abend! Hier ist Ihr Essen. Lassen Sie es sich schmecken!',
+   669→    systemPrompt: `Du bist ein Kellner / eine Kellnerin in einem Restaurant. Ein Gast ist unzufrieden. Du bleibst höflich mit "Sie" und versuchst, die Situation zu lösen.
+   670→
+   671→KONTEXT: Deutsches Restaurant. Der Gast beschwert sich über das Essen oder den Service. Du entschuldigst dich, bietest Lösungen an und bleibst professionell.
+   672→
+   673→${baseRules}`,
+   674→  },
+   675→  {
+   676→    id: 'b1-vorstellung',
+   677→    icon: '🎓',
+   678→    titleDe: 'B1 Prüfung – Sich vorstellen',
+   679→    titleTr: 'B1 Sınavı – Kendini Tanıtma',
+   680→    description: 'Kendi tanıtma metnini ezberle, B1 sınavına hazırlan',
+   681→    difficulty: 'B1',
+   682→    color: 'bg-gradient-to-r from-emerald-500 to-teal-500',
+   683→    vocabulary: [],
+   684→    samplePhrases: [],
+   685→    opener: '__VORSTELLUNG_OPENER__',
+   686→    systemPrompt: '__VORSTELLUNG_PROMPT__',
+   687→    aiRole: 'Prüfer',
+   688→  },
+   689→];
+   690→
+   691→export function getTopicById(id: string): ConversationTopic | undefined {
+   692→  return conversationTopics.find((t) => t.id === id);
+   693→}
+   694→
+   695→// Generate dynamic Vorstellung system prompt based on stored text & chunks
+   696→export function buildVorstellungPrompt(text: string, chunks: string[]): { systemPrompt: string; opener: string } {
+   697→  const chunkList = chunks.map((c, i) => `TEIL ${i + 1}: ${c}`).join('\n');
+   698→
+   699→  const systemPrompt = `Du bist ein Prüfer bei der Goethe/Telc B1 Prüfung, Teil "Sich vorstellen". Der Prüfling möchte seine Vorstellung üben und ezberlemen.
+   700→
+   701→DER VOLLSTÄNDIGE TEXT DES PRÜFLINGS:
+   702→"""\n${text}\n"""
+   703→
+   704→DER TEXT WURDE IN FOLGENDE TEILE GEGLIEDERT:
+   705→${chunkList}
+   706→
+   707→DEINE AUFGABE:
+   708→1. Gehe TEIL für TEIL vor. Beginne mit TEIL 1.
+   709→2. Lass den Prüfling jeden Teil selbstständig wiederholen — gib ihm zuerst einen Anstoß (z.B. den Anfang des Teils) und fordere ihn auf, weiterzumachen.
+   710→3. Wenn der Prüfling einen Teil gut kann, gehe zum nächsten TEIL über.
+   711→4. Wenn der Prüfling Fehler macht, gib einen ermutigenden Tipp im "tip"-Feld auf Türkisch.
+   712→5. Nachdem alle Teile geübt wurden, lass den Prüfling den GESAMTEN TEXT ohne Pause vortragen (als Prüfungssimulation).
+   713→6. Sei höflich mit "Sie", aber freundlich und ermutigend wie ein echter Prüfer.
+   714→7. Wenn der Prüfling den gesamten Text fehlerfrei vortragen kann, setze "isEnding" auf true und lobe ihn.
+   715→
+   716→${baseRules}`;
+   717→
+   718→  const opener = `Guten Tag! Willkommen zur B1 Prüfungsvorbereitung. Wir werden jetzt Ihre Vorstellung üben. Ihr Text hat ${chunks.length} Teile. Fangen wir mit TEIL 1 an. Ich sage Ihnen den Anfang, und Sie machen bitte weiter. Bereit? Hier ist der Anfang Ihres ersten Teils: "${chunks[0]?.split(/\s+/).slice(0, 4).join(' ')}..." — machen Sie bitte weiter!`;
+   719→
+   720→  return { systemPrompt, opener };
+   721→}
+   722→

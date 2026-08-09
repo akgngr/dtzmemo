@@ -1,0 +1,615 @@
+     1→'use client';
+     2→
+     3→import React, { useState, useCallback, useMemo, useRef } from 'react';
+     4→import { Shield, Trash2, Sparkles, AlertTriangle, Mic, Volume2, Calendar, Settings2, Key, Eye, EyeOff, CheckCircle2, Info, Globe, FolderPlus, Download, Upload, FileJson, FileText, Copy, Check, Plus, X, BookOpen, Pencil, ChevronRight, Database, HardDrive } from 'lucide-react';
+     5→import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+     6→import { Button } from '@/components/ui/button';
+     7→import { Badge } from '@/components/ui/badge';
+     8→import { Progress } from '@/components/ui/progress';
+     9→import { Separator } from '@/components/ui/separator';
+    10→import { Input } from '@/components/ui/input';
+    11→import { categories, wordPairs } from '@/lib/german-data';
+    12→import { useAppStore, type CustomWordList, type CustomWord } from '@/lib/store';
+    13→import { cn } from '@/lib/utils';
+    14→
+    15→// Pretty-print a YYYY-MM month string ("2025-07" → "Temmuz 2025")
+    16→const MONTH_NAMES_TR = [
+    17→  'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
+    18→  'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık',
+    19→];
+    20→function formatMonth(monthStr: string): string {
+    21→  const [y, m] = monthStr.split('-').map(Number);
+    22→  if (!y || !m) return monthStr;
+    23→  return `${MONTH_NAMES_TR[m - 1]} ${y}`;
+    24→}
+    25→
+    26→// ===== CSV/JSON Helpers =====
+    27→function hasTurkishSpecialChars(str: string): boolean {
+    28→  return /[şığüşçöİŞĞÜŞÇÖ]/.test(str);
+    29→}
+    30→function looksLikeHeader(first: string, second: string): boolean {
+    31→  const headerKeywords = ['german', 'turkish', 'almanca', 'türkçe', 'deutsch', 'de', 'tr', 'kelime', 'word', 'çeviri', 'translation'];
+    32→  const combined = (first + ' ' + second).toLowerCase();
+    33→  return headerKeywords.some((k) => combined.includes(k));
+    34→}
+    35→function parseCSV(content: string): CustomWord[] {
+    36→  let cleaned = content.replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    37→  const lines = cleaned.split('\n').filter((l) => l.trim().length > 0);
+    38→  if (lines.length === 0) return [];
+    39→  let startIndex = 0;
+    40→  if (lines.length > 1) {
+    41→    const parts = lines[0].split(',').map((s) => s.trim());
+    42→    if (parts.length >= 2 && looksLikeHeader(parts[0], parts[1])) startIndex = 1;
+    43→  }
+    44→  const words: CustomWord[] = [];
+    45→  for (let i = startIndex; i < lines.length; i++) {
+    46→    const p = lines[i].split(',').map((s) => s.trim());
+    47→    if (p.length >= 2 && p[0] && p[1]) words.push({ german: p[0], turkish: p[1] });
+    48→  }
+    49→  return words;
+    50→}
+    51→
+    52→function buildCSV(list: CustomWordList): string {
+    53→  const header = 'Almanca,Türkçe';
+    54→  const rows = list.words.map((w) => `${w.german},${w.turkish}`).join('\n');
+    55→  return `${header}\n${rows}`;
+    56→}
+    57→
+    58→function buildJSON(list: CustomWordList): string {
+    59→  return JSON.stringify({ name: list.name, description: list.description, words: list.words }, null, 2);
+    60→}
+    61→
+    62→function downloadFile(content: string, filename: string, mimeType: string) {
+    63→  const blob = new Blob([content], { type: mimeType });
+    64→  const url = URL.createObjectURL(blob);
+    65→  const a = document.createElement('a');
+    66→  a.href = url; a.download = filename; a.click();
+    67→  URL.revokeObjectURL(url);
+    68→}
+    69→
+    70→// ===== Sample data for examples =====
+    71→const SAMPLE_CSV = `Almanca,Türkçe
+    72→Apfel,Elma
+    73→Haus,Ev
+    74→Buch,Kitap
+    75→Schule,Okul
+    76→Lehrer,Öğretmen
+    77→Fenster,Pencere
+    78→Tisch,Masa
+    79→Stuhl,Sandalye`;
+    80→
+    81→const SAMPLE_JSON = JSON.stringify({
+    82→  name: "Örnek Liste",
+    83→  description: "Bu bir örnek kelime listesidir",
+    84→  words: [
+    85→    { german: "Guten Morgen", turkish: "Günaydın" },
+    86→    { german: "Auf Wiedersehen", turkish: "Hoşça kal" },
+    87→    { german: "Danke schön", turkish: "Çok teşekkürler" },
+    88→    { german: "Bitte schön", turkish: "Rica ederim" },
+    89→    { german: "Entschuldigung", turkish: "Özür dilerim" }
+    90→  ]
+    91→}, null, 2);
+    92→
+    93→// ===== API Key input field component =====
+    94→function ApiKeyField({
+    95→  label, description, placeholder, value, onChange, testUrl, testMethod = 'POST', testBody, testKeyField, successHint,
+    96→}: {
+    97→  label: string; description: string; placeholder: string; value: string; onChange: (v: string) => void;
+    98→  testUrl: string; testMethod?: string; testBody?: Record<string, unknown>; testKeyField?: string; successHint?: string;
+    99→}) {
+   100→  const [visible, setVisible] = useState(false);
+   101→  const [testing, setTesting] = useState(false);
+   102→  const [testResult, setTestResult] = useState<'idle' | 'success' | 'error'>('idle');
+   103→
+   104→  const handleTest = useCallback(async () => {
+   105→    if (!value.trim()) return;
+   106→    setTesting(true); setTestResult('idle');
+   107→    try {
+   108→      const body = testBody ? { ...testBody } : {};
+   109→      if (testKeyField) body[testKeyField] = value.trim();
+   110→      const res = await fetch(testUrl, { method: testMethod, headers: { 'Content-Type': 'application/json' }, body: Object.keys(body).length > 0 ? JSON.stringify(body) : undefined });
+   111→      if (res.status === 401 || res.status === 403) setTestResult('error'); else setTestResult('success');
+   112→    } catch { setTestResult('error'); } finally { setTesting(false); }
+   113→  }, [value, testUrl, testMethod, testBody, testKeyField]);
+   114→
+   115→  return (
+   116→    <div className="space-y-2">
+   117→      <div className="flex items-center justify-between">
+   118→        <label className="text-sm font-medium text-foreground">{label}</label>
+   119→        {value?.trim() ? (
+   120→          <Badge variant="outline" className="border-emerald-200 text-emerald-700 bg-emerald-50 text-[10px]"><CheckCircle2 className="mr-1 h-3 w-3" /> Kayıtlı</Badge>
+   121→        ) : (
+   122→          <Badge variant="outline" className="border-gray-200 text-gray-500 text-[10px]">Girilmedi</Badge>
+   123→        )}
+   124→      </div>
+   125→      <p className="text-xs text-muted-foreground">{description}</p>
+   126→      <div className="flex items-center gap-2">
+   127→        <div className="relative flex-1">
+   128→          <input type={visible ? 'text' : 'password'} value={value || ''} onChange={(e) => onChange(e.target.value)} className="w-full h-10 rounded-md border border-gray-200 px-3 pr-10 text-sm font-mono focus:border-emerald-400 focus:outline-none" placeholder={placeholder} autoComplete="off" />
+   129→          <button type="button" onClick={() => setVisible(!visible)} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+   130→            {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+   131→          </button>
+   132→        </div>
+   133→        <Button size="sm" variant="outline" onClick={handleTest} disabled={testing || !value?.trim()} className="shrink-0">
+   134→          {testing ? 'Test...' : 'Test Et'}
+   135→        </Button>
+   136→      </div>
+   137→      {testResult === 'success' && <p className="text-xs text-emerald-600 flex items-center gap-1"><CheckCircle2 className="h-3 w-3" />{successHint || 'API anahtarı geçerli.'}</p>}
+   138→      {testResult === 'error' && <p className="text-xs text-red-600">API anahtarı geçersiz veya erişim reddedildi.</p>}
+   139→    </div>
+   140→  );
+   141→}
+   142→
+   143→// ── Tab definition ────────────────────────────────────────────────────────────
+   144→const SETTINGS_TABS = [
+   145→  { id: 'general', label: 'Genel', icon: Settings2 },
+   146→  { id: 'api', label: 'API Anahtarları', icon: Key },
+   147→  { id: 'speech', label: 'Ses Kotası', icon: Mic },
+   148→  { id: 'words', label: 'Sözlüklerim', icon: FolderPlus },
+   149→  { id: 'data', label: 'Veri Yönetimi', icon: Database },
+   150→  { id: 'about', label: 'Hakkında', icon: Sparkles },
+   151→] as const;
+   152→
+   153→type TabId = (typeof SETTINGS_TABS)[number]['id'];
+   154→
+   155→// ── Component ────────────────────────────────────────────────────────────────
+   156→export function SettingsModule() {
+   157→  const store = useAppStore();
+   158→  const clearAllData = useAppStore((s) => s.clearAllData);
+   159→  const speechUsage = useAppStore((s) => s.speechUsage);
+   160→  const setSpeechMonthlyLimit = useAppStore((s) => s.setSpeechMonthlyLimit);
+   161→  const hasSpeechQuota = useAppStore((s) => s.hasSpeechQuota);
+   162→  const remainingSpeechQuota = useAppStore((s) => s.remainingSpeechQuota);
+   163→  const daysUntilSpeechReset = useAppStore((s) => s.daysUntilSpeechReset);
+   164→  const targetLanguage = useAppStore((s) => s.targetLanguage);
+   165→  const setTargetLanguage = useAppStore((s) => s.setTargetLanguage);
+   166→  const apiKeys = useAppStore((s) => s.apiKeys);
+   167→  const setApiKey = useAppStore((s) => s.setApiKey);
+   168→  const customWordLists = useAppStore((s) => s.customWordLists);
+   169→  const addCustomWordList = useAppStore((s) => s.addCustomWordList);
+   170→  const deleteCustomWordList = useAppStore((s) => s.deleteCustomWordList);
+   171→  const updateCustomWordList = useAppStore((s) => s.updateCustomWordList);
+   172→
+   173→  const [activeTab, setActiveTab] = useState<TabId>('general');
+   174→  const [showConfirm, setShowConfirm] = useState(false);
+   175→  const [limitInput, setLimitInput] = useState(String(speechUsage.monthlyLimit));
+   176→
+   177→  // Sözlüklerim state
+   178→  const [wordScreen, setWordScreen] = useState<'lists' | 'detail'>('lists');
+   179→  const [selectedListId, setSelectedListId] = useState<string | null>(null);
+   180→  const [newListName, setNewListName] = useState('');
+   181→  const [newWordGerman, setNewWordGerman] = useState('');
+   182→  const [newWordTurkish, setNewWordTurkish] = useState('');
+   183→  const [editingListName, setEditingListName] = useState(false);
+   184→  const [importStatus, setImportStatus] = useState<{ type: 'success' | 'error'; msg: string } | null>(null);
+   185→  const fileInputRef = useRef<HTMLInputElement>(null);
+   186→
+   187→  // Veri Yönetimi state
+   188→  const [exportStatus, setExportStatus] = useState<string | null>(null);
+   189→
+   190→  const quotaRemaining = remainingSpeechQuota();
+   191→  const quotaExhausted = !hasSpeechQuota();
+   192→  const daysUntilReset = daysUntilSpeechReset();
+   193→  const usedPercent = useMemo(() => {
+   194→    if (speechUsage.monthlyLimit <= 0) return 100;
+   195→    return Math.min(100, Math.round(((speechUsage.monthlyLimit - quotaRemaining) / speechUsage.monthlyLimit) * 100));
+   196→  }, [speechUsage.monthlyLimit, quotaRemaining]);
+   197→  const usedCount = Math.max(0, speechUsage.monthlyLimit - quotaRemaining);
+   198→
+   199→  const selectedList = customWordLists.find((l) => l.id === selectedListId);
+   200→
+   201→  const handleSaveLimit = useCallback(() => {
+   202→    const parsed = parseInt(limitInput, 10);
+   203→    if (Number.isFinite(parsed) && parsed > 0) setSpeechMonthlyLimit(parsed);
+   204→    else setLimitInput(String(speechUsage.monthlyLimit));
+   205→  }, [limitInput, setSpeechMonthlyLimit, speechUsage.monthlyLimit]);
+   206→
+   207→  const handleReset = useCallback(() => {
+   208→    clearAllData(); setShowConfirm(false); setLimitInput('300');
+   209→  }, [clearAllData]);
+   210→
+   211→  // ── Word list handlers ──
+   212→  const handleCreateList = () => {
+   213→    if (!newListName.trim()) return;
+   214→    const list: CustomWordList = {
+   215→      id: `cwl-${Date.now()}`,
+   216→      name: newListName.trim(),
+   217→      description: '',
+   218→      words: [], createdAt: new Date().toISOString(), category: 'Özel',
+   219→    };
+   220→    addCustomWordList(list);
+   221→    setNewListName('');
+   222→  };
+   223→
+   224→  const handleAddWord = () => {
+   225→    if (!selectedListId || !newWordGerman.trim() || !newWordTurkish.trim()) return;
+   226→    const list = customWordLists.find((l) => l.id === selectedListId);
+   227→    if (!list) return;
+   228→    updateCustomWordList(selectedListId, {
+   229→      words: [...list.words, { german: newWordGerman.trim(), turkish: newWordTurkish.trim() }],
+   230→    });
+   231→    setNewWordGerman(''); setNewWordTurkish('');
+   232→  };
+   233→
+   234→  const handleDeleteWord = (wordIndex: number) => {
+   235→    if (!selectedListId || !selectedList) return;
+   236→    updateCustomWordList(selectedListId, { words: selectedList.words.filter((_, i) => i !== wordIndex) });
+   237→  };
+   238→
+   239→  const handleFileImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+   240→    const file = e.target.files?.[0];
+   241→    if (!file) return;
+   242→    const reader = new FileReader();
+   243→    reader.onload = (ev) => {
+   244→      try {
+   245→        const content = ev.target?.result as string;
+   246→        let words: CustomWord[] = [];
+   247→        if (file.name.endsWith('.json')) {
+   248→          const data = JSON.parse(content);
+   249→          const w = Array.isArray(data) ? data : data.words;
+   250→          if (Array.isArray(w)) words = w.filter((x: any) => x.german && x.turkish).map((x: any) => ({ german: x.german, turkish: x.turkish }));
+   251→        } else {
+   252→          words = parseCSV(content);
+   253→        }
+   254→        if (words.length === 0) {
+   255→          setImportStatus({ type: 'error', msg: 'Dosyada geçerli kelime bulunamadı.' }); return;
+   256→        }
+   257→        const list: CustomWordList = {
+   258→          id: `cwl-${Date.now()}`,
+   259→          name: file.name.replace(/\.[^.]+$/, ''),
+   260→          description: `${words.length} kelime içe aktarıldı`,
+   261→          words, createdAt: new Date().toISOString(), category: 'İçe Aktarma',
+   262→        };
+   263→        addCustomWordList(list);
+   264→        setImportStatus({ type: 'success', msg: `${words.length} kelime başarıyla içe aktarıldı!` });
+   265→      } catch {
+   266→        setImportStatus({ type: 'error', msg: 'Dosya okunamadı. Lütfen formatı kontrol edin.' });
+   267→      }
+   268→    };
+   269→    reader.readAsText(file);
+   270→    if (fileInputRef.current) fileInputRef.current.value = '';
+   271→  };
+   272→
+   273→  // ── Tab content renderers ─────────────────────────────────────────────────
+   274→
+   275→  const renderGeneralTab = () => (
+   276→    <div className="space-y-4">
+   277→      <div className="rounded-lg bg-blue-50 p-4">
+   278→        <div className="flex items-start gap-3">
+   279→          <Info className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
+   280→          <div className="text-sm text-blue-800">
+   281→            <p className="font-medium mb-1">Uygulama Ayarları</p>
+   282→            <p>DeutschMemo uygulamanızın genel ayarlarını buradan yönetebilirsiniz. API anahtarları, ses kotası, sözlükleriniz ve veri yönetimi için ilgili sekmelere geçin.</p>
+   283→          </div>
+   284→        </div>
+   285→      </div>
+   286→      <Separator />
+   287→      <div className="space-y-2">
+   288→        <span className="text-xs font-semibold uppercase text-muted-foreground">Hızlı Erişim</span>
+   289→        <div className="grid grid-cols-2 gap-2">
+   290→          {SETTINGS_TABS.filter(t => t.id !== 'general').map((tab) => {
+   291→            const Icon = tab.icon;
+   292→            return (
+   293→              <button key={tab.id} onClick={() => setActiveTab(tab.id)} className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all text-left">
+   294→                <Icon className="h-4 w-4 text-emerald-600" />
+   295→                <span className="font-medium">{tab.label}</span>
+   296→                <ChevronRight className="h-3.5 w-3.5 ml-auto text-gray-400" />
+   297→              </button>
+   298→            );
+   299→          })}
+   300→        </div>
+   301→      </div>
+   302→    </div>
+   303→  );
+   304→
+   305→  const renderApiTab = () => (
+   306→    <div className="space-y-5">
+   307→      <div className="rounded-lg bg-blue-50 p-4">
+   308→        <div className="flex items-start gap-3">
+   309→          <Info className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
+   310→          <div className="text-sm text-blue-800">
+   311→            <p className="font-medium mb-1">API anahtarları gerekli mi?</p>
+   312→            <p>Geliştirme ortamında varsayılan anahtarlar kullanılır. Production&apos;da kendi API anahtarlarınızı girmeniz gerekir. Anahtarlar yalnızca tarayıcınızda saklanır.</p>
+   313→          </div>
+   314→        </div>
+   315→      </div>
+   316→      <Separator />
+   317→      <div className="space-y-5">
+   318→        <div className="space-y-1 mb-2">
+   319→          <span className="text-xs font-semibold uppercase text-muted-foreground">Sohbet (Chat) API&apos;leri</span>
+   320→          <p className="text-xs text-muted-foreground">Birden fazla anahtar girerseniz, sırayla denenir. İlk başarılı yanıt kullanılır.</p>
+   321→        </div>
+   322→        <ApiKeyField label="Zhipu BigModel API Anahtarı" description="GLM-4-Flash sohbet modeli için. docs.z.ai / open.bigmodel.cn" placeholder="51d6b2bb..." value={apiKeys.zhipuKey} onChange={(v) => setApiKey('zhipuKey', v)} testUrl="/api/chat" testBody={{ messages: [{ role: 'user', content: 'Hallo' }], systemPrompt: 'test' } as Record<string, unknown>} testKeyField="zhipuKey" successHint="Zhipu API anahtarı geçerli." />
+   323→        <Separator />
+   324→        <ApiKeyField label="OpenAI API Anahtarı" description="GPT-4o-mini sohbet modeli için. platform.openai.com" placeholder="sk-proj-..." value={apiKeys.openaiKey} onChange={(v) => setApiKey('openaiKey', v)} testUrl="/api/chat" testBody={{ messages: [{ role: 'user', content: 'Hallo' }], systemPrompt: 'test' } as Record<string, unknown>} testKeyField="openaiKey" successHint="OpenAI API anahtarı geçerli." />
+   325→        <Separator />
+   326→        <ApiKeyField label="Anthropic (Claude) API Anahtarı" description="Claude Sonnet 4 sohbet modeli için. console.anthropic.com" placeholder="sk-ant-..." value={apiKeys.claudeKey} onChange={(v) => setApiKey('claudeKey', v)} testUrl="/api/chat" testBody={{ messages: [{ role: 'user', content: 'Hallo' }], systemPrompt: 'test' } as Record<string, unknown>} testKeyField="claudeKey" successHint="Claude API anahtarı geçerli." />
+   327→        <Separator />
+   328→        <ApiKeyField label="Google AI (Gemini) API Anahtarı" description="Gemini 2.0 Flash sohbet modeli için. AI Studio&apos;dan alabilirsiniz." placeholder="AIzaSy..." value={apiKeys.googleAiKey} onChange={(v) => setApiKey('googleAiKey', v)} testUrl="/api/chat" testBody={{ messages: [{ role: 'user', content: 'Hallo' }], systemPrompt: 'test' } as Record<string, unknown>} testKeyField="googleAiKey" successHint="Google AI API anahtarı geçerli." />
+   329→      </div>
+   330→      <Separator />
+   331→      <div className="space-y-1 mb-2">
+   332→        <span className="text-xs font-semibold uppercase text-muted-foreground">Seslendirme (TTS) API&apos;leri</span>
+   333→      </div>
+   334→      <div className="space-y-5">
+   335→        <ApiKeyField label="ElevenLabs API Anahtarı" description="Yüksek kaliteli Almanca seslendirme (TTS) için." placeholder="sk_6c2fb452..." value={apiKeys.elevenLabsKey} onChange={(v) => setApiKey('elevenLabsKey', v)} testUrl="/api/tts" testBody={{ text: 'Hallo' } as Record<string, unknown>} testKeyField="elevenLabsKey" successHint="ElevenLabs API anahtarı geçerli." />
+   336→        <Separator />
+   337→        <ApiKeyField label="Google Cloud TTS API Anahtarı" description="Almanca seslendirme için yedek TTS sağlayıcısı." placeholder="AIzaSyDIy8..." value={apiKeys.googleTtsKey} onChange={(v) => setApiKey('googleTtsKey', v)} testUrl="/api/tts" testBody={{ text: 'Guten Tag' } as Record<string, unknown>} testKeyField="googleTtsKey" successHint="Google Cloud TTS API anahtarı geçerli." />
+   338→      </div>
+   339→      <Separator />
+   340→      <div className="space-y-2">
+   341→        <span className="text-xs font-semibold uppercase text-muted-foreground">Sohbet Sağlayıcı Sırası</span>
+   342→        <div className="space-y-2">
+   343→          {[
+   344→            { name: 'Zhipu (GLM-4-Flash)', desc: '1. tercih · docs.z.ai', active: !!apiKeys.zhipuKey },
+   345→            { name: 'OpenAI (GPT-4o-mini)', desc: '2. tercih · platform.openai.com', active: !!apiKeys.openaiKey },
+   346→            { name: 'Claude (Sonnet 4)', desc: '3. tercih · console.anthropic.com', active: !!apiKeys.claudeKey },
+   347→            { name: 'Google Gemini', desc: '4. tercih · AI Studio', active: !!apiKeys.googleAiKey },
+   348→          ].map((p) => (
+   349→            <div key={p.name} className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2">
+   350→              <div className="flex items-center gap-2"><Volume2 className="h-4 w-4 text-slate-600" /><div><p className="text-sm font-medium">{p.name}</p><p className="text-xs text-muted-foreground">{p.desc}</p></div></div>
+   351→              <Badge variant="outline" className={p.active ? 'border-emerald-200 text-emerald-700 bg-emerald-50' : 'border-gray-200 text-gray-400'}>{p.active ? 'Aktif' : 'Pasif'}</Badge>
+   352→            </div>
+   353→          ))}
+   354→        </div>
+   355→      </div>
+   356→    </div>
+   357→  );
+   358→
+   359→  const renderSpeechTab = () => (
+   360→    <div className="space-y-5">
+   361→      <div className="rounded-lg bg-blue-50 p-4">
+   362→        <div className="flex items-start gap-3"><AlertTriangle className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" /><div className="text-sm text-blue-800"><p className="font-medium mb-1">Sesli tanıma (STT) aylık kotalıdır</p><p>Google Web Speech API sınırsız değildir. Mikrofonla her konuşma bir kredidir. Seslendirme (TTS) ise sınırsızdır. Kota her ayın 1&apos;inde yenilenir.</p></div></div>
+   363→      </div>
+   364→      <div className="space-y-2">
+   365→        <div className="flex items-center justify-between"><span className="text-sm text-muted-foreground">Bu ayki kullanım</span><Badge variant="outline" className={cn('text-xs', quotaExhausted ? 'border-red-200 text-red-700 bg-red-50' : usedPercent >= 80 ? 'border-amber-200 text-amber-700 bg-amber-50' : 'border-emerald-200 text-emerald-700 bg-emerald-50')}>{quotaExhausted ? 'Kota doldu' : `${usedPercent}% kullanıldı`}</Badge></div>
+   366→        <div className="flex items-end justify-between"><div><span className="text-3xl font-bold text-foreground">{usedCount}</span><span className="text-sm text-muted-foreground"> / {speechUsage.monthlyLimit} tanıma</span></div><div className="text-right"><span className="text-sm font-semibold text-foreground">{quotaRemaining}</span><span className="text-xs text-muted-foreground"> kalan</span></div></div>
+   367→        <Progress value={usedPercent} className={cn('h-2', quotaExhausted ? '[&>div]:bg-red-500' : usedPercent >= 80 ? '[&>div]:bg-amber-500' : '[&>div]:bg-emerald-500')} />
+   368→        <div className="flex items-center gap-1.5 text-xs text-muted-foreground"><Calendar className="h-3 w-3" /><span>Dönem: <strong className="text-foreground">{formatMonth(speechUsage.month)}</strong> · Yenileme: <strong className="text-foreground">{daysUntilReset} gün</strong> sonra</span></div>
+   369→      </div>
+   370→      {quotaExhausted && (<div className="rounded-lg bg-red-50 p-3 border border-red-200"><p className="text-sm text-red-800"><strong>Kota doldu.</strong> {daysUntilReset} gün sonra yenilenecek.</p></div>)}
+   371→      <Separator />
+   372→      <div className="space-y-3">
+   373→        <div className="flex items-center gap-2"><Settings2 className="h-4 w-4 text-muted-foreground" /><span className="text-sm font-medium">Aylık limit ayarı</span></div>
+   374→        <div className="flex items-center gap-2">
+   375→          <input type="number" min={1} max={10000} step={10} value={limitInput} onChange={(e) => setLimitInput(e.target.value)} className="flex-1 h-10 rounded-md border border-gray-200 px-3 text-sm focus:border-emerald-400 focus:outline-none" />
+   376→          <Button size="sm" onClick={handleSaveLimit} disabled={limitInput === String(speechUsage.monthlyLimit)}>Kaydet</Button>
+   377→        </div>
+   378→      </div>
+   379→    </div>
+   380→  );
+   381→
+   382→  const renderWordsTab = () => {
+   383→    if (wordScreen === 'detail' && selectedList) {
+   384→      return (
+   385→        <div className="space-y-4">
+   386→          <div className="flex items-center gap-2">
+   387→            <button onClick={() => { setWordScreen('lists'); setSelectedListId(null); }} className="text-sm text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
+   388→              <span className="text-lg">‹</span> Tüm Listeler
+   389→            </button>
+   390→          </div>
+   391→          <div className="flex items-center justify-between">
+   392→            <h3 className="text-lg font-semibold text-foreground">{selectedList.name}</h3>
+   393→            <Badge variant="outline">{selectedList.words.length} kelime</Badge>
+   394→          </div>
+   395→          <Separator />
+   396→          {/* Add word form */}
+   397→          <div className="flex gap-2">
+   398→            <Input placeholder="Almanca" value={newWordGerman} onChange={(e) => setNewWordGerman(e.target.value)} className="flex-1" />
+   399→            <Input placeholder="Türkçe" value={newWordTurkish} onChange={(e) => setNewWordTurkish(e.target.value)} className="flex-1" />
+   400→            <Button size="sm" onClick={handleAddWord} disabled={!newWordGerman.trim() || !newWordTurkish.trim()}>
+   401→              <Plus className="h-4 w-4" />
+   402→            </Button>
+   403→          </div>
+   404→          {/* Word list */}
+   405→          <div className="space-y-1 max-h-80 overflow-y-auto">
+   406→            {selectedList.words.length === 0 && (
+   407→              <p className="text-sm text-muted-foreground text-center py-8">Henüz kelime eklenmedi. Yukarıdan kelime ekleyin.</p>
+   408→            )}
+   409→            {selectedList.words.map((w, i) => (
+   410→              <div key={i} className="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2 group">
+   411→                <div className="flex items-center gap-3">
+   412→                  <span className="text-xs text-muted-foreground w-6">{i + 1}.</span>
+   413→                  <span className="text-sm font-medium">{w.german}</span>
+   414→                  <span className="text-xs text-muted-foreground">→</span>
+   415→                  <span className="text-sm text-muted-foreground">{w.turkish}</span>
+   416→                </div>
+   417→                <button onClick={() => handleDeleteWord(i)} className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 transition-opacity">
+   418→                  <X className="h-4 w-4" />
+   419→                </button>
+   420→              </div>
+   421→            ))}
+   422→          </div>
+   423→          {/* Export buttons */}
+   424→          {selectedList.words.length > 0 && (
+   425→            <div className="flex gap-2">
+   426→              <Button size="sm" variant="outline" className="flex-1" onClick={() => downloadFile(buildCSV(selectedList), `${selectedList.name}.csv`, 'text/csv')}>
+   427→                <FileText className="h-4 w-4 mr-1" /> CSV İndir
+   428→              </Button>
+   429→              <Button size="sm" variant="outline" className="flex-1" onClick={() => downloadFile(buildJSON(selectedList), `${selectedList.name}.json`, 'application/json')}>
+   430→                <FileJson className="h-4 w-4 mr-1" /> JSON İndir
+   431→              </Button>
+   432→            </div>
+   433→          )}
+   434→        </div>
+   435→      );
+   436→    }
+   437→
+   438→    return (
+   439→      <div className="space-y-4">
+   440→        <div className="rounded-lg bg-purple-50 p-4">
+   441→          <div className="flex items-start gap-3">
+   442→            <FolderPlus className="h-5 w-5 text-purple-600 shrink-0 mt-0.5" />
+   443→            <div className="text-sm text-purple-800">
+   444→              <p className="font-medium mb-1">Özel Kelime Listeleri</p>
+   445→              <p>Kendi kelime listelerinizi oluşturun, CSV/JSON dosyalarından içe aktarın veya dışa aktarın.</p>
+   446→            </div>
+   447→          </div>
+   448→        </div>
+   449→        <Separator />
+   450→        {/* Create new list */}
+   451→        <div className="flex gap-2">
+   452→          <Input placeholder="Yeni liste adı..." value={newListName} onChange={(e) => setNewListName(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleCreateList()} className="flex-1" />
+   453→          <Button size="sm" onClick={handleCreateList} disabled={!newListName.trim()}>
+   454→            <Plus className="h-4 w-4 mr-1" /> Oluştur
+   455→          </Button>
+   456→        </div>
+   457→        {/* Lists */}
+   458→        <div className="space-y-2 max-h-96 overflow-y-auto">
+   459→          {customWordLists.length === 0 && (
+   460→            <div className="text-center py-8">
+   461→              <BookOpen className="h-10 w-10 text-gray-300 mx-auto mb-2" />
+   462→              <p className="text-sm text-muted-foreground">Henüz kelime listeniz yok.</p>
+   463→              <p className="text-xs text-muted-foreground">Yukarıdan yeni bir liste oluşturun.</p>
+   464→            </div>
+   465→          )}
+   466→          {customWordLists.map((list) => (
+   467→            <div key={list.id} className="flex items-center justify-between rounded-lg border border-gray-200 bg-white px-4 py-3 hover:bg-gray-50 hover:border-emerald-200 transition-all cursor-pointer group" onClick={() => { setSelectedListId(list.id); setWordScreen('detail'); }}>
+   468→              <div className="flex items-center gap-3">
+   469→                <FolderOpen className="h-5 w-5 text-purple-500" />
+   470→                <div>
+   471→                  <p className="text-sm font-medium">{list.name}</p>
+   472→                  <p className="text-xs text-muted-foreground">{list.words.length} kelime · {new Date(list.createdAt).toLocaleDateString('tr-TR')}</p>
+   473→                </div>
+   474→              </div>
+   475→              <div className="flex items-center gap-2">
+   476→                <Badge variant="outline" className="text-[10px]">{list.category}</Badge>
+   477→                <button onClick={(e) => { e.stopPropagation(); deleteCustomWordList(list.id); }} className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 transition-opacity p-1">
+   478→                  <Trash2 className="h-4 w-4" />
+   479→                </button>
+   480→              </div>
+   481→            </div>
+   482→          ))}
+   483→        </div>
+   484→      </div>
+   485→    );
+   486→  };
+   487→
+   488→  const renderDataTab = () => (
+   489→    <div className="space-y-5">
+   490→      <div className="rounded-lg bg-blue-50 p-4">
+   491→        <div className="flex items-start gap-3"><AlertTriangle className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" /><div className="text-sm text-blue-800"><p className="font-medium mb-1">Veri Yönetimi</p><p>Özel kelime listelerinizi CSV veya JSON olarak dışa/içe aktarabilirsiniz. Örnek dosya formatlarını inceleyerek doğru formatı görebilirsiniz.</p></div></div>
+   492→      </div>
+   493→      <Separator />
+   494→
+   495→      {/* Import */}
+   496→      <div className="space-y-3">
+   497→        <span className="text-xs font-semibold uppercase text-muted-foreground">İçe Aktar</span>
+   498→        <div className="flex gap-2">
+   499→          <Button size="sm" variant="outline" className="flex-1" onClick={() => fileInputRef.current?.click()}>
+   500→            <Upload className="h-4 w-4 mr-1" /> Dosya Yükle (CSV/JSON)
+   501→          </Button>
+   502→        </div>
+   503→        <input ref={fileInputRef} type="file" accept=".csv,.json" onChange={handleFileImport} className="hidden" />
+   504→        {importStatus && (
+   505→          <div className={cn('rounded-lg p-3 text-sm', importStatus.type === 'success' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700')}>
+   506→            {importStatus.msg}
+   507→          </div>
+   508→        )}
+   509→      </div>
+   510→      <Separator />
+   511→
+   512→      {/* Sample formats */}
+   513→      <div className="space-y-3">
+   514→        <span className="text-xs font-semibold uppercase text-muted-foreground">Örnek Dosya Formatları</span>
+   515→        <div className="grid gap-3">
+   516→          {/* CSV Example */}
+   517→          <div className="rounded-lg border border-gray-200 bg-white p-3 space-y-2">
+   518→            <div className="flex items-center justify-between">
+   519→              <div className="flex items-center gap-2"><FileText className="h-4 w-4 text-emerald-600" /><span className="text-sm font-medium">CSV Formatı</span></div>
+   520→              <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => downloadFile(SAMPLE_CSV, 'ornek-kelimeler.csv', 'text/csv')}><Download className="h-3 w-3 mr-1" /> İndir</Button>
+   521→            </div>
+   522→            <pre className="bg-slate-50 rounded-md p-2 text-xs text-slate-600 overflow-x-auto">{SAMPLE_CSV}</pre>
+   523→          </div>
+   524→          {/* JSON Example */}
+   525→          <div className="rounded-lg border border-gray-200 bg-white p-3 space-y-2">
+   526→            <div className="flex items-center justify-between">
+   527→              <div className="flex items-center gap-2"><FileJson className="h-4 w-4 text-blue-600" /><span className="text-sm font-medium">JSON Formatı</span></div>
+   528→              <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => downloadFile(SAMPLE_JSON, 'ornek-kelimeler.json', 'application/json')}><Download className="h-3 w-3 mr-1" /> İndir</Button>
+   529→            </div>
+   530→            <pre className="bg-slate-50 rounded-md p-2 text-xs text-slate-600 overflow-x-auto max-h-40">{SAMPLE_JSON}</pre>
+   531→          </div>
+   532→        </div>
+   533→      </div>
+   534→      <Separator />
+   535→
+   536→      {/* Storage info */}
+   537→      <div className="space-y-3">
+   538→        <span className="text-xs font-semibold uppercase text-muted-foreground">Depolama</span>
+   539→        <div className="rounded-lg bg-slate-50 p-3 space-y-2">
+   540→          <div className="flex items-center gap-2"><HardDrive className="h-4 w-4 text-slate-500" /><span className="text-sm font-medium">Kullanım Bilgisi</span></div>
+   541→          <div className="grid grid-cols-2 gap-2 text-xs">
+   542→            <div className="bg-white rounded-md p-2"><span className="text-muted-foreground">Kelime Listeleri:</span><br /><strong>{customWordLists.length}</strong> liste, <strong>{customWordLists.reduce((a, l) => a + l.words.length, 0)}</strong> kelime</div>
+   543→            <div className="bg-white rounded-md p-2"><span className="text-muted-foreground">Okuma Egzersizleri:</span><br /><strong>{store.customReadingExercises.length}</strong> adet</div>
+   544→          </div>
+   545→        </div>
+   546→      </div>
+   547→      <Separator />
+   548→
+   549→      {/* Danger zone */}
+   550→      <div className="rounded-lg border border-red-200 bg-red-50 p-4">
+   551→        <div className="flex items-start gap-3">
+   552→          <Trash2 className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
+   553→          <div className="flex-1">
+   554→            <p className="font-medium text-sm text-red-800">Tüm verileri sil</p>
+   555→            <p className="text-xs text-red-600 mt-1">Tüm ilerleme ve geçmiş verilerinizi kalıcı olarak siler. API anahtarları ve özel kelime listeleri korunur.</p>
+   556→            {!showConfirm ? (
+   557→              <Button variant="destructive" size="sm" className="mt-3" onClick={() => setShowConfirm(true)}><Trash2 className="mr-2 h-4 w-4" /> Verileri Sıfırla</Button>
+   558→            ) : (
+   559→              <div className="mt-3 flex items-center gap-2">
+   560→                <Button variant="destructive" size="sm" onClick={handleReset}>Eminim, Sil</Button>
+   561→                <Button variant="outline" size="sm" onClick={() => setShowConfirm(false)}>İptal</Button>
+   562→              </div>
+   563→            )}
+   564→          </div>
+   565→        </div>
+   566→      </div>
+   567→    </div>
+   568→  );
+   569→
+   570→  const renderAboutTab = () => (
+   571→    <div className="space-y-3 text-sm text-muted-foreground">
+   572→      <div className="flex justify-between"><span>Uygulama</span><span className="font-medium text-foreground">DeutschMemo</span></div>
+   573→      <Separator />
+   574→      <div className="flex justify-between"><span>Seviye</span><span className="font-medium text-foreground">Almanca B1</span></div>
+   575→      <Separator />
+   576→      <div className="flex justify-between"><span>Toplam Kelime</span><span className="font-medium text-foreground">{wordPairs.length}</span></div>
+   577→      <Separator />
+   578→      <div className="flex justify-between"><span>Toplam Kategori</span><span className="font-medium text-foreground">{categories.length}</span></div>
+   579→    </div>
+   580→  );
+   581→
+   582→  const tabContentMap: Record<TabId, () => React.ReactNode> = {
+   583→    general: renderGeneralTab,
+   584→    api: renderApiTab,
+   585→    speech: renderSpeechTab,
+   586→    words: renderWordsTab,
+   587→    data: renderDataTab,
+   588→    about: renderAboutTab,
+   589→  };
+   590→
+   591→  return (
+   592→    <div className="space-y-5">
+   593→      {/* Tab navigation */}
+   594→      <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1">
+   595→        {SETTINGS_TABS.map((tab) => {
+   596→          const Icon = tab.icon;
+   597→          const isActive = activeTab === tab.id;
+   598→          return (
+   599→            <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={cn('flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-medium whitespace-nowrap transition-all shrink-0', isActive ? 'bg-emerald-600 text-white shadow-sm' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 hover:border-gray-300')}>
+   600→              <Icon className="h-3.5 w-3.5" />
+   601→              {tab.label}
+   602→            </button>
+   603→          );
+   604→        })}
+   605→      </div>
+   606→      {/* Tab content */}
+   607→      <Card className="border-0 shadow-sm">
+   608→        <CardContent className="p-5">
+   609→          {tabContentMap[activeTab]()}
+   610→        </CardContent>
+   611→      </Card>
+   612→    </div>
+   613→  );
+   614→}
+   615→
