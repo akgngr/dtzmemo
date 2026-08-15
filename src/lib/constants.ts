@@ -47,6 +47,11 @@ import {
   Award,
   FolderPlus,
   BookOpenText,
+  GraduationCap,
+  FileEdit,
+  Puzzle,
+  BookMarked,
+  ArrowLeft,
 } from 'lucide-react';
 import { categories } from '@/lib/german-data';
 
@@ -111,7 +116,15 @@ export function getCategoryColor(catId: string) {
 }
 
 /* ────────────────────────── Nav Items ────────────────────────── */
-export const navItems = [
+export interface NavItem {
+  id: string;
+  label: string;
+  icon: React.ElementType;
+  isGroup?: boolean;
+  sublabel?: string;
+}
+
+export const navItems: NavItem[] = [
   { id: 'dashboard', label: 'Ana Sayfa', icon: HomeIcon },
   { id: 'flashcards', label: 'Kartlar', icon: Layers },
   { id: 'fill-blank', label: 'Boşluk', icon: PenLine },
@@ -119,7 +132,6 @@ export const navItems = [
   { id: 'drag-drop', label: 'Sürükle', icon: GripHorizontal },
   { id: 'matching', label: 'Eşleştirme', icon: ArrowLeftRight },
   { id: 'kelime-ezber', label: 'Kelime Ezber', icon: Sparkles },
-  { id: 'vocab', label: 'Kelimeler', icon: BookOpen },
   { id: 'vocab-explorer', label: 'Kelime Gezgini', icon: Compass },
   { id: 'pronunciation', label: 'Telaffuz', icon: Mic },
   { id: 'conversation', label: 'Konuşma', icon: MessageCircle },
@@ -129,7 +141,15 @@ export const navItems = [
   { id: 'reading', label: 'Okuma', icon: BookOpenText },
   { id: 'quiz', label: 'Quiz', icon: CircleHelp },
   { id: 'achievements', label: 'Başarımlar', icon: Award },
+  { id: 'b1-exam', label: 'B1 Sınavı', icon: GraduationCap, isGroup: true },
   { id: 'custom-words', label: 'Sözlüklerim', icon: FolderPlus },
   { id: 'statistics', label: 'İstatistik', icon: BarChart3 },
   { id: 'settings', label: 'Ayarlar', icon: Settings },
+];
+
+export const b1ExamItems: NavItem[] = [
+  { id: 'exam-writing', label: 'Yazma', sublabel: 'Schriftlicher Ausdruck', icon: FileEdit },
+  { id: 'exam-grammar', label: 'Dil Yapıları', sublabel: 'Sprachbausteine', icon: Puzzle },
+  { id: 'exam-picture', label: 'Resim Tanımlama', sublabel: 'Bildbeschreibung', icon: BookMarked },
+  { id: 'exam-vocab', label: 'Sınav Kelimeleri', sublabel: 'Prüfungswortschatz', icon: GraduationCap },
 ];

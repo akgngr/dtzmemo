@@ -6,7 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Checkbox } from '@/components/ui/checkbox';
-import { categories, wordPairs } from '@/lib/german-data';
+import { categories } from '@/lib/german-data';
+import { vocabulary } from '@/lib/vocabulary-data';
 import { useAppStore } from '@/lib/store';
 import { iconMap, colorMap } from '@/lib/constants';
 
@@ -97,7 +98,7 @@ export function CategoryFilter() {
                     <div className="text-xs text-muted-foreground truncate">{cat.name}</div>
                   </div>
                   <span className="text-xs text-muted-foreground shrink-0 tabular-nums">
-                    {wordPairs.filter((w) => w.category === cat.id).length}
+                    {vocabulary.filter((w) => w.category === cat.id).length}
                   </span>
                 </div>
               );

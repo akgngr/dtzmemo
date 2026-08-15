@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useMemo, useRef } from 'react';
-import { Shield, Trash2, Sparkles, AlertTriangle, Mic, Volume2, Calendar, Settings2, Key, Eye, EyeOff, CheckCircle2, Info, Globe, FolderPlus, Download, Upload, FileJson, FileText, Copy, Check, Plus, X, BookOpen, Pencil, ChevronRight, Database, HardDrive } from 'lucide-react';
+import { Shield, Trash2, Sparkles, AlertTriangle, Mic, Volume2, Calendar, Settings2, Key, Eye, EyeOff, CheckCircle2, Info, Globe, FolderPlus, FolderOpen, Download, Upload, FileJson, FileText, Copy, Check, Plus, X, BookOpen, Pencil, ChevronRight, Database, HardDrive } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

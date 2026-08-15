@@ -6,6 +6,14 @@ export interface VocabWord {
   frequency: number;
 }
 
-import vocabData from './vocabulary-data.json';
+import memoData from './word-vocabulary.json';
 
-export const vocabulary: VocabWord[] = vocabData as VocabWord[];
+const rawMemo = (memoData as { words: { id: string; german: string; turkish: string; category: string }[] }).words;
+
+export const vocabulary: VocabWord[] = rawMemo.map((w, i) => ({
+  id: w.id,
+  german: w.german,
+  turkish: w.turkish,
+  category: w.category,
+  frequency: 1,
+}));

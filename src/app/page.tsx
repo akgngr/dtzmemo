@@ -18,7 +18,6 @@ import { WordCompletionModule } from '@/components/modules/WordCompletionModule'
 import { DragDropModule } from '@/components/modules/DragDropModule';
 import { MatchingModule } from '@/components/modules/MatchingModule';
 import { WordMemorizationModule } from '@/components/modules/WordMemorizationModule';
-import { VocabModule } from '@/components/modules/VocabModule';
 import { VocabExplorerModule } from '@/components/modules/VocabExplorerModule';
 import { PronunciationTrainerModule } from '@/components/modules/PronunciationTrainerModule';
 import { CompetitionModule } from '@/components/modules/CompetitionModule';
@@ -30,6 +29,11 @@ import { ListeningModule } from '@/components/modules/ListeningModule';
 import { ReadingModule } from '@/components/modules/ReadingModule';
 import { QuizModule } from '@/components/modules/QuizModule';
 import { AchievementsModule } from '@/components/modules/AchievementsModule';
+import { ExamWritingModule } from '@/components/modules/exam/ExamWritingModule';
+import { ExamGrammarModule } from '@/components/modules/exam/ExamGrammarModule';
+import { ExamPictureModule } from '@/components/modules/exam/ExamPictureModule';
+import { ExamVocabModule } from '@/components/modules/exam/ExamVocabModule';
+import { CustomWordsModule } from '@/components/modules/CustomWordsModule';
 
 
 const moduleMap: Record<string, React.ComponentType> = {
@@ -40,7 +44,6 @@ const moduleMap: Record<string, React.ComponentType> = {
   'drag-drop': DragDropModule,
   matching: MatchingModule,
   'kelime-ezber': WordMemorizationModule,
-  vocab: VocabModule,
   'vocab-explorer': VocabExplorerModule,
   pronunciation: PronunciationTrainerModule,
   conversation: ConversationModule,
@@ -50,6 +53,11 @@ const moduleMap: Record<string, React.ComponentType> = {
   reading: ReadingModule,
   quiz: QuizModule,
   achievements: AchievementsModule,
+  'exam-writing': ExamWritingModule,
+  'exam-grammar': ExamGrammarModule,
+  'exam-picture': ExamPictureModule,
+  'exam-vocab': ExamVocabModule,
+  'custom-words': CustomWordsModule,
 
   statistics: StatisticsModule,
   settings: SettingsModule,

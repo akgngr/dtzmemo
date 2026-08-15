@@ -270,7 +270,7 @@ export function StatisticsModule() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <Icon className={`h-3.5 w-3.5 ${info.color} shrink-0`} />
-                        <span className="text-sm font-medium truncate">{entry.exerciseLabel}</span>
+                        <span className="text-sm font-medium truncate">{typeof entry.exerciseLabel === 'string' ? entry.exerciseLabel : 'Okuma'}</span>
                       </div>
                       <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
                         <span>{dateStr} {timeStr}</span>

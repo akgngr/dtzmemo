@@ -839,12 +839,12 @@ export function ReadingModule() {
     // Save to store
     if (saveExerciseResult) {
       const correctCount = selectedExercise.questions.filter((q) => answers[q.id] === q.correctAnswer).length;
-      saveExerciseResult({
-        type: 'reading',
-        correct: correctCount,
-        total: selectedExercise.questions.length,
-        level: selectedExercise.level,
-      });
+      saveExerciseResult(
+        'reading',
+        correctCount,
+        selectedExercise.questions.length,
+        selectedExercise.category ? [selectedExercise.category] : undefined,
+      );
     }
   };
 

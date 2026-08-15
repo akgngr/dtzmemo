@@ -27,14 +27,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { categories, wordPairs } from '@/lib/german-data';
+import { categories } from '@/lib/german-data';
+import { vocabulary } from '@/lib/vocabulary-data';
 import { useAppStore } from '@/lib/store';
 import { getCategoryColor } from '@/lib/constants';
 import { CategoryFilter } from '@/components/shared/CategoryFilter';
 
 export function Dashboard() {
   const { setActiveModule, streak, todayReviewed, cardProgress } = useAppStore();
-  const totalWords = wordPairs.length;
+  const totalWords = vocabulary.length;
   const totalCategories = categories.length;
   const learnedCount = Object.values(cardProgress).filter((c) => c.correct >= 2).length;
 
@@ -114,7 +115,7 @@ export function Dashboard() {
             { id: 'drag-drop', label: 'Cümle Kur', icon: GripHorizontal, desc: 'Sürükle bırak', color: 'from-purple-500 to-purple-600' },
             { id: 'matching', label: 'Eşleştir', icon: ArrowLeftRight, desc: 'Almanca-Türkçe', color: 'from-teal-500 to-teal-600' },
             { id: 'kelime-ezber', label: 'Kelime Ezber', icon: Sparkles, desc: '502 kelime kartı', color: 'from-fuchsia-500 to-fuchsia-600' },
-            { id: 'vocab', label: 'Kelimeler', icon: BookOpen, desc: 'Kelime listesi', color: 'from-cyan-500 to-cyan-600' },
+            { id: 'vocab-explorer', label: 'Kelime Gezgini', icon: BookOpen, desc: '502 kelime', color: 'from-cyan-500 to-cyan-600' },
             { id: 'conversation', label: 'Konuşma', icon: MessageCircle, desc: 'AI ile Almanca sohbet', color: 'from-indigo-500 to-purple-600' },
             { id: 'competition', label: 'Yarışma', icon: Timer, desc: 'Zamana karşı', color: 'from-violet-500 to-violet-600' },
             { id: 'spaced-repetition', label: 'Tekrar', icon: RotateCcw, desc: 'Aralıklı tekrar', color: 'from-blue-500 to-cyan-600' },
@@ -161,7 +162,7 @@ export function Dashboard() {
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            {wordPairs.slice(0, 5).map((wp) => {
+            {vocabulary.slice(0, 5).map((wp) => {
               const clr = getCategoryColor(wp.category);
               return (
                 <div key={wp.id} className="flex items-center gap-3 rounded-lg p-2 hover:bg-gray-50">

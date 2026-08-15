@@ -231,6 +231,8 @@ export const useAppStore = create<AppState>()(
     (set, get) => ({
       activeModule: "dashboard",
       setActiveModule: (module) => set({ activeModule: module }),
+      moduleLabel: "Ana Sayfa",
+      setModuleLabel: (label) => set({ moduleLabel: label }),
 
       selectedCategories: [],
       setSelectedCategories: (categories) => set({ selectedCategories: categories }),
@@ -538,7 +540,7 @@ export const useAppStore = create<AppState>()(
     }),
     {
       name: "deutsch-memo-storage",
-      version: 8,
+      version: 9,
       migrate: (persistedState: any, version: number) => {
         if (version === 0 || version === 1) {
           const oldCategory = persistedState.selectedCategory;
@@ -598,6 +600,19 @@ export const useAppStore = create<AppState>()(
             ...persistedState,
             vorstellungText: persistedState.vorstellungText || '',
             vorstellungChunks: persistedState.vorstellungChunks || [],
+          };
+        }
+        if (version === 8) {
+          return {
+            ...persistedState,
+            moduleLabel: typeof persistedState.moduleLabel === 'string' ? persistedState.moduleLabel : 'Ana Sayfa',
+            exerciseHistory: Array.isArray(persistedState.exerciseHistory)
+              ? persistedState.exerciseHistory.map((entry: any) => ({
+                  ...entry,
+                  exerciseLabel: typeof entry.exerciseLabel === 'string' ? entry.exerciseLabel : 'Okuma',
+                  exercise: typeof entry.exercise === 'string' ? entry.exercise : 'reading',
+                }))
+              : [],
           };
         }
         return persistedState;

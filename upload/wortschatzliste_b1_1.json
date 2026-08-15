@@ -1,0 +1,2704 @@
+[
+  {
+    "article": "der",
+    "german": "(Telefon-/Strom-)Anbieter",
+    "plural": "",
+    "translation": "(telefon/elektrik) tedarik şirketi",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "angenehm",
+    "plural": "",
+    "translation": "rahat",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Anmeldung",
+    "plural": "Anmeldungen",
+    "translation": "kayıt",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "(Auslands-)Aufenthalt",
+    "plural": "Aufenthalte",
+    "translation": "yurtdışında bulunma",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Behördengang",
+    "plural": "Behördengänge",
+    "translation": "resmi işlemler",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Deutsche",
+    "plural": "Deutschen",
+    "translation": "Alman",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Deutsche",
+    "plural": "Deutschen",
+    "translation": "Alman",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Durchschnitt",
+    "plural": "",
+    "translation": "ortalama",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Ehrenamt",
+    "plural": "Ehrenämter",
+    "translation": "fahri vazife",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "ehrenamtlich",
+    "plural": "",
+    "translation": "gönüllü",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "sich einleben",
+    "plural": "",
+    "translation": "alışmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "einsam",
+    "plural": "",
+    "translation": "yalnız",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Einwohnermeldeamt",
+    "plural": "Einwohnermeldeämter",
+    "translation": "nüfus dairesi",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Elternhaus",
+    "plural": "Elternhäuser",
+    "translation": "aile evi",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "erleben",
+    "plural": "",
+    "translation": "deneyimlemek",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Erwachsene",
+    "plural": "Erwachsenen",
+    "translation": "yetişkin",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Erwachsene",
+    "plural": "Erwachsenen",
+    "translation": "yetişkin",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Gegend",
+    "plural": "Gegenden",
+    "translation": "bölge",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Handarbeit",
+    "plural": "Handarbeiten",
+    "translation": "el işi",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Heimweh",
+    "plural": "",
+    "translation": "sıla hasreti",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Jahrhundert",
+    "plural": "Jahrhunderte",
+    "translation": "yüzyıl",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Jahrzehnt",
+    "plural": "Jahrzehnte",
+    "translation": "onyıl",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Jogging",
+    "plural": "",
+    "translation": "jogging",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Jugendzentrum",
+    "plural": "Jugenzentren",
+    "translation": "gençlik merkezi",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Mannschaft",
+    "plural": "Mannschaften",
+    "translation": "takım",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Million",
+    "plural": "Millionen",
+    "translation": "milyon",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "pendeln",
+    "plural": "",
+    "translation": "gidip gelmek",
+    "example_sentence": "Er pendelt zwischen der Arbeit und Zuhause."
+  },
+  {
+    "article": "",
+    "german": "schwer",
+    "plural": "",
+    "translation": "ağır",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Schwierigkeit",
+    "plural": "Schwierigkeiten",
+    "translation": "zorluk",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "sportlich",
+    "plural": "",
+    "translation": "sportif",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Tanz",
+    "plural": "Tänze",
+    "translation": "dans",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "sich ummelden",
+    "plural": "",
+    "translation": "kayıt değiştirmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "unterstützen",
+    "plural": "",
+    "translation": "desteklemek",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Verein",
+    "plural": "Vereine",
+    "translation": "dernek",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Wohnsitz",
+    "plural": "Wohnsitze",
+    "translation": "ikamet",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "einwandern",
+    "plural": "",
+    "translation": "bir ülkeye göçmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "auswandern",
+    "plural": "",
+    "translation": "bir ülkeden göçmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Einwanderung",
+    "plural": "",
+    "translation": "bir ülkeye göçme",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Auswanderung",
+    "plural": "",
+    "translation": "bir ülkeden göçme",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "einen Vertrag abschließen",
+    "plural": "",
+    "translation": "bir sözleşme yapmak",
+    "example_sentence": "Sie muss einen Vertrag mit dem Stromanbieter abschließen."
+  },
+  {
+    "article": "",
+    "german": "Kartons/Koffer/… packen",
+    "plural": "",
+    "translation": "karton/bavul/... toplamak",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "Möbel aufbauen",
+    "plural": "",
+    "translation": "mobilya kurmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "Sport treiben",
+    "plural": "",
+    "translation": "spor yapmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "Es hat wochenlang/monatelang/jahrelang/jahrzehntelang/… gedauert.",
+    "plural": "",
+    "translation": "haftalarca/aylarca/yıllarca/on yıllarca/... sürdü.",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "ansprechen",
+    "plural": "",
+    "translation": "hitap etmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "ausleihen",
+    "plural": "",
+    "translation": "ödünç almak",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "begegnen",
+    "plural": "",
+    "translation": "karşılaşmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Disko = der Club",
+    "plural": "Diskos = Clubs",
+    "translation": "disko = kulüp",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Gesellschaft",
+    "plural": "Gesellschaften",
+    "translation": "toplum",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "leicht",
+    "plural": "",
+    "translation": "hafif",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Stimmung",
+    "plural": "Stimmungen",
+    "translation": "ruh hali",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "teilen",
+    "plural": "",
+    "translation": "bölmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Unterstützung (meistens Sg.)",
+    "plural": "",
+    "translation": "destek (genellikle tekil)",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Vergnügen",
+    "plural": "",
+    "translation": "eğlence",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "zufällig",
+    "plural": "",
+    "translation": "rastgele",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "befreundet sein (mit)",
+    "plural": "",
+    "translation": "arkadaş olmak (kişiyle)",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "Ich leihe mir ein Fahrrad aus.",
+    "plural": "",
+    "translation": "Bir bisiklet ödünç alıyorum.",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Bereich",
+    "plural": "Bereiche",
+    "translation": "bölge",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Bürgerinitiative",
+    "plural": "Bürgerinitiativen",
+    "translation": "yurttaş hareketi",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Engagement",
+    "plural": "",
+    "translation": "özveri",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "sich engagieren für",
+    "plural": "",
+    "translation": "bir şey için özveride bulunmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Kultur",
+    "plural": "Kulturen",
+    "translation": "kültür",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Kulturschock",
+    "plural": "Kulturschocks",
+    "translation": "kültür şoku",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Phase",
+    "plural": "Phasen",
+    "translation": "aşama",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Vorurteil",
+    "plural": "Vorurteile",
+    "translation": "önyargı",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "sich beschäftigen mit",
+    "plural": "",
+    "translation": "bir işle meşgul olmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Betrieb",
+    "plural": "Betriebe",
+    "translation": "işletme",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Bewerbungsanschreiben",
+    "plural": "",
+    "translation": "başvuru dilekçesi",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Bezahlung",
+    "plural": "Bezahlungen",
+    "translation": "ödeme",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Chance",
+    "plural": "Chancen",
+    "translation": "fırsat",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Digitalisierung",
+    "plural": "Digitalisierungen",
+    "translation": "dijitalleşme",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Festanstellung",
+    "plural": "Festanstellungen",
+    "translation": "sabit iş",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "formulieren",
+    "plural": "",
+    "translation": "ifade etmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Informatik",
+    "plural": "",
+    "translation": "bilişim",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Informatiker",
+    "plural": "Informatiker",
+    "translation": "bilişim uzmanı",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Informatikerin",
+    "plural": "Informatikerinnen",
+    "translation": "??? bilişim uzmanı ???",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "IT (= Informationstechnik)",
+    "plural": "",
+    "translation": "it (= bilişim teknolojisi)",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Kenntnis",
+    "plural": "Kenntnisse",
+    "translation": "bilgi",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "leisten",
+    "plural": "",
+    "translation": "sağlamak",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "letzter/letzte/letztes",
+    "plural": "",
+    "translation": "son",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "nämlich",
+    "plural": "",
+    "translation": "ismen",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Schichtarbeit",
+    "plural": "Schichtarbeiten",
+    "translation": "vardiyalı çalışma",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Stellenangebot = die Stellenanzeige",
+    "plural": "",
+    "translation": "iş ilanı",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Tarif",
+    "plural": "Tarife",
+    "translation": "tarife",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Tätigkeit",
+    "plural": "Tätigkeiten",
+    "translation": "faaliyet",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "tun",
+    "plural": "",
+    "translation": "yapmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "unbefristet",
+    "plural": "",
+    "translation": "süresiz",
+    "example_sentence": "Er hat eine unbefristete Aufenthaltserlaubnis."
+  },
+  {
+    "article": "",
+    "german": "befristet",
+    "plural": "",
+    "translation": "süreli",
+    "example_sentence": "Die Festeinstellung ist auf ein Jahr befristet."
+  },
+  {
+    "article": "",
+    "german": "einstellen",
+    "plural": "",
+    "translation": "işe almak",
+    "example_sentence": "Warum wollen Unternehmen keine Menschen mit Behinderung einstellen?"
+  },
+  {
+    "article": "",
+    "german": "entlassen",
+    "plural": "",
+    "translation": "işten çıkarmak",
+    "example_sentence": "Sie wurde schon mehrmals entlassen."
+  },
+  {
+    "article": "",
+    "german": "sicher",
+    "plural": "",
+    "translation": "güvenli",
+    "example_sentence": "Ein sicheres Einkommen ist wichtig."
+  },
+  {
+    "article": "",
+    "german": "unsicher",
+    "plural": "",
+    "translation": "güvensiz",
+    "example_sentence": "Er ist unsicher, was das korrekte Verhalten ist."
+  },
+  {
+    "article": "",
+    "german": "einen Beitrag leisten zu",
+    "plural": "",
+    "translation": "katkıda bulunmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "Es fällt mir leicht/schwer, zu …",
+    "plural": "",
+    "translation": "Benim açımdan kolay/zor,",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "also",
+    "plural": "",
+    "translation": "yani",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Argument",
+    "plural": "Argumente",
+    "translation": "argüman",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Behinderung",
+    "plural": "Behinderungen",
+    "translation": "engel",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Branche",
+    "plural": "Branchen",
+    "translation": "sektör",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "doch",
+    "plural": "",
+    "translation": "yine de",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "(sich) durchsetzen",
+    "plural": "",
+    "translation": "istediğini yaptırmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "ebenfalls",
+    "plural": "",
+    "translation": "aynı şekilde",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Erzieher",
+    "plural": "Erzieher",
+    "translation": "eğitici",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Erzieherin",
+    "plural": "Erzieherinnen",
+    "translation": "eğitici",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "führen zu",
+    "plural": "",
+    "translation": "şuna neden olur",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "gleichberechtigt",
+    "plural": "",
+    "translation": "eşit yetkiye sahip",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Gleichberechtigung",
+    "plural": "Gleichberechtigungen",
+    "translation": "eşit yetki",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Inklusion",
+    "plural": "",
+    "translation": "bütünleştirme",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "irgendwann",
+    "plural": "",
+    "translation": "herhangi bir zaman",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "jedenfalls",
+    "plural": "",
+    "translation": "ne olursa olsun",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "KI (= künstliche Intelligenz)",
+    "plural": "",
+    "translation": "yz (= yapay zeka)",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Ungleichheit",
+    "plural": "Ungleichheiten",
+    "translation": "eşitsizlik",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Verantwortung",
+    "plural": "Verantwortungen",
+    "translation": "sorumluluk",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "zustimmen",
+    "plural": "",
+    "translation": "onaylamak",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "fair",
+    "plural": "",
+    "translation": "adil",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "unfair",
+    "plural": "",
+    "translation": "adil değil",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "gleich",
+    "plural": "",
+    "translation": "eşit",
+    "example_sentence": "Männer und Frauen werden nicht gleich behandelt."
+  },
+  {
+    "article": "",
+    "german": "ungleich",
+    "plural": "",
+    "translation": "eşit değil",
+    "example_sentence": "Männer und Frauen werden ungleich behandelt."
+  },
+  {
+    "article": "",
+    "german": "allerdings",
+    "plural": "",
+    "translation": "fakat",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Arbeitnehmer",
+    "plural": "Arbeitnehmer",
+    "translation": "işçi",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Arbeitnehmerin",
+    "plural": "Arbeitnehmerinnen",
+    "translation": "işçi",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "(Arbeits-)Bedingung",
+    "plural": "(Arbeits-)Bedingungen",
+    "translation": "çalışma koşulu",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Beschäftigte",
+    "plural": "Beschäftigten",
+    "translation": "işçiler",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Beschäftigte",
+    "plural": "Beschäftigten",
+    "translation": "işçiler",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "belastend",
+    "plural": "",
+    "translation": "yük bindirici",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "betreffen",
+    "plural": "",
+    "translation": "ilgilendirmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Einkommen",
+    "plural": "",
+    "translation": "gelir",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "finanziell",
+    "plural": "",
+    "translation": "mali",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Gewerkschaft",
+    "plural": "Gewerkschaften",
+    "translation": "sendika",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "insgesamt",
+    "plural": "",
+    "translation": "toplamda",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Lohn",
+    "plural": "Löhne",
+    "translation": "ücret",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "merken",
+    "plural": "",
+    "translation": "hatırlamak",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "scheitern",
+    "plural": "",
+    "translation": "başarısız olmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "Streik",
+    "plural": "Streiks",
+    "translation": "grev",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "streiken",
+    "plural": "",
+    "translation": "greve gitmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Tarifvertrag",
+    "plural": "Tarifverträge",
+    "translation": "tarifeli sözleşme",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "(sich) verbessern",
+    "plural": "",
+    "translation": "kendini iyileştirmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "verhandeln",
+    "plural": "",
+    "translation": "pazarlık yapmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Verständnis",
+    "plural": "Verständnisse",
+    "translation": "anlayış",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "wertvoll",
+    "plural": "",
+    "translation": "değerli",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "steigen",
+    "plural": "",
+    "translation": "yükselmek",
+    "example_sentence": "Die Zahlen steigen nur langsam."
+  },
+  {
+    "article": "",
+    "german": "sinken",
+    "plural": "",
+    "translation": "alçalmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "für höhere Löhne und bessere Arbeitsbedingungen kämpfen",
+    "plural": "",
+    "translation": "daha fazla ücret ve daha iyi çalışma koşulları için mücadele etmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "Ich führe ein Team/Unternehmen/...",
+    "plural": "",
+    "translation": "Bir ekip/şirket/ yönetiyorum...",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "achten auf",
+    "plural": "",
+    "translation": "bir şeye dikkat etmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "anfassen",
+    "plural": "",
+    "translation": "dokunmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Art",
+    "plural": "Arten",
+    "translation": "tür",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Atmosphäre",
+    "plural": "",
+    "translation": "atmosfer",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "(Farb-)Auswahl",
+    "plural": "",
+    "translation": "renk seçimi",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "beeinflussen",
+    "plural": "",
+    "translation": "etkilemek",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Blick",
+    "plural": "Blicke",
+    "translation": "bakış",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Couch = Sofa",
+    "plural": "Couchs = Sofas",
+    "translation": "divan = kanepe",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "farbig",
+    "plural": "",
+    "translation": "renkli",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Fußboden",
+    "plural": "Fußböden",
+    "translation": "zemin",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "gebraucht",
+    "plural": "",
+    "translation": "kullanılmış",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Himmel",
+    "plural": "",
+    "translation": "gökyüzü",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Hof",
+    "plural": "Höfe",
+    "translation": "avlu",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "individuell",
+    "plural": "",
+    "translation": "özgün",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Innenstadt",
+    "plural": "Innenstädte",
+    "translation": "şehir merkezi",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Kissen",
+    "plural": "Kissen",
+    "translation": "yastık",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Lage",
+    "plural": "Lagen",
+    "translation": "konum",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Licht",
+    "plural": "",
+    "translation": "işık",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "mitten in, auf, …",
+    "plural": "",
+    "translation": "ortasında, üstünde, ...",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Position",
+    "plural": "Positionen",
+    "translation": "pozisyon",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "schick",
+    "plural": "",
+    "translation": "şık",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Spiegel",
+    "plural": "",
+    "translation": "ayna",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Toilette = Klo = WC",
+    "plural": "Toiletten = Klos = WCs",
+    "translation": "tuvalet = hela = wc",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Vogel",
+    "plural": "Vögel",
+    "translation": "kuş",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Wohnungseinrichtung",
+    "plural": "Wohnungseinrichtungen",
+    "translation": "konut",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Zuhause",
+    "plural": "",
+    "translation": "yuva",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "weich",
+    "plural": "",
+    "translation": "yumuşak",
+    "example_sentence": "Weiche Textilien laden zum Entspannen ein."
+  },
+  {
+    "article": "",
+    "german": "hart",
+    "plural": "",
+    "translation": "sert",
+    "example_sentence": "Der harte Fußboden ist sehr praktisch."
+  },
+  {
+    "article": "die",
+    "german": "Ordnung",
+    "plural": "",
+    "translation": "düzen",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Unordnung",
+    "plural": "",
+    "translation": "düzensizlik",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "ablenken",
+    "plural": "",
+    "translation": "dikkat dağıtmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Ablenkung",
+    "plural": "Ablenkungen",
+    "translation": "oyalama",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Arbeitszimmer",
+    "plural": "",
+    "translation": "çalışma odası",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Badewanne",
+    "plural": "Badewannen",
+    "translation": "küvet",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Dachgeschoss",
+    "plural": "Dachgeschosse",
+    "translation": "çatı katı",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "gehören",
+    "plural": "",
+    "translation": "ait olmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "sich hinsetzen",
+    "plural": "",
+    "translation": "bir yere oturmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Lieblingsort",
+    "plural": "Lieblingsorte",
+    "translation": "favori yer",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Schreibtisch",
+    "plural": "Schreibtische",
+    "translation": "çalışma masası",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Spielzeug",
+    "plural": "Spielzeuge",
+    "translation": "oyuncak",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "ständig",
+    "plural": "",
+    "translation": "sürekli",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Zeug",
+    "plural": "",
+    "translation": "şey",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "(Gemüse-)Anbau",
+    "plural": "",
+    "translation": "sebze ekimi",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "anbauen",
+    "plural": "",
+    "translation": "ekim yapmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Beet",
+    "plural": "Beete",
+    "translation": "pancar",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "beobachten",
+    "plural": "",
+    "translation": "gözlemlemek",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "blühen",
+    "plural": "",
+    "translation": "çiçek açmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Erde",
+    "plural": "",
+    "translation": "toprak",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Ernte",
+    "plural": "Ernten",
+    "translation": "hasat",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "ernten",
+    "plural": "",
+    "translation": "hasat etmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Fläche",
+    "plural": "Flächen",
+    "translation": "alan",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "gärtnern",
+    "plural": "",
+    "translation": "bahçe işleri yapmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Kirche",
+    "plural": "Kirchen",
+    "translation": "kilise",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "lebenswert",
+    "plural": "",
+    "translation": "yaşamaya değer",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "mitmachen",
+    "plural": "",
+    "translation": "katılmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Schatten",
+    "plural": "",
+    "translation": "gölge",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "städtisch",
+    "plural": "",
+    "translation": "kentsel",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Standort",
+    "plural": "Standorte",
+    "translation": "lokasyon",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "wachsen",
+    "plural": "",
+    "translation": "büyümek",
+    "example_sentence": "Die Pflanzen wachsen schnell."
+  },
+  {
+    "article": "",
+    "german": "die Möglichkeit bieten",
+    "plural": "",
+    "translation": "imkan sunmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "Rücksicht nehmen auf",
+    "plural": "",
+    "translation": "bir şeye dikkat etmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "aktuell",
+    "plural": "",
+    "translation": "güncel",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Arbeitskraft",
+    "plural": "Arbeitskräfte",
+    "translation": "iş gücü",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Ausländer",
+    "plural": "Ausländer",
+    "translation": "yabancı",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Ausländerin",
+    "plural": "Ausländerinnen",
+    "translation": "yabancı",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "ausländisch",
+    "plural": "",
+    "translation": "yabancı",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Bevölkerung",
+    "plural": "Bevölkerungen",
+    "translation": "nüfus",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Bundeskanzler",
+    "plural": "Bundeskanzler",
+    "translation": "Şansölye",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Bundeskanzlerin",
+    "plural": "Bundeskanzlerinnen",
+    "translation": "Şansölye",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Bundesrepublik Deutschland (= die BRD)",
+    "plural": "",
+    "translation": "Federal Almanya Cumhuriyeti (= brd)",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Deutsche Demokratische Republik (= die DDR)",
+    "plural": "",
+    "translation": "Demokratik Almanya Cumhuriyeti (= ddr)",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Diskriminierung",
+    "plural": "Diskriminierungen",
+    "translation": "ayrımcılık",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Einwanderungsland",
+    "plural": "Einwanderungsländer",
+    "translation": "göç alan ülke",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "erlauben",
+    "plural": "",
+    "translation": "izin vermek",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "fliehen",
+    "plural": "",
+    "translation": "kaçmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Flucht",
+    "plural": "",
+    "translation": "kaçış",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Gastarbeiter",
+    "plural": "Gastarbeiter",
+    "translation": "geçici işçi",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Gastarbeiterin",
+    "plural": "Gastarbeiterinnen",
+    "translation": "geçici işçi",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Geflüchtete",
+    "plural": "Geflüchteten",
+    "translation": "mülteci",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Geflüchtete",
+    "plural": "Geflüchteten",
+    "translation": "mülteci",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Generation",
+    "plural": "Generationen",
+    "translation": "nesil",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Heimatland",
+    "plural": "Heimatländer",
+    "translation": "anavatan",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Integration",
+    "plural": "",
+    "translation": "entegrasyon",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Migrant",
+    "plural": "Migranten",
+    "translation": "göçmen",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Migrantin",
+    "plural": "Migrantinnen",
+    "translation": "göçmen",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Migration",
+    "plural": "Migrationen",
+    "translation": "göç",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Migrationserfahrung",
+    "plural": "Migrationserfahrungen",
+    "translation": "göç geçmişi",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Migrationshintergrund",
+    "plural": "Migrationshintergründe",
+    "translation": "göç arka planı",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Offenheit",
+    "plural": "",
+    "translation": "açıklık",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Rassismus",
+    "plural": "",
+    "translation": "ırkçılık",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Regierung",
+    "plural": "Regierungen",
+    "translation": "hükumet",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "selbstverständlich",
+    "plural": "",
+    "translation": "pek tabii",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Toleranz",
+    "plural": "",
+    "translation": "tolerans",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Wirtschaft",
+    "plural": "",
+    "translation": "ekonomi",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Frieden",
+    "plural": "",
+    "translation": "barış",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Krieg",
+    "plural": "Kriege",
+    "translation": "savaş",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Zweite Weltkrieg",
+    "plural": "",
+    "translation": "ikinci dünya savaşı",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "Es herrscht Frieden/Krieg.",
+    "plural": "",
+    "translation": "Barış/Savaş hüküm sürüyor.",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Bleistift",
+    "plural": "Bleistifte",
+    "translation": "kurşunkalem",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "ernsthaft = ernst",
+    "plural": "",
+    "translation": "ciddi",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Gewohnheit",
+    "plural": "Gewohnheiten",
+    "translation": "alışkanlık",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Hälfte",
+    "plural": "Hälften",
+    "translation": "yarı",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "kulturell",
+    "plural": "",
+    "translation": "kültürel",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Missverständnis",
+    "plural": "Missverständnisse",
+    "translation": "yanlış anlaşılma",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Scherz",
+    "plural": "Scherze",
+    "translation": "espri",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Situation",
+    "plural": "Situationen",
+    "translation": "durum",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "spinnen",
+    "plural": "",
+    "translation": "örmek",
+    "example_sentence": "Der Typ spinnt wohl! -> Der Typ ist verrückt."
+  },
+  {
+    "article": "das",
+    "german": "Trinkgeld",
+    "plural": "Trinkgelder",
+    "translation": "bahşiş",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "scherzhaft",
+    "plural": "",
+    "translation": "acı verici",
+    "example_sentence": "Ich wusste nicht, ob sie ihre Wut scherzhaft übertrieb."
+  },
+  {
+    "article": "",
+    "german": "ernsthaft",
+    "plural": "",
+    "translation": "ciddi",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "den Eindruck haben",
+    "plural": "",
+    "translation": "intibaya sahip olmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "in Eile sein",
+    "plural": "",
+    "translation": "acelesi olmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "Mir war nicht bewusst, dass …",
+    "plural": "",
+    "translation": "Şunun bilincinde değildim:",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "aufwachsen",
+    "plural": "",
+    "translation": "büyümek",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Chancengleichheit",
+    "plural": "",
+    "translation": "fırsat eşitliği",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "fördern",
+    "plural": "",
+    "translation": "teşvik etmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Förderung",
+    "plural": "Förderungen",
+    "translation": "teşvik",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Initiative",
+    "plural": "Initiativen",
+    "translation": "girişim",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Staatsangehörigkeit",
+    "plural": "Staatsangehörigkeiten",
+    "translation": "uyruk",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "eine ausländische/die deutsche Staatsangehörigkeit haben",
+    "plural": "",
+    "translation": "yabancı uyruğa sahip olmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "Ich bin in … aufgewachsen.",
+    "plural": "",
+    "translation": "Büyüdüğüm yer: ...",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "Das hängt von der Person/der Sprache/… ab.",
+    "plural": "",
+    "translation": "Bu, kişiye/dile... bağlı.",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Appetit",
+    "plural": "",
+    "translation": "iştah",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Bewegung",
+    "plural": "Bewegungen",
+    "translation": "hareket",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Diät",
+    "plural": "Diäten",
+    "translation": "diyet",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Droge",
+    "plural": "Drogen",
+    "translation": "uyuşturucu",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Druck",
+    "plural": "Druck",
+    "translation": "basınç",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "enthalten",
+    "plural": "",
+    "translation": "içermek",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Entspannung",
+    "plural": "",
+    "translation": "gevşeme",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Ernährung",
+    "plural": "",
+    "translation": "beslenme",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Gaststätte",
+    "plural": "Gaststätten",
+    "translation": "lokanta",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Kalorie",
+    "plural": "Kalorien",
+    "translation": "kalori",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Kneipe",
+    "plural": "Kneipen",
+    "translation": "bar",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "(Zucker-)Konsum",
+    "plural": "",
+    "translation": "şeker tüketimi",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Limonade",
+    "plural": "Limonaden",
+    "translation": "limonata",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Mahlzeit",
+    "plural": "Mahlzeiten",
+    "translation": "öğün",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "meditieren",
+    "plural": "",
+    "translation": "meditasyon yapmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Nachtisch",
+    "plural": "Nachtische",
+    "translation": "tatlı",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Nahrungsmittel",
+    "plural": "",
+    "translation": "besin",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Pflaume",
+    "plural": "Pflaumen",
+    "translation": "erik",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Pille = Tablette",
+    "plural": "Pillen = Tabletten",
+    "translation": "hap = tablet",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Quark",
+    "plural": "",
+    "translation": "peynir",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "rauchen",
+    "plural": "",
+    "translation": "sigara içmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "(Nicht-)Raucher",
+    "plural": "(Nicht-)Raucher",
+    "translation": "sigara içmeyen",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "(Nicht-)Raucherin",
+    "plural": "(Nicht-)Raucherinnen",
+    "translation": "sigara içmeyen",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Risiko",
+    "plural": "Risiken",
+    "translation": "risk",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Sahne",
+    "plural": "",
+    "translation": "kaymak",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "schmecken",
+    "plural": "",
+    "translation": "tadına bakmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Schnitzel",
+    "plural": "",
+    "translation": "şnitzel",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Schritt",
+    "plural": "Schritte",
+    "translation": "adım",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Steak",
+    "plural": "Steaks",
+    "translation": "biftek",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "umstellen",
+    "plural": "",
+    "translation": "dönüştürmek",
+    "example_sentence": "Ich möchte meine Ernährung umstellen."
+  },
+  {
+    "article": "die",
+    "german": "Umstellung",
+    "plural": "Umstellungen",
+    "translation": "dönüşüm",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Zigarette",
+    "plural": "Zigaretten",
+    "translation": "sigara",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Zitrone",
+    "plural": "Zitronen",
+    "translation": "limon",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "abnehmen",
+    "plural": "",
+    "translation": "kilo vermek",
+    "example_sentence": "Ich will kein Gramm abnehmen."
+  },
+  {
+    "article": "",
+    "german": "zunehmen",
+    "plural": "",
+    "translation": "kilo almak",
+    "example_sentence": "Sie möchte gerne etwas zunehmen."
+  },
+  {
+    "article": "",
+    "german": "satt",
+    "plural": "",
+    "translation": "doygun",
+    "example_sentence": "Gerichte die satt machen, sind gesünder."
+  },
+  {
+    "article": "",
+    "german": "hungrig",
+    "plural": "",
+    "translation": "aç",
+    "example_sentence": "Tipp: Nicht hungrig einkaufen gehen!"
+  },
+  {
+    "article": "",
+    "german": "tierische Produkte",
+    "plural": "",
+    "translation": "hayvani ürünler",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "(stark) verarbeitete Lebensmittel",
+    "plural": "",
+    "translation": "aşırı işlenmiş gıdalar",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "sich vollwertig/vegetarisch/vegan/… ernähren",
+    "plural": "",
+    "translation": "sağlıklı/vejeteryan/vegan/ ... beslenmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "Eine Studie zeigt, dass …",
+    "plural": "",
+    "translation": "Bir araştırma şunu gösteriyor:",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "(sich) entscheiden (für)",
+    "plural": "",
+    "translation": "bir şeye karar vermek",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Eis",
+    "plural": "",
+    "translation": "buz",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Geschmack",
+    "plural": "Geschmäcker",
+    "translation": "tat",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Hersteller",
+    "plural": "Hersteller",
+    "translation": "üretici",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Marmelade",
+    "plural": "Marmeladen",
+    "translation": "reçel",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Pudding",
+    "plural": "Puddings",
+    "translation": "pudding",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "(Zucker-)Steuer",
+    "plural": "(Zucker-)Steuern",
+    "translation": "şeker vergisi",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Würfel",
+    "plural": "Würfel",
+    "translation": "küp",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "Ich bereite meine Mahlzeiten zu Hause zu.",
+    "plural": "",
+    "translation": "Öğünlerimi evde hazırlıyorum.",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "aufhören",
+    "plural": "",
+    "translation": "sona ermek",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Fortschritt",
+    "plural": "Fortschritte",
+    "translation": "gelişim",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Maßnahme",
+    "plural": "Maßnahmen",
+    "translation": "tedbir",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "optimieren",
+    "plural": "",
+    "translation": "optimize etmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "übertreiben",
+    "plural": "",
+    "translation": "abartmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "versuchen",
+    "plural": "",
+    "translation": "denemek",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Stärke",
+    "plural": "Stärken",
+    "translation": "güç",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Schwäche",
+    "plural": "Schwächen",
+    "translation": "zayıflık",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "sich unter Druck setzen",
+    "plural": "",
+    "translation": "baskı altına girmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Alternative",
+    "plural": "Alternativen",
+    "translation": "alternatif",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Dienstleistung",
+    "plural": "Dienstleistungen",
+    "translation": "hizmet",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Einfluss",
+    "plural": "Einflüsse",
+    "translation": "etki",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Follower",
+    "plural": "Follower",
+    "translation": "takipçi",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Followerin",
+    "plural": "Followerinnen",
+    "translation": "takipçi",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Gesetz",
+    "plural": "Gesetze",
+    "translation": "yasa",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Influencer",
+    "plural": "Influencer",
+    "translation": "internet ünlüsü",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Influencerin",
+    "plural": "Influencerinnen",
+    "translation": "internet ünlüsü",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Konsument",
+    "plural": "Konsumenten",
+    "translation": "tüketici",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Konsumentin",
+    "plural": "Konsumentinnen",
+    "translation": "tüketici",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "konsumieren",
+    "plural": "",
+    "translation": "tüketmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Plakat",
+    "plural": "Plakate",
+    "translation": "plaket",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Prospekt",
+    "plural": "Prospekte",
+    "translation": "broşür",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Rundfunk",
+    "plural": "",
+    "translation": "yayın",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Schaufenster",
+    "plural": "Schaufenster",
+    "translation": "vitrin",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Skandal",
+    "plural": "Skandale",
+    "translation": "skandal",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "überzeugen von",
+    "plural": "",
+    "translation": "bir konuda ikna etmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "warnen (vor)",
+    "plural": "",
+    "translation": "bir şeye karşı uyarmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Werbeslogan",
+    "plural": "Werbeslogans",
+    "translation": "reklam sloganı",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Werbung",
+    "plural": "Werbungen",
+    "translation": "reklam",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Zielgruppe",
+    "plural": "Zielgruppen",
+    "translation": "hedef kitle",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "Formen der Werbung = Arten von Werbung",
+    "plural": "",
+    "translation": "reklam türleri",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "defekt = kaputt",
+    "plural": "",
+    "translation": "bozuk",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Empfänger",
+    "plural": "Empfänger",
+    "translation": "alıcı",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Empfängerin",
+    "plural": "Empfängerinnen",
+    "translation": "alıcı",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "erkennen (an)",
+    "plural": "",
+    "translation": "bir şeyden tanımak",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "fordern",
+    "plural": "",
+    "translation": "talep etmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "hübsch",
+    "plural": "",
+    "translation": "güzel",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Kleid",
+    "plural": "Kleider",
+    "translation": "kıyafet",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Konsumgewohnheiten (Pl.)",
+    "plural": "",
+    "translation": "tüketim alışkınlıkları (çoğul)",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Kundenservice",
+    "plural": "Kundenservices",
+    "translation": "müşteri hizmetleri",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Material",
+    "plural": "Materialien",
+    "translation": "malzeme",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "nachdenken über",
+    "plural": "",
+    "translation": "bir şey hakkında düşünmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Onlineshopping",
+    "plural": "",
+    "translation": "internetten alışveriş",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Outfit",
+    "plural": "Outfits",
+    "translation": "dış görünüm",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Paket",
+    "plural": "Pakete",
+    "translation": "paket",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Schmuck",
+    "plural": "",
+    "translation": "takı",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Tasche",
+    "plural": "Taschen",
+    "translation": "cep",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "umtauschen",
+    "plural": "",
+    "translation": "değiş tokuş etmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "(Kauf-, Konsum-)Verhalten",
+    "plural": "",
+    "translation": "satış, tüketim davranışı",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Verkäufer",
+    "plural": "Verkäufer",
+    "translation": "satıcı",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Verkäuferin",
+    "plural": "Verkäuferinnen",
+    "translation": "satıcı",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "(Paket-)Versand",
+    "plural": "",
+    "translation": "paket gönderimi",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Ware",
+    "plural": "Waren",
+    "translation": "ürün",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "einen Artikel zurückgeben/zurückschicken",
+    "plural": "",
+    "translation": "bir ürünü iade etmek/geri göndermek",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "etwas online bestellen = etwas online kaufen",
+    "plural": "",
+    "translation": "bir şeyi internetten sipariş etmek = bir şeyi internetten satın almak",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "Ich mache mir darüber keine Gedanken.",
+    "plural": "",
+    "translation": "Bununla ilgili kafa yormuyorum.",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "Das Geld wird zurückerstattet.",
+    "plural": "",
+    "translation": "Para iade edilecek.",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "Die Kleidung ist zu eng/groß.",
+    "plural": "",
+    "translation": "Kıyafet dar/bol.",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "Ich möchte einen Artikel reklamieren.",
+    "plural": "",
+    "translation": "Bir ürünle ilgili şikayette bulunmak istiyorum.",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "Meine Bestellnummer ist die …",
+    "plural": "",
+    "translation": "Sipariş numaram: ...",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "sich einsetzen für",
+    "plural": "",
+    "translation": "bir şeyi savunmak",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Frist",
+    "plural": "Fristen",
+    "translation": "süre",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Organisation",
+    "plural": "Organisationen",
+    "translation": "organizasyon",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "(Umwelt-, Verbraucher-)Schutz",
+    "plural": "",
+    "translation": "çevrenin, tüketicinin korunması",
+    "example_sentence": ""
+  },
+  {
+    "article": "der",
+    "german": "Verbraucher",
+    "plural": "Verbraucher",
+    "translation": "tüketici",
+    "example_sentence": ""
+  },
+  {
+    "article": "die",
+    "german": "Verbraucherin",
+    "plural": "Verbraucherinnen",
+    "translation": "tüketici",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "widerrufen",
+    "plural": "",
+    "translation": "iptal etmek",
+    "example_sentence": ""
+  },
+  {
+    "article": "das",
+    "german": "Widerrufsrecht",
+    "plural": "Widerrufsrechte",
+    "translation": "iptal etme hakkı",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "verpackt",
+    "plural": "",
+    "translation": "ambalajlanmış",
+    "example_sentence": ""
+  },
+  {
+    "article": "",
+    "german": "unverpackt",
+    "plural": "",
+    "translation": "ambalajlanmamış",
+    "example_sentence": "Unverpackte Lebensmittel sind umweltfreundlich."
+  },
+  {
+    "article": "",
+    "german": "Ich unterstütze regionale Produzenten.",
+    "plural": "",
+    "translation": "Yerli üreticileri destekliyorum.",
+    "example_sentence": ""
+  }
+]

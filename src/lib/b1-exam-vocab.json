@@ -1,0 +1,3782 @@
+[
+  {
+    "id": "b1w_1",
+    "german": "der (Telefon-/Strom-)Anbieter",
+    "article": "der",
+    "plural": null,
+    "turkish": "(telefon/elektrik) tedarik şirketi",
+    "example": "",
+    "topic": "Reise & Verkehr",
+    "topicTr": "Seyahat & Ulaşım"
+  },
+  {
+    "id": "b1w_2",
+    "german": "angenehm",
+    "article": null,
+    "plural": null,
+    "turkish": "rahat",
+    "example": "",
+    "topic": "Bildung & Sprache",
+    "topicTr": "Eğitim & Dil"
+  },
+  {
+    "id": "b1w_3",
+    "german": "die Anmeldung",
+    "article": "die",
+    "plural": "Anmeldungen",
+    "turkish": "kayıt",
+    "example": "",
+    "topic": "Verwaltung & Recht",
+    "topicTr": "İdare & Hukuk"
+  },
+  {
+    "id": "b1w_4",
+    "german": "der (Auslands-)Aufenthalt",
+    "article": "der",
+    "plural": "Aufenthalte",
+    "turkish": "yurtdışında bulunma",
+    "example": "",
+    "topic": "Verwaltung & Recht",
+    "topicTr": "İdare & Hukuk"
+  },
+  {
+    "id": "b1w_5",
+    "german": "der Behördengang",
+    "article": "der",
+    "plural": "Behördengänge",
+    "turkish": "resmi işlemler",
+    "example": "",
+    "topic": "Verwaltung & Recht",
+    "topicTr": "İdare & Hukuk"
+  },
+  {
+    "id": "b1w_6",
+    "german": "der Deutsche",
+    "article": "der",
+    "plural": "Deutschen",
+    "turkish": "Alman",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_7",
+    "german": "die Deutsche",
+    "article": "die",
+    "plural": "Deutschen",
+    "turkish": "Alman",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_8",
+    "german": "der Durchschnitt",
+    "article": "der",
+    "plural": null,
+    "turkish": "ortalama",
+    "example": "",
+    "topic": "Alltag & Leben",
+    "topicTr": "Günlük Yaşam"
+  },
+  {
+    "id": "b1w_9",
+    "german": "das Ehrenamt",
+    "article": "das",
+    "plural": "Ehrenämter",
+    "turkish": "fahri vazife",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_10",
+    "german": "ehrenamtlich",
+    "article": null,
+    "plural": null,
+    "turkish": "gönüllü",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_11",
+    "german": "sich einleben",
+    "article": null,
+    "plural": null,
+    "turkish": "alışmak",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_12",
+    "german": "einsam",
+    "article": null,
+    "plural": null,
+    "turkish": "yalnız",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_13",
+    "german": "das Einwohnermeldeamt",
+    "article": "das",
+    "plural": "Einwohnermeldeämter",
+    "turkish": "nüfus dairesi",
+    "example": "",
+    "topic": "Wohnen & Immobilie",
+    "topicTr": "Konut & Yaşam"
+  },
+  {
+    "id": "b1w_14",
+    "german": "das Elternhaus",
+    "article": "das",
+    "plural": "Elternhäuser",
+    "turkish": "aile evi",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_15",
+    "german": "erleben",
+    "article": null,
+    "plural": null,
+    "turkish": "deneyimlemek",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_16",
+    "german": "der Erwachsene",
+    "article": "der",
+    "plural": "Erwachsenen",
+    "turkish": "yetişkin",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_17",
+    "german": "die Erwachsene",
+    "article": "die",
+    "plural": "Erwachsenen",
+    "turkish": "yetişkin",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_18",
+    "german": "die Gegend",
+    "article": "die",
+    "plural": "Gegenden",
+    "turkish": "bölge",
+    "example": "",
+    "topic": "Wohnen & Immobilie",
+    "topicTr": "Konut & Yaşam"
+  },
+  {
+    "id": "b1w_19",
+    "german": "die Handarbeit",
+    "article": "die",
+    "plural": "Handarbeiten",
+    "turkish": "el işi",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_20",
+    "german": "das Heimweh",
+    "article": "das",
+    "plural": null,
+    "turkish": "sıla hasreti",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_21",
+    "german": "das Jahrhundert",
+    "article": "das",
+    "plural": "Jahrhunderte",
+    "turkish": "yüzyıl",
+    "example": "",
+    "topic": "Alltag & Leben",
+    "topicTr": "Günlük Yaşam"
+  },
+  {
+    "id": "b1w_22",
+    "german": "das Jahrzehnt",
+    "article": "das",
+    "plural": "Jahrzehnte",
+    "turkish": "onyıl",
+    "example": "",
+    "topic": "Alltag & Leben",
+    "topicTr": "Günlük Yaşam"
+  },
+  {
+    "id": "b1w_23",
+    "german": "das Jogging",
+    "article": "das",
+    "plural": null,
+    "turkish": "jogging",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_24",
+    "german": "das Jugendzentrum",
+    "article": "das",
+    "plural": "Jugenzentren",
+    "turkish": "gençlik merkezi",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_25",
+    "german": "die Mannschaft",
+    "article": "die",
+    "plural": "Mannschaften",
+    "turkish": "takım",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_26",
+    "german": "die Million",
+    "article": "die",
+    "plural": "Millionen",
+    "turkish": "milyon",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_27",
+    "german": "pendeln",
+    "article": null,
+    "plural": null,
+    "turkish": "gidip gelmek",
+    "example": "Er pendelt zwischen der Arbeit und Zuhause.",
+    "topic": "Reise & Verkehr",
+    "topicTr": "Seyahat & Ulaşım"
+  },
+  {
+    "id": "b1w_28",
+    "german": "schwer",
+    "article": null,
+    "plural": null,
+    "turkish": "ağır",
+    "example": "",
+    "topic": "Bildung & Sprache",
+    "topicTr": "Eğitim & Dil"
+  },
+  {
+    "id": "b1w_29",
+    "german": "die Schwierigkeit",
+    "article": "die",
+    "plural": "Schwierigkeiten",
+    "turkish": "zorluk",
+    "example": "",
+    "topic": "Bildung & Sprache",
+    "topicTr": "Eğitim & Dil"
+  },
+  {
+    "id": "b1w_30",
+    "german": "sportlich",
+    "article": null,
+    "plural": null,
+    "turkish": "sportif",
+    "example": "",
+    "topic": "Alltag & Leben",
+    "topicTr": "Günlük Yaşam"
+  },
+  {
+    "id": "b1w_31",
+    "german": "der Tanz",
+    "article": "der",
+    "plural": "Tänze",
+    "turkish": "dans",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_32",
+    "german": "sich ummelden",
+    "article": null,
+    "plural": null,
+    "turkish": "kayıt değiştirmek",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_33",
+    "german": "unterstützen",
+    "article": null,
+    "plural": null,
+    "turkish": "desteklemek",
+    "example": "",
+    "topic": "Alltag & Leben",
+    "topicTr": "Günlük Yaşam"
+  },
+  {
+    "id": "b1w_34",
+    "german": "der Verein",
+    "article": "der",
+    "plural": "Vereine",
+    "turkish": "dernek",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_35",
+    "german": "der Wohnsitz",
+    "article": "der",
+    "plural": "Wohnsitze",
+    "turkish": "ikamet",
+    "example": "",
+    "topic": "Wohnen & Immobilie",
+    "topicTr": "Konut & Yaşam"
+  },
+  {
+    "id": "b1w_36",
+    "german": "einwandern",
+    "article": null,
+    "plural": null,
+    "turkish": "bir ülkeye göçmek",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_37",
+    "german": "auswandern",
+    "article": null,
+    "plural": null,
+    "turkish": "bir ülkeden göçmek",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_38",
+    "german": "die Einwanderung",
+    "article": "die",
+    "plural": null,
+    "turkish": "bir ülkeye göçme",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_39",
+    "german": "die Auswanderung",
+    "article": "die",
+    "plural": null,
+    "turkish": "bir ülkeden göçme",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_40",
+    "german": "einen Vertrag abschließen",
+    "article": null,
+    "plural": null,
+    "turkish": "bir sözleşme yapmak",
+    "example": "Sie muss einen Vertrag mit dem Stromanbieter abschließen.",
+    "topic": "Verwaltung & Recht",
+    "topicTr": "İdare & Hukuk"
+  },
+  {
+    "id": "b1w_41",
+    "german": "Kartons/Koffer/… packen",
+    "article": null,
+    "plural": null,
+    "turkish": "karton/bavul/... toplamak",
+    "example": "",
+    "topic": "Wohnen & Immobilie",
+    "topicTr": "Konut & Yaşam"
+  },
+  {
+    "id": "b1w_42",
+    "german": "Möbel aufbauen",
+    "article": null,
+    "plural": null,
+    "turkish": "mobilya kurmak",
+    "example": "",
+    "topic": "Wohnen & Immobilie",
+    "topicTr": "Konut & Yaşam"
+  },
+  {
+    "id": "b1w_43",
+    "german": "Sport treiben",
+    "article": null,
+    "plural": null,
+    "turkish": "spor yapmak",
+    "example": "",
+    "topic": "Alltag & Leben",
+    "topicTr": "Günlük Yaşam"
+  },
+  {
+    "id": "b1w_44",
+    "german": "ansprechen",
+    "article": null,
+    "plural": null,
+    "turkish": "hitap etmek",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_45",
+    "german": "ausleihen",
+    "article": null,
+    "plural": null,
+    "turkish": "ödünç almak",
+    "example": "",
+    "topic": "Alltag & Leben",
+    "topicTr": "Günlük Yaşam"
+  },
+  {
+    "id": "b1w_46",
+    "german": "begegnen",
+    "article": null,
+    "plural": null,
+    "turkish": "karşılaşmak",
+    "example": "",
+    "topic": "Alltag & Leben",
+    "topicTr": "Günlük Yaşam"
+  },
+  {
+    "id": "b1w_47",
+    "german": "die Disko = der Club",
+    "article": "die",
+    "plural": "Diskos = Clubs",
+    "turkish": "disko = kulüp",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_48",
+    "german": "die Gesellschaft",
+    "article": "die",
+    "plural": "Gesellschaften",
+    "turkish": "toplum",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_49",
+    "german": "leicht",
+    "article": null,
+    "plural": null,
+    "turkish": "hafif",
+    "example": "",
+    "topic": "Bildung & Sprache",
+    "topicTr": "Eğitim & Dil"
+  },
+  {
+    "id": "b1w_50",
+    "german": "die Stimmung",
+    "article": "die",
+    "plural": "Stimmungen",
+    "turkish": "ruh hali",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_51",
+    "german": "teilen",
+    "article": null,
+    "plural": null,
+    "turkish": "bölmek",
+    "example": "",
+    "topic": "Alltag & Leben",
+    "topicTr": "Günlük Yaşam"
+  },
+  {
+    "id": "b1w_52",
+    "german": "die Unterstützung (meistens Sg.)",
+    "article": "die",
+    "plural": null,
+    "turkish": "destek (genellikle tekil)",
+    "example": "",
+    "topic": "Alltag & Leben",
+    "topicTr": "Günlük Yaşam"
+  },
+  {
+    "id": "b1w_53",
+    "german": "das Vergnügen",
+    "article": "das",
+    "plural": null,
+    "turkish": "eğlence",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_54",
+    "german": "zufällig",
+    "article": null,
+    "plural": null,
+    "turkish": "rastgele",
+    "example": "",
+    "topic": "Alltag & Leben",
+    "topicTr": "Günlük Yaşam"
+  },
+  {
+    "id": "b1w_55",
+    "german": "befreundet sein (mit)",
+    "article": null,
+    "plural": null,
+    "turkish": "arkadaş olmak (kişiyle)",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_56",
+    "german": "der Bereich",
+    "article": "der",
+    "plural": "Bereiche",
+    "turkish": "bölge",
+    "example": "",
+    "topic": "Wohnen & Immobilie",
+    "topicTr": "Konut & Yaşam"
+  },
+  {
+    "id": "b1w_57",
+    "german": "die Bürgerinitiative",
+    "article": "die",
+    "plural": "Bürgerinitiativen",
+    "turkish": "yurttaş hareketi",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_58",
+    "german": "das Engagement",
+    "article": "das",
+    "plural": null,
+    "turkish": "özveri",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_59",
+    "german": "sich engagieren für",
+    "article": null,
+    "plural": null,
+    "turkish": "bir şey için özveride bulunmak",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_60",
+    "german": "die Kultur",
+    "article": "die",
+    "plural": "Kulturen",
+    "turkish": "kültür",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_61",
+    "german": "der Kulturschock",
+    "article": "der",
+    "plural": "Kulturschocks",
+    "turkish": "kültür şoku",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_62",
+    "german": "die Phase",
+    "article": "die",
+    "plural": "Phasen",
+    "turkish": "aşama",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_63",
+    "german": "das Vorurteil",
+    "article": "das",
+    "plural": "Vorurteile",
+    "turkish": "önyargı",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_64",
+    "german": "sich beschäftigen mit",
+    "article": null,
+    "plural": null,
+    "turkish": "bir işle meşgul olmak",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_65",
+    "german": "der Betrieb",
+    "article": "der",
+    "plural": "Betriebe",
+    "turkish": "işletme",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_66",
+    "german": "das Bewerbungsanschreiben",
+    "article": "das",
+    "plural": null,
+    "turkish": "başvuru dilekçesi",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_67",
+    "german": "die Bezahlung",
+    "article": "die",
+    "plural": "Bezahlungen",
+    "turkish": "ödeme",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_68",
+    "german": "die Chance",
+    "article": "die",
+    "plural": "Chancen",
+    "turkish": "fırsat",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_69",
+    "german": "die Digitalisierung",
+    "article": "die",
+    "plural": "Digitalisierungen",
+    "turkish": "dijitalleşme",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_70",
+    "german": "die Festanstellung",
+    "article": "die",
+    "plural": "Festanstellungen",
+    "turkish": "sabit iş",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_71",
+    "german": "formulieren",
+    "article": null,
+    "plural": null,
+    "turkish": "ifade etmek",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_72",
+    "german": "die Informatik",
+    "article": "die",
+    "plural": null,
+    "turkish": "bilişim",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_73",
+    "german": "der Informatiker",
+    "article": "der",
+    "plural": "Informatiker",
+    "turkish": "bilişim uzmanı",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_74",
+    "german": "die Informatikerin",
+    "article": "die",
+    "plural": "Informatikerinnen",
+    "turkish": "??? bilişim uzmanı ???",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_75",
+    "german": "die IT (= Informationstechnik)",
+    "article": "die",
+    "plural": null,
+    "turkish": "it (= bilişim teknolojisi)",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_76",
+    "german": "die Kenntnis",
+    "article": "die",
+    "plural": "Kenntnisse",
+    "turkish": "bilgi",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_77",
+    "german": "leisten",
+    "article": null,
+    "plural": null,
+    "turkish": "sağlamak",
+    "example": "",
+    "topic": "Alltag & Leben",
+    "topicTr": "Günlük Yaşam"
+  },
+  {
+    "id": "b1w_78",
+    "german": "letzter/letzte/letztes",
+    "article": null,
+    "plural": null,
+    "turkish": "son",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_79",
+    "german": "nämlich",
+    "article": null,
+    "plural": null,
+    "turkish": "ismen",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_80",
+    "german": "die Schichtarbeit",
+    "article": "die",
+    "plural": "Schichtarbeiten",
+    "turkish": "vardiyalı çalışma",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_81",
+    "german": "das Stellenangebot = die Stellenanzeige",
+    "article": "das",
+    "plural": null,
+    "turkish": "iş ilanı",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_82",
+    "german": "der Tarif",
+    "article": "der",
+    "plural": "Tarife",
+    "turkish": "tarife",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_83",
+    "german": "die Tätigkeit",
+    "article": "die",
+    "plural": "Tätigkeiten",
+    "turkish": "faaliyet",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_84",
+    "german": "tun",
+    "article": null,
+    "plural": null,
+    "turkish": "yapmak",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_85",
+    "german": "unbefristet",
+    "article": null,
+    "plural": null,
+    "turkish": "süresiz",
+    "example": "Er hat eine unbefristete Aufenthaltserlaubnis.",
+    "topic": "Verwaltung & Recht",
+    "topicTr": "İdare & Hukuk"
+  },
+  {
+    "id": "b1w_86",
+    "german": "befristet",
+    "article": null,
+    "plural": null,
+    "turkish": "süreli",
+    "example": "Die Festeinstellung ist auf ein Jahr befristet.",
+    "topic": "Verwaltung & Recht",
+    "topicTr": "İdare & Hukuk"
+  },
+  {
+    "id": "b1w_87",
+    "german": "einstellen",
+    "article": null,
+    "plural": null,
+    "turkish": "işe almak",
+    "example": "Warum wollen Unternehmen keine Menschen mit Behinderung einstellen?",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_88",
+    "german": "entlassen",
+    "article": null,
+    "plural": null,
+    "turkish": "işten çıkarmak",
+    "example": "Sie wurde schon mehrmals entlassen.",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_89",
+    "german": "sicher",
+    "article": null,
+    "plural": null,
+    "turkish": "güvenli",
+    "example": "Ein sicheres Einkommen ist wichtig.",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_90",
+    "german": "unsicher",
+    "article": null,
+    "plural": null,
+    "turkish": "güvensiz",
+    "example": "Er ist unsicher, was das korrekte Verhalten ist.",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_91",
+    "german": "einen Beitrag leisten zu",
+    "article": null,
+    "plural": null,
+    "turkish": "katkıda bulunmak",
+    "example": "",
+    "topic": "Alltag & Leben",
+    "topicTr": "Günlük Yaşam"
+  },
+  {
+    "id": "b1w_92",
+    "german": "Es fällt mir leicht/schwer, zu …",
+    "article": null,
+    "plural": null,
+    "turkish": "Benim açımdan kolay/zor,",
+    "example": "",
+    "topic": "Bildung & Sprache",
+    "topicTr": "Eğitim & Dil"
+  },
+  {
+    "id": "b1w_93",
+    "german": "also",
+    "article": null,
+    "plural": null,
+    "turkish": "yani",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_94",
+    "german": "das Argument",
+    "article": "das",
+    "plural": "Argumente",
+    "turkish": "argüman",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_95",
+    "german": "die Behinderung",
+    "article": "die",
+    "plural": "Behinderungen",
+    "turkish": "engel",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_96",
+    "german": "die Branche",
+    "article": "die",
+    "plural": "Branchen",
+    "turkish": "sektör",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_97",
+    "german": "doch",
+    "article": null,
+    "plural": null,
+    "turkish": "yine de",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_98",
+    "german": "(sich) durchsetzen",
+    "article": null,
+    "plural": null,
+    "turkish": "istediğini yaptırmak",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_99",
+    "german": "ebenfalls",
+    "article": null,
+    "plural": null,
+    "turkish": "aynı şekilde",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_100",
+    "german": "der Erzieher",
+    "article": "der",
+    "plural": "Erzieher",
+    "turkish": "eğitici",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_101",
+    "german": "die Erzieherin",
+    "article": "die",
+    "plural": "Erzieherinnen",
+    "turkish": "eğitici",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_102",
+    "german": "führen zu",
+    "article": null,
+    "plural": null,
+    "turkish": "şuna neden olur",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_103",
+    "german": "gleichberechtigt",
+    "article": null,
+    "plural": null,
+    "turkish": "eşit yetkiye sahip",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_104",
+    "german": "die Gleichberechtigung",
+    "article": "die",
+    "plural": "Gleichberechtigungen",
+    "turkish": "eşit yetki",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_105",
+    "german": "die Inklusion",
+    "article": "die",
+    "plural": null,
+    "turkish": "bütünleştirme",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_106",
+    "german": "irgendwann",
+    "article": null,
+    "plural": null,
+    "turkish": "herhangi bir zaman",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_107",
+    "german": "jedenfalls",
+    "article": null,
+    "plural": null,
+    "turkish": "ne olursa olsun",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_108",
+    "german": "die KI (= künstliche Intelligenz)",
+    "article": "die",
+    "plural": null,
+    "turkish": "yz (= yapay zeka)",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_109",
+    "german": "die Ungleichheit",
+    "article": "die",
+    "plural": "Ungleichheiten",
+    "turkish": "eşitsizlik",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_110",
+    "german": "die Verantwortung",
+    "article": "die",
+    "plural": "Verantwortungen",
+    "turkish": "sorumluluk",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_111",
+    "german": "zustimmen",
+    "article": null,
+    "plural": null,
+    "turkish": "onaylamak",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_112",
+    "german": "fair",
+    "article": null,
+    "plural": null,
+    "turkish": "adil",
+    "example": "",
+    "topic": "Bildung & Sprache",
+    "topicTr": "Eğitim & Dil"
+  },
+  {
+    "id": "b1w_113",
+    "german": "unfair",
+    "article": null,
+    "plural": null,
+    "turkish": "adil değil",
+    "example": "",
+    "topic": "Bildung & Sprache",
+    "topicTr": "Eğitim & Dil"
+  },
+  {
+    "id": "b1w_114",
+    "german": "gleich",
+    "article": null,
+    "plural": null,
+    "turkish": "eşit",
+    "example": "Männer und Frauen werden nicht gleich behandelt.",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_115",
+    "german": "ungleich",
+    "article": null,
+    "plural": null,
+    "turkish": "eşit değil",
+    "example": "Männer und Frauen werden ungleich behandelt.",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_116",
+    "german": "allerdings",
+    "article": null,
+    "plural": null,
+    "turkish": "fakat",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_117",
+    "german": "der Arbeitnehmer",
+    "article": "der",
+    "plural": "Arbeitnehmer",
+    "turkish": "işçi",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_118",
+    "german": "die Arbeitnehmerin",
+    "article": "die",
+    "plural": "Arbeitnehmerinnen",
+    "turkish": "işçi",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_119",
+    "german": "die (Arbeits-)Bedingung",
+    "article": "die",
+    "plural": "(Arbeits-)Bedingungen",
+    "turkish": "çalışma koşulu",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_120",
+    "german": "der Beschäftigte",
+    "article": "der",
+    "plural": "Beschäftigten",
+    "turkish": "işçiler",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_121",
+    "german": "die Beschäftigte",
+    "article": "die",
+    "plural": "Beschäftigten",
+    "turkish": "işçiler",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_122",
+    "german": "belastend",
+    "article": null,
+    "plural": null,
+    "turkish": "yük bindirici",
+    "example": "",
+    "topic": "Bildung & Sprache",
+    "topicTr": "Eğitim & Dil"
+  },
+  {
+    "id": "b1w_123",
+    "german": "betreffen",
+    "article": null,
+    "plural": null,
+    "turkish": "ilgilendirmek",
+    "example": "",
+    "topic": "Bildung & Sprache",
+    "topicTr": "Eğitim & Dil"
+  },
+  {
+    "id": "b1w_124",
+    "german": "das Einkommen",
+    "article": "das",
+    "plural": null,
+    "turkish": "gelir",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_125",
+    "german": "finanziell",
+    "article": null,
+    "plural": null,
+    "turkish": "mali",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_126",
+    "german": "die Gewerkschaft",
+    "article": "die",
+    "plural": "Gewerkschaften",
+    "turkish": "sendika",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_127",
+    "german": "insgesamt",
+    "article": null,
+    "plural": null,
+    "turkish": "toplamda",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_128",
+    "german": "der Lohn",
+    "article": "der",
+    "plural": "Löhne",
+    "turkish": "ücret",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_129",
+    "german": "merken",
+    "article": null,
+    "plural": null,
+    "turkish": "hatırlamak",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_130",
+    "german": "scheitern",
+    "article": null,
+    "plural": null,
+    "turkish": "başarısız olmak",
+    "example": "",
+    "topic": "Bildung & Sprache",
+    "topicTr": "Eğitim & Dil"
+  },
+  {
+    "id": "b1w_131",
+    "german": "Streik",
+    "article": null,
+    "plural": "Streiks",
+    "turkish": "grev",
+    "example": "",
+    "topic": "Wohnen & Immobilie",
+    "topicTr": "Konut & Yaşam"
+  },
+  {
+    "id": "b1w_132",
+    "german": "streiken",
+    "article": null,
+    "plural": null,
+    "turkish": "greve gitmek",
+    "example": "",
+    "topic": "Wohnen & Immobilie",
+    "topicTr": "Konut & Yaşam"
+  },
+  {
+    "id": "b1w_133",
+    "german": "der Tarifvertrag",
+    "article": "der",
+    "plural": "Tarifverträge",
+    "turkish": "tarifeli sözleşme",
+    "example": "",
+    "topic": "Verwaltung & Recht",
+    "topicTr": "İdare & Hukuk"
+  },
+  {
+    "id": "b1w_134",
+    "german": "(sich) verbessern",
+    "article": null,
+    "plural": null,
+    "turkish": "kendini iyileştirmek",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_135",
+    "german": "verhandeln",
+    "article": null,
+    "plural": null,
+    "turkish": "pazarlık yapmak",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_136",
+    "german": "das Verständnis",
+    "article": "das",
+    "plural": "Verständnisse",
+    "turkish": "anlayış",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_137",
+    "german": "wertvoll",
+    "article": null,
+    "plural": null,
+    "turkish": "değerli",
+    "example": "",
+    "topic": "Bildung & Sprache",
+    "topicTr": "Eğitim & Dil"
+  },
+  {
+    "id": "b1w_138",
+    "german": "steigen",
+    "article": null,
+    "plural": null,
+    "turkish": "yükselmek",
+    "example": "Die Zahlen steigen nur langsam.",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_139",
+    "german": "sinken",
+    "article": null,
+    "plural": null,
+    "turkish": "alçalmak",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_140",
+    "german": "für höhere Löhne und bessere Arbeitsbedingungen kämpfen",
+    "article": null,
+    "plural": null,
+    "turkish": "daha fazla ücret ve daha iyi çalışma koşulları için mücadele etmek",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_141",
+    "german": "Ich führe ein Team/Unternehmen/...",
+    "article": null,
+    "plural": null,
+    "turkish": "Bir ekip/şirket/ yönetiyorum...",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_142",
+    "german": "achten auf",
+    "article": null,
+    "plural": null,
+    "turkish": "bir şeye dikkat etmek",
+    "example": "",
+    "topic": "Wohnen & Immobilie",
+    "topicTr": "Konut & Yaşam"
+  },
+  {
+    "id": "b1w_143",
+    "german": "anfassen",
+    "article": null,
+    "plural": null,
+    "turkish": "dokunmak",
+    "example": "",
+    "topic": "Wohnen & Immobilie",
+    "topicTr": "Konut & Yaşam"
+  },
+  {
+    "id": "b1w_144",
+    "german": "die Art",
+    "article": "die",
+    "plural": "Arten",
+    "turkish": "tür",
+    "example": "",
+    "topic": "Wohnen & Immobilie",
+    "topicTr": "Konut & Yaşam"
+  },
+  {
+    "id": "b1w_145",
+    "german": "die Atmosphäre",
+    "article": "die",
+    "plural": null,
+    "turkish": "atmosfer",
+    "example": "",
+    "topic": "Wohnen & Immobilie",
+    "topicTr": "Konut & Yaşam"
+  },
+  {
+    "id": "b1w_146",
+    "german": "die (Farb-)Auswahl",
+    "article": "die",
+    "plural": null,
+    "turkish": "renk seçimi",
+    "example": "",
+    "topic": "Wohnen & Immobilie",
+    "topicTr": "Konut & Yaşam"
+  },
+  {
+    "id": "b1w_147",
+    "german": "beeinflussen",
+    "article": null,
+    "plural": null,
+    "turkish": "etkilemek",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_148",
+    "german": "der Blick",
+    "article": "der",
+    "plural": "Blicke",
+    "turkish": "bakış",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_149",
+    "german": "die Couch = Sofa",
+    "article": "die",
+    "plural": "Couchs = Sofas",
+    "turkish": "divan = kanepe",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_150",
+    "german": "farbig",
+    "article": null,
+    "plural": null,
+    "turkish": "renkli",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_151",
+    "german": "der Fußboden",
+    "article": "der",
+    "plural": "Fußböden",
+    "turkish": "zemin",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_152",
+    "german": "gebraucht",
+    "article": null,
+    "plural": null,
+    "turkish": "kullanılmış",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_153",
+    "german": "der Himmel",
+    "article": "der",
+    "plural": null,
+    "turkish": "gökyüzü",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_154",
+    "german": "der Hof",
+    "article": "der",
+    "plural": "Höfe",
+    "turkish": "avlu",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_155",
+    "german": "individuell",
+    "article": null,
+    "plural": null,
+    "turkish": "özgün",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_156",
+    "german": "die Innenstadt",
+    "article": "die",
+    "plural": "Innenstädte",
+    "turkish": "şehir merkezi",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_157",
+    "german": "das Kissen",
+    "article": "das",
+    "plural": "Kissen",
+    "turkish": "yastık",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_158",
+    "german": "die Lage",
+    "article": "die",
+    "plural": "Lagen",
+    "turkish": "konum",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_159",
+    "german": "das Licht",
+    "article": "das",
+    "plural": null,
+    "turkish": "işık",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_160",
+    "german": "mitten in, auf, …",
+    "article": null,
+    "plural": null,
+    "turkish": "ortasında, üstünde, ...",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_161",
+    "german": "die Position",
+    "article": "die",
+    "plural": "Positionen",
+    "turkish": "pozisyon",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_162",
+    "german": "schick",
+    "article": null,
+    "plural": null,
+    "turkish": "şık",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_163",
+    "german": "der Spiegel",
+    "article": "der",
+    "plural": null,
+    "turkish": "ayna",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_164",
+    "german": "die Toilette = Klo = WC",
+    "article": "die",
+    "plural": "Toiletten = Klos = WCs",
+    "turkish": "tuvalet = hela = wc",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_165",
+    "german": "der Vogel",
+    "article": "der",
+    "plural": "Vögel",
+    "turkish": "kuş",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_166",
+    "german": "die Wohnungseinrichtung",
+    "article": "die",
+    "plural": "Wohnungseinrichtungen",
+    "turkish": "konut",
+    "example": "",
+    "topic": "Wohnen & Immobilie",
+    "topicTr": "Konut & Yaşam"
+  },
+  {
+    "id": "b1w_167",
+    "german": "das Zuhause",
+    "article": "das",
+    "plural": null,
+    "turkish": "yuva",
+    "example": "",
+    "topic": "Wohnen & Immobilie",
+    "topicTr": "Konut & Yaşam"
+  },
+  {
+    "id": "b1w_168",
+    "german": "weich",
+    "article": null,
+    "plural": null,
+    "turkish": "yumuşak",
+    "example": "Weiche Textilien laden zum Entspannen ein.",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_169",
+    "german": "hart",
+    "article": null,
+    "plural": null,
+    "turkish": "sert",
+    "example": "Der harte Fußboden ist sehr praktisch.",
+    "topic": "Wohnen & Immobilie",
+    "topicTr": "Konut & Yaşam"
+  },
+  {
+    "id": "b1w_170",
+    "german": "die Ordnung",
+    "article": "die",
+    "plural": null,
+    "turkish": "düzen",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_171",
+    "german": "die Unordnung",
+    "article": "die",
+    "plural": null,
+    "turkish": "düzensizlik",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_172",
+    "german": "ablenken",
+    "article": null,
+    "plural": null,
+    "turkish": "dikkat dağıtmak",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_173",
+    "german": "die Ablenkung",
+    "article": "die",
+    "plural": "Ablenkungen",
+    "turkish": "oyalama",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_174",
+    "german": "das Arbeitszimmer",
+    "article": "das",
+    "plural": null,
+    "turkish": "çalışma odası",
+    "example": "",
+    "topic": "Wohnen & Immobilie",
+    "topicTr": "Konut & Yaşam"
+  },
+  {
+    "id": "b1w_175",
+    "german": "die Badewanne",
+    "article": "die",
+    "plural": "Badewannen",
+    "turkish": "küvet",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_176",
+    "german": "das Dachgeschoss",
+    "article": "das",
+    "plural": "Dachgeschosse",
+    "turkish": "çatı katı",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_177",
+    "german": "gehören",
+    "article": null,
+    "plural": null,
+    "turkish": "ait olmak",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_178",
+    "german": "sich hinsetzen",
+    "article": null,
+    "plural": null,
+    "turkish": "bir yere oturmak",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_179",
+    "german": "der Lieblingsort",
+    "article": "der",
+    "plural": "Lieblingsorte",
+    "turkish": "favori yer",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_180",
+    "german": "der Schreibtisch",
+    "article": "der",
+    "plural": "Schreibtische",
+    "turkish": "çalışma masası",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_181",
+    "german": "das Spielzeug",
+    "article": "das",
+    "plural": "Spielzeuge",
+    "turkish": "oyuncak",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_182",
+    "german": "ständig",
+    "article": null,
+    "plural": null,
+    "turkish": "sürekli",
+    "example": "",
+    "topic": "Verwaltung & Recht",
+    "topicTr": "İdare & Hukuk"
+  },
+  {
+    "id": "b1w_183",
+    "german": "das Zeug",
+    "article": "das",
+    "plural": null,
+    "turkish": "şey",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_184",
+    "german": "der (Gemüse-)Anbau",
+    "article": "der",
+    "plural": null,
+    "turkish": "sebze ekimi",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_185",
+    "german": "anbauen",
+    "article": null,
+    "plural": null,
+    "turkish": "ekim yapmak",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_186",
+    "german": "das Beet",
+    "article": "das",
+    "plural": "Beete",
+    "turkish": "pancar",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_187",
+    "german": "beobachten",
+    "article": null,
+    "plural": null,
+    "turkish": "gözlemlemek",
+    "example": "",
+    "topic": "Wohnen & Immobilie",
+    "topicTr": "Konut & Yaşam"
+  },
+  {
+    "id": "b1w_188",
+    "german": "blühen",
+    "article": null,
+    "plural": null,
+    "turkish": "çiçek açmak",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_189",
+    "german": "die Erde",
+    "article": "die",
+    "plural": null,
+    "turkish": "toprak",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_190",
+    "german": "die Ernte",
+    "article": "die",
+    "plural": "Ernten",
+    "turkish": "hasat",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_191",
+    "german": "ernten",
+    "article": null,
+    "plural": null,
+    "turkish": "hasat etmek",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_192",
+    "german": "die Fläche",
+    "article": "die",
+    "plural": "Flächen",
+    "turkish": "alan",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_193",
+    "german": "gärtnern",
+    "article": null,
+    "plural": null,
+    "turkish": "bahçe işleri yapmak",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_194",
+    "german": "die Kirche",
+    "article": "die",
+    "plural": "Kirchen",
+    "turkish": "kilise",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_195",
+    "german": "lebenswert",
+    "article": null,
+    "plural": null,
+    "turkish": "yaşamaya değer",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_196",
+    "german": "mitmachen",
+    "article": null,
+    "plural": null,
+    "turkish": "katılmak",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_197",
+    "german": "der Schatten",
+    "article": "der",
+    "plural": null,
+    "turkish": "gölge",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_198",
+    "german": "städtisch",
+    "article": null,
+    "plural": null,
+    "turkish": "kentsel",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_199",
+    "german": "der Standort",
+    "article": "der",
+    "plural": "Standorte",
+    "turkish": "lokasyon",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_200",
+    "german": "wachsen",
+    "article": null,
+    "plural": null,
+    "turkish": "büyümek",
+    "example": "Die Pflanzen wachsen schnell.",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_201",
+    "german": "die Möglichkeit bieten",
+    "article": null,
+    "plural": null,
+    "turkish": "imkan sunmak",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_202",
+    "german": "Rücksicht nehmen auf",
+    "article": null,
+    "plural": null,
+    "turkish": "bir şeye dikkat etmek",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_203",
+    "german": "aktuell",
+    "article": null,
+    "plural": null,
+    "turkish": "güncel",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_204",
+    "german": "die Arbeitskraft",
+    "article": "die",
+    "plural": "Arbeitskräfte",
+    "turkish": "iş gücü",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_205",
+    "german": "der Ausländer",
+    "article": "der",
+    "plural": "Ausländer",
+    "turkish": "yabancı",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_206",
+    "german": "die Ausländerin",
+    "article": "die",
+    "plural": "Ausländerinnen",
+    "turkish": "yabancı",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_207",
+    "german": "ausländisch",
+    "article": null,
+    "plural": null,
+    "turkish": "yabancı",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_208",
+    "german": "die Bevölkerung",
+    "article": "die",
+    "plural": "Bevölkerungen",
+    "turkish": "nüfus",
+    "example": "",
+    "topic": "Wohnen & Immobilie",
+    "topicTr": "Konut & Yaşam"
+  },
+  {
+    "id": "b1w_209",
+    "german": "der Bundeskanzler",
+    "article": "der",
+    "plural": "Bundeskanzler",
+    "turkish": "Şansölye",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_210",
+    "german": "die Bundeskanzlerin",
+    "article": "die",
+    "plural": "Bundeskanzlerinnen",
+    "turkish": "Şansölye",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_211",
+    "german": "die Bundesrepublik Deutschland (= die BRD)",
+    "article": "die",
+    "plural": null,
+    "turkish": "Federal Almanya Cumhuriyeti (= brd)",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_212",
+    "german": "die Deutsche Demokratische Republik (= die DDR)",
+    "article": "die",
+    "plural": null,
+    "turkish": "Demokratik Almanya Cumhuriyeti (= ddr)",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_213",
+    "german": "die Diskriminierung",
+    "article": "die",
+    "plural": "Diskriminierungen",
+    "turkish": "ayrımcılık",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_214",
+    "german": "das Einwanderungsland",
+    "article": "das",
+    "plural": "Einwanderungsländer",
+    "turkish": "göç alan ülke",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_215",
+    "german": "erlauben",
+    "article": null,
+    "plural": null,
+    "turkish": "izin vermek",
+    "example": "",
+    "topic": "Verwaltung & Recht",
+    "topicTr": "İdare & Hukuk"
+  },
+  {
+    "id": "b1w_216",
+    "german": "fliehen",
+    "article": null,
+    "plural": null,
+    "turkish": "kaçmak",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_217",
+    "german": "die Flucht",
+    "article": "die",
+    "plural": null,
+    "turkish": "kaçış",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_218",
+    "german": "der Gastarbeiter",
+    "article": "der",
+    "plural": "Gastarbeiter",
+    "turkish": "geçici işçi",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_219",
+    "german": "die Gastarbeiterin",
+    "article": "die",
+    "plural": "Gastarbeiterinnen",
+    "turkish": "geçici işçi",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_220",
+    "german": "der Geflüchtete",
+    "article": "der",
+    "plural": "Geflüchteten",
+    "turkish": "mülteci",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_221",
+    "german": "die Geflüchtete",
+    "article": "die",
+    "plural": "Geflüchteten",
+    "turkish": "mülteci",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_222",
+    "german": "die Generation",
+    "article": "die",
+    "plural": "Generationen",
+    "turkish": "nesil",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_223",
+    "german": "das Heimatland",
+    "article": "das",
+    "plural": "Heimatländer",
+    "turkish": "anavatan",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_224",
+    "german": "die Integration",
+    "article": "die",
+    "plural": null,
+    "turkish": "entegrasyon",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_225",
+    "german": "der Migrant",
+    "article": "der",
+    "plural": "Migranten",
+    "turkish": "göçmen",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_226",
+    "german": "die Migrantin",
+    "article": "die",
+    "plural": "Migrantinnen",
+    "turkish": "göçmen",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_227",
+    "german": "die Migration",
+    "article": "die",
+    "plural": "Migrationen",
+    "turkish": "göç",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_228",
+    "german": "die Migrationserfahrung",
+    "article": "die",
+    "plural": "Migrationserfahrungen",
+    "turkish": "göç geçmişi",
+    "example": "",
+    "topic": "Bildung & Sprache",
+    "topicTr": "Eğitim & Dil"
+  },
+  {
+    "id": "b1w_229",
+    "german": "der Migrationshintergrund",
+    "article": "der",
+    "plural": "Migrationshintergründe",
+    "turkish": "göç arka planı",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_230",
+    "german": "die Offenheit",
+    "article": "die",
+    "plural": null,
+    "turkish": "açıklık",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_231",
+    "german": "der Rassismus",
+    "article": "der",
+    "plural": null,
+    "turkish": "ırkçılık",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_232",
+    "german": "die Regierung",
+    "article": "die",
+    "plural": "Regierungen",
+    "turkish": "hükumet",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_233",
+    "german": "selbstverständlich",
+    "article": null,
+    "plural": null,
+    "turkish": "pek tabii",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_234",
+    "german": "die Toleranz",
+    "article": "die",
+    "plural": null,
+    "turkish": "tolerans",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_235",
+    "german": "die Wirtschaft",
+    "article": "die",
+    "plural": null,
+    "turkish": "ekonomi",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_236",
+    "german": "der Frieden",
+    "article": "der",
+    "plural": null,
+    "turkish": "barış",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_237",
+    "german": "der Krieg",
+    "article": "der",
+    "plural": "Kriege",
+    "turkish": "savaş",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_238",
+    "german": "der Zweite Weltkrieg",
+    "article": "der",
+    "plural": null,
+    "turkish": "ikinci dünya savaşı",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_239",
+    "german": "Es herrscht Frieden/Krieg.",
+    "article": null,
+    "plural": null,
+    "turkish": "Barış/Savaş hüküm sürüyor.",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_240",
+    "german": "der Bleistift",
+    "article": "der",
+    "plural": "Bleistifte",
+    "turkish": "kurşunkalem",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_241",
+    "german": "ernsthaft = ernst",
+    "article": null,
+    "plural": null,
+    "turkish": "ciddi",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_242",
+    "german": "die Gewohnheit",
+    "article": "die",
+    "plural": "Gewohnheiten",
+    "turkish": "alışkanlık",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_243",
+    "german": "die Hälfte",
+    "article": "die",
+    "plural": "Hälften",
+    "turkish": "yarı",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_244",
+    "german": "kulturell",
+    "article": null,
+    "plural": null,
+    "turkish": "kültürel",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_245",
+    "german": "das Missverständnis",
+    "article": "das",
+    "plural": "Missverständnisse",
+    "turkish": "yanlış anlaşılma",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_246",
+    "german": "der Scherz",
+    "article": "der",
+    "plural": "Scherze",
+    "turkish": "espri",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_247",
+    "german": "die Situation",
+    "article": "die",
+    "plural": "Situationen",
+    "turkish": "durum",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_248",
+    "german": "spinnen",
+    "article": null,
+    "plural": null,
+    "turkish": "örmek",
+    "example": "Der Typ spinnt wohl! -> Der Typ ist verrückt.",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_249",
+    "german": "das Trinkgeld",
+    "article": "das",
+    "plural": "Trinkgelder",
+    "turkish": "bahşiş",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_250",
+    "german": "scherzhaft",
+    "article": null,
+    "plural": null,
+    "turkish": "acı verici",
+    "example": "Ich wusste nicht, ob sie ihre Wut scherzhaft übertrieb.",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_251",
+    "german": "ernsthaft",
+    "article": null,
+    "plural": null,
+    "turkish": "ciddi",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_252",
+    "german": "den Eindruck haben",
+    "article": null,
+    "plural": null,
+    "turkish": "intibaya sahip olmak",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_253",
+    "german": "in Eile sein",
+    "article": null,
+    "plural": null,
+    "turkish": "acelesi olmak",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_254",
+    "german": "Mir war nicht bewusst, dass …",
+    "article": null,
+    "plural": null,
+    "turkish": "Şunun bilincinde değildim:",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_255",
+    "german": "aufwachsen",
+    "article": null,
+    "plural": null,
+    "turkish": "büyümek",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_256",
+    "german": "die Chancengleichheit",
+    "article": "die",
+    "plural": null,
+    "turkish": "fırsat eşitliği",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_257",
+    "german": "fördern",
+    "article": null,
+    "plural": null,
+    "turkish": "teşvik etmek",
+    "example": "",
+    "topic": "Bildung & Sprache",
+    "topicTr": "Eğitim & Dil"
+  },
+  {
+    "id": "b1w_258",
+    "german": "die Förderung",
+    "article": "die",
+    "plural": "Förderungen",
+    "turkish": "teşvik",
+    "example": "",
+    "topic": "Bildung & Sprache",
+    "topicTr": "Eğitim & Dil"
+  },
+  {
+    "id": "b1w_259",
+    "german": "die Initiative",
+    "article": "die",
+    "plural": "Initiativen",
+    "turkish": "girişim",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_260",
+    "german": "die Staatsangehörigkeit",
+    "article": "die",
+    "plural": "Staatsangehörigkeiten",
+    "turkish": "uyruk",
+    "example": "",
+    "topic": "Verwaltung & Recht",
+    "topicTr": "İdare & Hukuk"
+  },
+  {
+    "id": "b1w_261",
+    "german": "eine ausländische/die deutsche Staatsangehörigkeit haben",
+    "article": null,
+    "plural": null,
+    "turkish": "yabancı uyruğa sahip olmak",
+    "example": "",
+    "topic": "Gesellschaft & Leben",
+    "topicTr": "Toplum & Yaşam"
+  },
+  {
+    "id": "b1w_262",
+    "german": "Das hängt von der Person/der Sprache/… ab.",
+    "article": null,
+    "plural": null,
+    "turkish": "Bu, kişiye/dile... bağlı.",
+    "example": "",
+    "topic": "Bildung & Sprache",
+    "topicTr": "Eğitim & Dil"
+  },
+  {
+    "id": "b1w_263",
+    "german": "der Appetit",
+    "article": "der",
+    "plural": null,
+    "turkish": "iştah",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_264",
+    "german": "die Bewegung",
+    "article": "die",
+    "plural": "Bewegungen",
+    "turkish": "hareket",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_265",
+    "german": "die Diät",
+    "article": "die",
+    "plural": "Diäten",
+    "turkish": "diyet",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_266",
+    "german": "die Droge",
+    "article": "die",
+    "plural": "Drogen",
+    "turkish": "uyuşturucu",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_267",
+    "german": "der Druck",
+    "article": "der",
+    "plural": "Druck",
+    "turkish": "basınç",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_268",
+    "german": "enthalten",
+    "article": null,
+    "plural": null,
+    "turkish": "içermek",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_269",
+    "german": "die Entspannung",
+    "article": "die",
+    "plural": null,
+    "turkish": "gevşeme",
+    "example": "",
+    "topic": "Wohnen & Immobilie",
+    "topicTr": "Konut & Yaşam"
+  },
+  {
+    "id": "b1w_270",
+    "german": "die Ernährung",
+    "article": "die",
+    "plural": null,
+    "turkish": "beslenme",
+    "example": "",
+    "topic": "Gesundheit & Pflege",
+    "topicTr": "Sağlık"
+  },
+  {
+    "id": "b1w_271",
+    "german": "die Gaststätte",
+    "article": "die",
+    "plural": "Gaststätten",
+    "turkish": "lokanta",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_272",
+    "german": "die Kalorie",
+    "article": "die",
+    "plural": "Kalorien",
+    "turkish": "kalori",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_273",
+    "german": "die Kneipe",
+    "article": "die",
+    "plural": "Kneipen",
+    "turkish": "bar",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_274",
+    "german": "der (Zucker-)Konsum",
+    "article": "der",
+    "plural": null,
+    "turkish": "şeker tüketimi",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_275",
+    "german": "die Limonade",
+    "article": "die",
+    "plural": "Limonaden",
+    "turkish": "limonata",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_276",
+    "german": "die Mahlzeit",
+    "article": "die",
+    "plural": "Mahlzeiten",
+    "turkish": "öğün",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_277",
+    "german": "meditieren",
+    "article": null,
+    "plural": null,
+    "turkish": "meditasyon yapmak",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_278",
+    "german": "der Nachtisch",
+    "article": "der",
+    "plural": "Nachtische",
+    "turkish": "tatlı",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_279",
+    "german": "das Nahrungsmittel",
+    "article": "das",
+    "plural": null,
+    "turkish": "besin",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_280",
+    "german": "die Pflaume",
+    "article": "die",
+    "plural": "Pflaumen",
+    "turkish": "erik",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_281",
+    "german": "die Pille = Tablette",
+    "article": "die",
+    "plural": "Pillen = Tabletten",
+    "turkish": "hap = tablet",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_282",
+    "german": "der Quark",
+    "article": "der",
+    "plural": null,
+    "turkish": "peynir",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_283",
+    "german": "rauchen",
+    "article": null,
+    "plural": null,
+    "turkish": "sigara içmek",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_284",
+    "german": "der (Nicht-)Raucher",
+    "article": "der",
+    "plural": "(Nicht-)Raucher",
+    "turkish": "sigara içmeyen",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_285",
+    "german": "die (Nicht-)Raucherin",
+    "article": "die",
+    "plural": "(Nicht-)Raucherinnen",
+    "turkish": "sigara içmeyen",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_286",
+    "german": "das Risiko",
+    "article": "das",
+    "plural": "Risiken",
+    "turkish": "risk",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_287",
+    "german": "die Sahne",
+    "article": "die",
+    "plural": null,
+    "turkish": "kaymak",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_288",
+    "german": "schmecken",
+    "article": null,
+    "plural": null,
+    "turkish": "tadına bakmak",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_289",
+    "german": "das Schnitzel",
+    "article": "das",
+    "plural": null,
+    "turkish": "şnitzel",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_290",
+    "german": "der Schritt",
+    "article": "der",
+    "plural": "Schritte",
+    "turkish": "adım",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_291",
+    "german": "das Steak",
+    "article": "das",
+    "plural": "Steaks",
+    "turkish": "biftek",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_292",
+    "german": "umstellen",
+    "article": null,
+    "plural": null,
+    "turkish": "dönüştürmek",
+    "example": "Ich möchte meine Ernährung umstellen.",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_293",
+    "german": "die Umstellung",
+    "article": "die",
+    "plural": "Umstellungen",
+    "turkish": "dönüşüm",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_294",
+    "german": "die Zigarette",
+    "article": "die",
+    "plural": "Zigaretten",
+    "turkish": "sigara",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_295",
+    "german": "die Zitrone",
+    "article": "die",
+    "plural": "Zitronen",
+    "turkish": "limon",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_296",
+    "german": "abnehmen",
+    "article": null,
+    "plural": null,
+    "turkish": "kilo vermek",
+    "example": "Ich will kein Gramm abnehmen.",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_297",
+    "german": "zunehmen",
+    "article": null,
+    "plural": null,
+    "turkish": "kilo almak",
+    "example": "Sie möchte gerne etwas zunehmen.",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_298",
+    "german": "satt",
+    "article": null,
+    "plural": null,
+    "turkish": "doygun",
+    "example": "Gerichte die satt machen, sind gesünder.",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_299",
+    "german": "hungrig",
+    "article": null,
+    "plural": null,
+    "turkish": "aç",
+    "example": "Tipp: Nicht hungrig einkaufen gehen!",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_300",
+    "german": "tierische Produkte",
+    "article": null,
+    "plural": null,
+    "turkish": "hayvani ürünler",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_301",
+    "german": "(stark) verarbeitete Lebensmittel",
+    "article": null,
+    "plural": null,
+    "turkish": "aşırı işlenmiş gıdalar",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_302",
+    "german": "sich vollwertig/vegetarisch/vegan/… ernähren",
+    "article": null,
+    "plural": null,
+    "turkish": "sağlıklı/vejeteryan/vegan/ ... beslenmek",
+    "example": "",
+    "topic": "Gesundheit & Pflege",
+    "topicTr": "Sağlık"
+  },
+  {
+    "id": "b1w_303",
+    "german": "Eine Studie zeigt, dass …",
+    "article": null,
+    "plural": null,
+    "turkish": "Bir araştırma şunu gösteriyor:",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_304",
+    "german": "(sich) entscheiden (für)",
+    "article": null,
+    "plural": null,
+    "turkish": "bir şeye karar vermek",
+    "example": "",
+    "topic": "Bildung & Sprache",
+    "topicTr": "Eğitim & Dil"
+  },
+  {
+    "id": "b1w_305",
+    "german": "das Eis",
+    "article": "das",
+    "plural": null,
+    "turkish": "buz",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_306",
+    "german": "der Geschmack",
+    "article": "der",
+    "plural": "Geschmäcker",
+    "turkish": "tat",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_307",
+    "german": "der Hersteller",
+    "article": "der",
+    "plural": "Hersteller",
+    "turkish": "üretici",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_308",
+    "german": "die Marmelade",
+    "article": "die",
+    "plural": "Marmeladen",
+    "turkish": "reçel",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_309",
+    "german": "der Pudding",
+    "article": "der",
+    "plural": "Puddings",
+    "turkish": "pudding",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_310",
+    "german": "die (Zucker-)Steuer",
+    "article": "die",
+    "plural": "(Zucker-)Steuern",
+    "turkish": "şeker vergisi",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_311",
+    "german": "der Würfel",
+    "article": "der",
+    "plural": "Würfel",
+    "turkish": "küp",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_312",
+    "german": "aufhören",
+    "article": null,
+    "plural": null,
+    "turkish": "sona ermek",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_313",
+    "german": "der Fortschritt",
+    "article": "der",
+    "plural": "Fortschritte",
+    "turkish": "gelişim",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_314",
+    "german": "die Maßnahme",
+    "article": "die",
+    "plural": "Maßnahmen",
+    "turkish": "tedbir",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_315",
+    "german": "optimieren",
+    "article": null,
+    "plural": null,
+    "turkish": "optimize etmek",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_316",
+    "german": "übertreiben",
+    "article": null,
+    "plural": null,
+    "turkish": "abartmak",
+    "example": "",
+    "topic": "Alltag & Leben",
+    "topicTr": "Günlük Yaşam"
+  },
+  {
+    "id": "b1w_317",
+    "german": "versuchen",
+    "article": null,
+    "plural": null,
+    "turkish": "denemek",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_318",
+    "german": "die Stärke",
+    "article": "die",
+    "plural": "Stärken",
+    "turkish": "güç",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_319",
+    "german": "die Schwäche",
+    "article": "die",
+    "plural": "Schwächen",
+    "turkish": "zayıflık",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_320",
+    "german": "sich unter Druck setzen",
+    "article": null,
+    "plural": null,
+    "turkish": "baskı altına girmek",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_321",
+    "german": "die Alternative",
+    "article": "die",
+    "plural": "Alternativen",
+    "turkish": "alternatif",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_322",
+    "german": "die Dienstleistung",
+    "article": "die",
+    "plural": "Dienstleistungen",
+    "turkish": "hizmet",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_323",
+    "german": "der Einfluss",
+    "article": "der",
+    "plural": "Einflüsse",
+    "turkish": "etki",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_324",
+    "german": "der Follower",
+    "article": "der",
+    "plural": "Follower",
+    "turkish": "takipçi",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_325",
+    "german": "die Followerin",
+    "article": "die",
+    "plural": "Followerinnen",
+    "turkish": "takipçi",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_326",
+    "german": "das Gesetz",
+    "article": "das",
+    "plural": "Gesetze",
+    "turkish": "yasa",
+    "example": "",
+    "topic": "Verwaltung & Recht",
+    "topicTr": "İdare & Hukuk"
+  },
+  {
+    "id": "b1w_327",
+    "german": "der Influencer",
+    "article": "der",
+    "plural": "Influencer",
+    "turkish": "internet ünlüsü",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_328",
+    "german": "die Influencerin",
+    "article": "die",
+    "plural": "Influencerinnen",
+    "turkish": "internet ünlüsü",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_329",
+    "german": "der Konsument",
+    "article": "der",
+    "plural": "Konsumenten",
+    "turkish": "tüketici",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_330",
+    "german": "die Konsumentin",
+    "article": "die",
+    "plural": "Konsumentinnen",
+    "turkish": "tüketici",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_331",
+    "german": "konsumieren",
+    "article": null,
+    "plural": null,
+    "turkish": "tüketmek",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_332",
+    "german": "das Plakat",
+    "article": "das",
+    "plural": "Plakate",
+    "turkish": "plaket",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_333",
+    "german": "der Prospekt",
+    "article": "der",
+    "plural": "Prospekte",
+    "turkish": "broşür",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_334",
+    "german": "der Rundfunk",
+    "article": "der",
+    "plural": null,
+    "turkish": "yayın",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_335",
+    "german": "das Schaufenster",
+    "article": "das",
+    "plural": "Schaufenster",
+    "turkish": "vitrin",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_336",
+    "german": "der Skandal",
+    "article": "der",
+    "plural": "Skandale",
+    "turkish": "skandal",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_337",
+    "german": "überzeugen von",
+    "article": null,
+    "plural": null,
+    "turkish": "bir konuda ikna etmek",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_338",
+    "german": "warnen (vor)",
+    "article": null,
+    "plural": null,
+    "turkish": "bir şeye karşı uyarmak",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_339",
+    "german": "der Werbeslogan",
+    "article": "der",
+    "plural": "Werbeslogans",
+    "turkish": "reklam sloganı",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_340",
+    "german": "die Werbung",
+    "article": "die",
+    "plural": "Werbungen",
+    "turkish": "reklam",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_341",
+    "german": "die Zielgruppe",
+    "article": "die",
+    "plural": "Zielgruppen",
+    "turkish": "hedef kitle",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_342",
+    "german": "Formen der Werbung = Arten von Werbung",
+    "article": null,
+    "plural": null,
+    "turkish": "reklam türleri",
+    "example": "",
+    "topic": "Wohnen & Immobilie",
+    "topicTr": "Konut & Yaşam"
+  },
+  {
+    "id": "b1w_343",
+    "german": "defekt = kaputt",
+    "article": null,
+    "plural": null,
+    "turkish": "bozuk",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_344",
+    "german": "der Empfänger",
+    "article": "der",
+    "plural": "Empfänger",
+    "turkish": "alıcı",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_345",
+    "german": "die Empfängerin",
+    "article": "die",
+    "plural": "Empfängerinnen",
+    "turkish": "alıcı",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_346",
+    "german": "erkennen (an)",
+    "article": null,
+    "plural": null,
+    "turkish": "bir şeyden tanımak",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_347",
+    "german": "fordern",
+    "article": null,
+    "plural": null,
+    "turkish": "talep etmek",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_348",
+    "german": "hübsch",
+    "article": null,
+    "plural": null,
+    "turkish": "güzel",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_349",
+    "german": "das Kleid",
+    "article": "das",
+    "plural": "Kleider",
+    "turkish": "kıyafet",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_350",
+    "german": "die Konsumgewohnheiten (Pl.)",
+    "article": "die",
+    "plural": null,
+    "turkish": "tüketim alışkınlıkları (çoğul)",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_351",
+    "german": "der Kundenservice",
+    "article": "der",
+    "plural": "Kundenservices",
+    "turkish": "müşteri hizmetleri",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_352",
+    "german": "das Material",
+    "article": "das",
+    "plural": "Materialien",
+    "turkish": "malzeme",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_353",
+    "german": "nachdenken über",
+    "article": null,
+    "plural": null,
+    "turkish": "bir şey hakkında düşünmek",
+    "example": "",
+    "topic": "Verwaltung & Recht",
+    "topicTr": "İdare & Hukuk"
+  },
+  {
+    "id": "b1w_354",
+    "german": "das Onlineshopping",
+    "article": "das",
+    "plural": null,
+    "turkish": "internetten alışveriş",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_355",
+    "german": "das Outfit",
+    "article": "das",
+    "plural": "Outfits",
+    "turkish": "dış görünüm",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_356",
+    "german": "das Paket",
+    "article": "das",
+    "plural": "Pakete",
+    "turkish": "paket",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_357",
+    "german": "der Schmuck",
+    "article": "der",
+    "plural": null,
+    "turkish": "takı",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_358",
+    "german": "die Tasche",
+    "article": "die",
+    "plural": "Taschen",
+    "turkish": "cep",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_359",
+    "german": "umtauschen",
+    "article": null,
+    "plural": null,
+    "turkish": "değiş tokuş etmek",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_360",
+    "german": "das (Kauf-, Konsum-)Verhalten",
+    "article": "das",
+    "plural": null,
+    "turkish": "satış, tüketim davranışı",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_361",
+    "german": "der Verkäufer",
+    "article": "der",
+    "plural": "Verkäufer",
+    "turkish": "satıcı",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_362",
+    "german": "die Verkäuferin",
+    "article": "die",
+    "plural": "Verkäuferinnen",
+    "turkish": "satıcı",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_363",
+    "german": "der (Paket-)Versand",
+    "article": "der",
+    "plural": null,
+    "turkish": "paket gönderimi",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_364",
+    "german": "die Ware",
+    "article": "die",
+    "plural": "Waren",
+    "turkish": "ürün",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_365",
+    "german": "einen Artikel zurückgeben/zurückschicken",
+    "article": null,
+    "plural": null,
+    "turkish": "bir ürünü iade etmek/geri göndermek",
+    "example": "",
+    "topic": "Kommunikation & Medien",
+    "topicTr": "İletişim & Medya"
+  },
+  {
+    "id": "b1w_366",
+    "german": "etwas online bestellen = etwas online kaufen",
+    "article": null,
+    "plural": null,
+    "turkish": "bir şeyi internetten sipariş etmek = bir şeyi internetten satın almak",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_367",
+    "german": "Die Kleidung ist zu eng/groß.",
+    "article": null,
+    "plural": null,
+    "turkish": "Kıyafet dar/bol.",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_368",
+    "german": "Meine Bestellnummer ist die …",
+    "article": null,
+    "plural": null,
+    "turkish": "Sipariş numaram: ...",
+    "example": "",
+    "topic": "Arbeit & Beruf",
+    "topicTr": "İş & Meslek"
+  },
+  {
+    "id": "b1w_369",
+    "german": "sich einsetzen für",
+    "article": null,
+    "plural": null,
+    "turkish": "bir şeyi savunmak",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_370",
+    "german": "die Frist",
+    "article": "die",
+    "plural": "Fristen",
+    "turkish": "süre",
+    "example": "",
+    "topic": "Verwaltung & Recht",
+    "topicTr": "İdare & Hukuk"
+  },
+  {
+    "id": "b1w_371",
+    "german": "die Organisation",
+    "article": "die",
+    "plural": "Organisationen",
+    "turkish": "organizasyon",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_372",
+    "german": "der (Umwelt-, Verbraucher-)Schutz",
+    "article": "der",
+    "plural": null,
+    "turkish": "çevrenin, tüketicinin korunması",
+    "example": "",
+    "topic": "Umwelt & Konsum",
+    "topicTr": "Çevre & Tüketim"
+  },
+  {
+    "id": "b1w_373",
+    "german": "der Verbraucher",
+    "article": "der",
+    "plural": "Verbraucher",
+    "turkish": "tüketici",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_374",
+    "german": "die Verbraucherin",
+    "article": "die",
+    "plural": "Verbraucherinnen",
+    "turkish": "tüketici",
+    "example": "",
+    "topic": "Allgemein",
+    "topicTr": "Genel"
+  },
+  {
+    "id": "b1w_375",
+    "german": "widerrufen",
+    "article": null,
+    "plural": null,
+    "turkish": "iptal etmek",
+    "example": "",
+    "topic": "Verwaltung & Recht",
+    "topicTr": "İdare & Hukuk"
+  },
+  {
+    "id": "b1w_376",
+    "german": "das Widerrufsrecht",
+    "article": "das",
+    "plural": "Widerrufsrechte",
+    "turkish": "iptal etme hakkı",
+    "example": "",
+    "topic": "Verwaltung & Recht",
+    "topicTr": "İdare & Hukuk"
+  },
+  {
+    "id": "b1w_377",
+    "german": "verpackt",
+    "article": null,
+    "plural": null,
+    "turkish": "ambalajlanmış",
+    "example": "",
+    "topic": "Umwelt & Konsum",
+    "topicTr": "Çevre & Tüketim"
+  },
+  {
+    "id": "b1w_378",
+    "german": "unverpackt",
+    "article": null,
+    "plural": null,
+    "turkish": "ambalajlanmamış",
+    "example": "Unverpackte Lebensmittel sind umweltfreundlich.",
+    "topic": "Umwelt & Konsum",
+    "topicTr": "Çevre & Tüketim"
+  }
+]

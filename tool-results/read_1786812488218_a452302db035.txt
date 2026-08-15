@@ -1,0 +1,678 @@
+     1→'use client';
+     2→
+     3→import React, { useState, useRef, useEffect, useCallback } from 'react';
+     4→import { motion, AnimatePresence } from 'framer-motion';
+     5→import {
+     6→  BookMarked, ChevronRight, RotateCcw, Lightbulb, CheckCircle,
+     7→  Mic, Square, Send, Volume2, X, Loader2, ArrowLeft, Eye, GraduationCap,
+     8→} from 'lucide-react';
+     9→import { picturePrompts, PicturePrompt } from '@/lib/exam-data';
+    10→import { useAppStore } from '@/lib/store';
+    11→import { useTTS } from '@/hooks/use-tts';
+    12→import { cn } from '@/lib/utils';
+    13→
+    14→type Level = 'beginner' | 'intermediate' | 'pro';
+    15→type Phase = 'select-picture' | 'select-level' | 'analyzing' | 'chatting' | 'listening' | 'loading-ai' | 'ended';
+    16→type Sender = 'user' | 'ai';
+    17→
+    18→interface ChatMessage {
+    19→  id: string;
+    20→  sender: Sender;
+    21→  text: string;
+    22→  tip?: string;
+    23→  suggestions?: string[];
+    24→  isEnding?: boolean;
+    25→}
+    26→
+    27→interface LevelOption {
+    28→  id: Level;
+    29→  label: string;
+    30→  labelTr: string;
+    31→  icon: string;
+    32→  color: string;
+    33→  bgColor: string;
+    34→  borderColor: string;
+    35→  textColor: string;
+    36→  description: string;
+    37→}
+    38→
+    39→const LEVELS: LevelOption[] = [
+    40→  {
+    41→    id: 'beginner', label: 'Başlangıç', labelTr: 'Anfänger', icon: '🟢',
+    42→    color: 'text-emerald-700', bgColor: 'bg-emerald-50', borderColor: 'border-emerald-200',
+    43→    textColor: 'text-emerald-600',
+    44→    description: 'AI seni adım adım yönlendirir, kalıp cümleler ve örnekler gösterir.',
+    45→  },
+    46→  {
+    47→    id: 'intermediate', label: 'Orta', labelTr: 'Mittelstufe', icon: '🟡',
+    48→    color: 'text-amber-700', bgColor: 'bg-amber-50', borderColor: 'border-amber-200',
+    49→    textColor: 'text-amber-600',
+    50→    description: 'AI sadece gerekirse yardım eder, sen bağımsız açıklarsın.',
+    51→  },
+    52→  {
+    53→    id: 'pro', label: 'Pro', labelTr: 'Prüfung', icon: '🔴',
+    54→    color: 'text-red-700', bgColor: 'bg-red-50', borderColor: 'border-red-200',
+    55→    textColor: 'text-red-600',
+    56→    description: 'Tam sınav formatı: Sınav sorusu sorulur, bağımsız açıklarsın, sonra değerlendirme alırsın.',
+    57→  },
+    58→];
+    59→
+    60→/* ═══ Speech Recognition Types ═══ */
+    61→interface SRResult { 0: { transcript: string }; isFinal: boolean; }
+    62→interface SREvent { results: { length: number; [i: number]: SRResult }; resultIndex: number; }
+    63→interface SR {
+    64→  lang: string; continuous: boolean; interimResults: boolean; maxAlternatives: number;
+    65→  start: () => void; stop: () => void; abort: () => void;
+    66→  onresult: ((e: SREvent) => void) | null;
+    67→  onerror: ((e: any) => void) | null;
+    68→  onend: (() => void) | null;
+    69→  onstart: (() => void) | null;
+    70→}
+    71→type SRCtor = new () => SR;
+    72→
+    73→export function ExamPictureModule() {
+    74→  const tts = useTTS({ lang: 'de-DE' });
+    75→  const { apiKeys, hasSpeechQuota, incrementSpeechUsage, remainingSpeechQuota, daysUntilSpeechReset, speechUsage } = useAppStore();
+    76→
+    77→  const [phase, setPhase] = useState<Phase>('select-picture');
+    78→  const [selectedPicture, setSelectedPicture] = useState<PicturePrompt | null>(null);
+    79→  const [level, setLevel] = useState<Level | null>(null);
+    80→  const [messages, setMessages] = useState<ChatMessage[]>([]);
+    81→  const [imageDescription, setImageDescription] = useState('');
+    82→  const [textInput, setTextInput] = useState('');
+    83→  const [showHints, setShowHints] = useState(false);
+    84→  const [error, setError] = useState<string | null>(null);
+    85→
+    86→  /* ═══ Client-side image description cache ═══ */
+    87→  const PIC_DESC_CACHE_KEY = 'exam-pic-desc-cache';
+    88→  const getDescCache = useCallback((): Record<string, string> => {
+    89→    if (typeof window === 'undefined') return {};
+    90→    try { return JSON.parse(localStorage.getItem(PIC_DESC_CACHE_KEY) || '{}'); } catch { return {}; }
+    91→  }, []);
+    92→  const saveDescCache = useCallback((url: string, desc: string) => {
+    93→    try {
+    94→      const c = getDescCache();
+    95→      c[url] = desc;
+    96→      localStorage.setItem(PIC_DESC_CACHE_KEY, JSON.stringify(c));
+    97→    } catch {}
+    98→  }, [getDescCache]);
+    99→  const [fallbackNotice, setFallbackNotice] = useState(false);
+   100→  const [liveTranscript, setLiveTranscript] = useState('');
+   101→  const [browserSupported, setBrowserSupported] = useState(true);
+   102→
+   103→  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+   104→  const recognitionRef = useRef<SR | null>(null);
+   105→  const finalTranscriptRef = useRef('');
+   106→  const manualStopRef = useRef(false);
+   107→  const silenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+   108→  const maxDurTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+   109→  const lastAiRef = useRef<ChatMessage | null>(null);
+   110→  const levelRef = useRef<Level | null>(null);
+   111→  const msgsRef = useRef<ChatMessage[]>([]);
+   112→  const imgDescRef = useRef('');
+   113→
+   114→  useEffect(() => { levelRef.current = level; }, [level]);
+   115→  useEffect(() => { msgsRef.current = messages; }, [messages]);
+   116→  useEffect(() => { imgDescRef.current = imageDescription; }, [imageDescription]);
+   117→
+   118→  const quotaRemaining = remainingSpeechQuota();
+   119→  const quotaExhausted = !hasSpeechQuota();
+   120→
+   121→  // Scroll
+   122→  useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }); }, [messages, phase, liveTranscript]);
+   123→
+   124→  // Auto-play AI
+   125→  useEffect(() => {
+   126→    const last = messages[messages.length - 1];
+   127→    if (!last || last.sender !== 'ai' || last === lastAiRef.current) return;
+   128→    lastAiRef.current = last;
+   129→    tts.speak(last.text).catch(() => {});
+   130→  }, [messages, tts]);
+   131→
+   132→  // Browser check
+   133→  useEffect(() => {
+   134→    if (typeof window !== 'undefined') {
+   135→      const w = window as any;
+   136→      if (!w.SpeechRecognition && !w.webkitSpeechRecognition) setBrowserSupported(false);
+   137→    }
+   138→  }, []);
+   139→
+   140→  /* ═══ API Call ═══ */
+   141→  const fetchAiReply = useCallback(async (history: ChatMessage[], isFirst: boolean) => {
+   142→    setPhase('loading-ai');
+   143→    setError(null);
+   144→    try {
+   145→      const apiMessages = history
+   146→        .filter(m => m.id !== 'opener')
+   147→        .map(m => ({ role: m.sender === 'user' ? 'user' : 'assistant', content: m.text }));
+   148→
+   149→      const res = await fetch('/api/exam-picture-chat', {
+   150→        method: 'POST',
+   151→        headers: { 'Content-Type': 'application/json' },
+   152→        body: JSON.stringify({
+   153→          imageUrl: selectedPicture!.imageUrl,
+   154→          messages: apiMessages,
+   155→          level: levelRef.current!,
+   156→          imageDescription: imgDescRef.current || undefined,
+   157→          isFirstMessage: isFirst,
+   158→          zhipuKey: apiKeys.zhipuKey || undefined,
+   159→          openaiKey: apiKeys.openaiKey || undefined,
+   160→          claudeKey: apiKeys.claudeKey || undefined,
+   161→          googleAiKey: apiKeys.googleAiKey || undefined,
+   162→        }),
+   163→      });
+   164→      if (!res.ok) {
+   165→        const d = await res.json().catch(() => ({}));
+   166→        throw new Error(d.error || `HTTP ${res.status}`);
+   167→      }
+   168→      const data = await res.json();
+   169→
+   170→      if (data.imageDescription) setImageDescription(data.imageDescription);
+   171→
+   172→      const aiMsg: ChatMessage = {
+   173→        id: `ai-${Date.now()}`,
+   174→        sender: 'ai',
+   175→        text: data.reply || '...',
+   176→        tip: data.tip || '',
+   177→        isEnding: Boolean(data.isEnding),
+   178→        suggestions: Array.isArray(data.suggestions) && data.suggestions.length > 0 ? data.suggestions : undefined,
+   179→      };
+   180→      setMessages(prev => [...prev, aiMsg]);
+   181→
+   182→      if (aiMsg.isEnding) setTimeout(() => setPhase('ended'), 1500);
+   183→      else setPhase('chatting');
+   184→    } catch (err) {
+   185→      setError((err as Error).message);
+   186→      setPhase('chatting');
+   187→    }
+   188→  }, [selectedPicture, apiKeys]);
+   189→
+   190→  /* ═══ Start Session ═══ */
+   191→  const startSession = useCallback(async (pic: PicturePrompt, lvl: Level) => {
+   192→    setSelectedPicture(pic);
+   193→    setLevel(lvl);
+   194→    setMessages([]);
+   195→    setShowHints(false);
+   196→    setPhase('analyzing');
+   197→    setError(null);
+   198→
+   199→    // Check client cache for image description
+   200→    const cachedDesc = getDescCache()[pic.imageUrl];
+   201→    if (cachedDesc) setImageDescription(cachedDesc);
+   202→
+   203→    // First API call: analyze image + get opening message
+   204→    try {
+   205→      const res = await fetch('/api/exam-picture-chat', {
+   206→        method: 'POST',
+   207→        headers: { 'Content-Type': 'application/json' },
+   208→        body: JSON.stringify({
+   209→          imageUrl: pic.imageUrl,
+   210→          messages: [],
+   211→          level: lvl,
+   212→          isFirstMessage: true,
+   213→          fallbackDescription: pic.description,
+   214→          cachedDescription: cachedDesc || undefined,
+   215→          zhipuKey: apiKeys.zhipuKey || undefined,
+   216→          openaiKey: apiKeys.openaiKey || undefined,
+   217→          claudeKey: apiKeys.claudeKey || undefined,
+   218→          googleAiKey: apiKeys.googleAiKey || undefined,
+   219→        }),
+   220→      });
+   221→      if (!res.ok) {
+   222→        const d = await res.json().catch(() => ({}));
+   223→        throw new Error(d.error || `HTTP ${res.status}`);
+   224→      }
+   225→      const data = await res.json();
+   226→      if (data.imageDescription) {
+   227→        setImageDescription(data.imageDescription);
+   228→        saveDescCache(pic.imageUrl, data.imageDescription);
+   229→      }
+   230→      if (data.usedFallback) setFallbackNotice(true);
+   231→      else setFallbackNotice(false);
+   232→
+   233→      const opener: ChatMessage = {
+   234→        id: 'opener',
+   235→        sender: 'ai',
+   236→        text: data.reply || 'Bitte beschreiben Sie dieses Bild.',
+   237→        tip: data.tip || '',
+   238→        suggestions: Array.isArray(data.suggestions) && data.suggestions.length > 0 ? data.suggestions : undefined,
+   239→      };
+   240→      setMessages([opener]);
+   241→      setPhase('chatting');
+   242→    } catch (err) {
+   243→      console.error('[ExamPicture] startSession failed:', err);
+   244→      setError((err as Error).message);
+   245→      setPhase('select-level');
+   246→    }
+   247→  }, [apiKeys, getDescCache, saveDescCache]);
+   248→
+   249→  /* ═══ Send User Message ═══ */
+   250→  const sendMessage = useCallback(async (text: string) => {
+   251→    if (!text.trim() || phase !== 'chatting') return;
+   252→    setTextInput('');
+   253→    const userMsg: ChatMessage = { id: `user-${Date.now()}`, sender: 'user', text: text.trim(), timestamp: Date.now() };
+   254→    const updated = [...msgsRef.current, userMsg];
+   255→    setMessages(updated);
+   256→    await fetchAiReply(updated, false);
+   257→  }, [phase, fetchAiReply]);
+   258→
+   259→  /* ═══ Speech Recognition ═══ */
+   260→  const startListening = useCallback(() => {
+   261→    if (quotaExhausted) { setError(`Bu ayki ses tanıma kotan doldu. ${daysUntilSpeechReset()} gün sonra yenilenecek.`); return; }
+   262→    tts.stop(); setError(null);
+   263→    setLiveTranscript(''); finalTranscriptRef.current = ''; manualStopRef.current = false;
+   264→    if (recognitionRef.current) try { recognitionRef.current.abort(); } catch {}
+   265→
+   266→    const w = window as any;
+   267→    const ctor = (w.SpeechRecognition || w.webkitSpeechRecognition) as SRCtor | undefined;
+   268→    if (!ctor) { setBrowserSupported(false); return; }
+   269→
+   270→    const rec = new ctor();
+   271→    rec.lang = 'de-DE'; rec.continuous = true; rec.interimResults = true; rec.maxAlternatives = 1;
+   272→    rec.onstart = () => setPhase('listening');
+   273→    rec.onresult = (e: SREvent) => {
+   274→      if (silenceTimerRef.current) { clearTimeout(silenceTimerRef.current); silenceTimerRef.current = null; }
+   275→      silenceTimerRef.current = setTimeout(() => { manualStopRef.current = true; try { rec.stop(); } catch {} }, 5000);
+   276→      let interim = '', final_ = finalTranscriptRef.current;
+   277→      for (let i = e.resultIndex; i < e.results.length; i++) {
+   278→        if (e.results[i].isFinal) final_ += e.results[i][0].transcript + ' ';
+   279→        else interim += e.results[i][0].transcript;
+   280→      }
+   281→      finalTranscriptRef.current = final_;
+   282→      setLiveTranscript((final_ + interim).trim());
+   283→    };
+   284→    rec.onerror = (e: any) => {
+   285→      if (e.error === 'not-allowed') setError('Mikrofon izni reddedildi.');
+   286→      else if (e.error === 'no-speech' && !finalTranscriptRef.current.trim()) setError('Ses algılanamadı.');
+   287→      else if (e.error !== 'aborted') setError(`Tanıma hatası: ${e.error}`);
+   288→      setPhase('chatting');
+   289→    };
+   290→    rec.onend = () => {
+   291→      if (maxDurTimerRef.current) { clearTimeout(maxDurTimerRef.current); maxDurTimerRef.current = null; }
+   292→      if (silenceTimerRef.current) { clearTimeout(silenceTimerRef.current); silenceTimerRef.current = null; }
+   293→      const t = finalTranscriptRef.current.trim();
+   294→      if (t) { incrementSpeechUsage(); sendMessage(t); }
+   295→      else if (manualStopRef.current) setPhase('chatting');
+   296→    };
+   297→    recognitionRef.current = rec;
+   298→    try {
+   299→      rec.start();
+   300→      maxDurTimerRef.current = setTimeout(() => { manualStopRef.current = true; try { rec.stop(); } catch {} }, 30_000);
+   301→    } catch { setError('Dinleme başlatılamadı.'); setPhase('chatting'); }
+   302→  }, [tts, quotaExhausted, daysUntilSpeechReset, incrementSpeechUsage, sendMessage]);
+   303→
+   304→  const stopListening = useCallback(() => {
+   305→    manualStopRef.current = true;
+   306→    if (maxDurTimerRef.current) { clearTimeout(maxDurTimerRef.current); maxDurTimerRef.current = null; }
+   307→    if (silenceTimerRef.current) { clearTimeout(silenceTimerRef.current); silenceTimerRef.current = null; }
+   308→    if (recognitionRef.current) try { recognitionRef.current.stop(); } catch {}
+   309→  }, []);
+   310→
+   311→  const handleMicToggle = useCallback(() => {
+   312→    if (phase === 'listening') stopListening();
+   313→    else if (phase === 'chatting') startListening();
+   314→  }, [phase, startListening, stopListening]);
+   315→
+   316→  const reset = useCallback(() => {
+   317→    if (recognitionRef.current) try { recognitionRef.current.abort(); } catch {}
+   318→    tts.stop();
+   319→    setPhase(selectedPicture ? 'select-level' : 'select-picture');
+   320→    setMessages([]); setImageDescription(''); setLevel(null); setError(null); setFallbackNotice(false);
+   321→  }, [selectedPicture, tts]);
+   322→
+   323→  const lastAiMsg = messages[messages.length - 1];
+   324→  const lastSuggestions = lastAiMsg?.sender === 'ai' && lastAiMsg.suggestions?.length ? lastAiMsg.suggestions : undefined;
+   325→
+   326→  /* ═════════════ RENDER ═════════════ */
+   327→
+   328→  // ─── Phase 1: Select Picture ───
+   329→  if (phase === 'select-picture') {
+   330→    return (
+   331→      <div className="space-y-4">
+   332→        <div className="rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 p-5 border border-violet-100">
+   333→          <div className="flex items-center gap-3 mb-3">
+   334→            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100">
+   335→              <Eye className="h-5 w-5 text-violet-600" />
+   336→            </div>
+   337→            <div>
+   338→              <h2 className="text-lg font-bold text-violet-900">Bildbeschreibung</h2>
+   339→              <p className="text-xs text-violet-500">Resim Tanımlama - AI Destekli</p>
+   340→            </div>
+   341→          </div>
+   342→          <p className="text-sm text-violet-700 leading-relaxed">
+   343→            Bir resim seçin. AI resmi analiz edip size uygun seviyede rehberlik edecek.
+   344→            Her seviyede farklı bir deneyim yaşayacaksınız!
+   345→          </p>
+   346→        </div>
+   347→        <div className="grid gap-3">
+   348→          {picturePrompts.map((p, i) => (
+   349→            <motion.button
+   350→              key={p.id}
+   351→              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
+   352→              onClick={() => { setSelectedPicture(p); setPhase('select-level'); }}
+   353→              className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-4 text-left hover:border-violet-300 hover:shadow-md transition-all duration-200"
+   354→            >
+   355→              <div className="flex h-16 w-24 shrink-0 items-center justify-center rounded-lg overflow-hidden bg-gray-100">
+   356→                <img src={p.imageUrl} alt={p.title} className="h-full w-full object-cover" />
+   357→              </div>
+   358→              <div className="flex-1 min-w-0">
+   359→                <p className="text-sm font-semibold text-gray-900">{p.title}</p>
+   360→                <p className="text-xs text-gray-500">{p.titleTr}</p>
+   361→                <p className="text-xs text-gray-400 mt-1 line-clamp-2">{p.descriptionTr}</p>
+   362→              </div>
+   363→              <ChevronRight className="h-4 w-4 text-gray-400 shrink-0" />
+   364→            </motion.button>
+   365→          ))}
+   366→        </div>
+   367→      </div>
+   368→    );
+   369→  }
+   370→
+   371→  // ─── Phase 2: Select Level ───
+   372→  if (phase === 'select-level' && selectedPicture) {
+   373→    return (
+   374→      <div className="space-y-4">
+   375→        <button onClick={() => setPhase('select-picture')} className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors">
+   376→          <ArrowLeft className="h-4 w-4" /> Resim Seçimine Dön
+   377→        </button>
+   378→        <div className="rounded-2xl overflow-hidden border border-gray-200">
+   379→          <img src={selectedPicture.imageUrl} alt={selectedPicture.title} className="w-full h-48 object-cover" />
+   380→          <div className="p-4 bg-white">
+   381→            <h3 className="font-bold text-gray-900">{selectedPicture.title}</h3>
+   382→            <p className="text-xs text-gray-500 mt-1">{selectedPicture.descriptionTr}</p>
+   383→          </div>
+   384→        </div>
+   385→        <div className="text-center py-2">
+   386→          <h3 className="text-lg font-bold text-gray-800">Seviyeni Seç</h3>
+   387→          <p className="text-sm text-gray-500">AI nasıl rehberlik etsin?</p>
+   388→        </div>
+   389→        {/* Error on level select page */}
+   390→        <AnimatePresence>
+   391→          {error && (
+   392→            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+   393→              className="rounded-lg bg-red-50 px-3 py-2.5 text-xs text-red-700 border border-red-200"
+   394→            >
+   395→              <p className="font-medium mb-1">Bağlantı hatası:</p>
+   396→              <p>{error}</p>
+   397→              <p className="mt-1.5 opacity-80">İpucu: Ayarlar'dan en az bir API anahtarı (OpenAI, Google AI veya Claude) ekleyin. Vision yoksa da metin bazlı devam eder.</p>
+   398→            </motion.div>
+   399→          )}
+   400→        </AnimatePresence>
+   401→        <div className="space-y-3">
+   402→          {LEVELS.map((lv, i) => (
+   403→            <motion.button
+   404→              key={lv.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}
+   405→              whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}
+   406→              onClick={() => startSession(selectedPicture, lv.id)}
+   407→              className={cn('w-full rounded-2xl border-2 p-4 text-left hover:shadow-md transition-all', lv.borderColor, 'bg-white hover:border-current')}
+   408→            >
+   409→              <div className="flex items-center gap-3">
+   410→                <div className={cn('shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-2xl', lv.bgColor)}>
+   411→                  {lv.icon}
+   412→                </div>
+   413→                <div className="flex-1 min-w-0">
+   414→                  <div className="flex items-center gap-2">
+   415→                    <span className={cn('font-bold', lv.color)}>{lv.label}</span>
+   416→                    <span className={cn('text-xs px-1.5 py-0.5 rounded-full', lv.bgColor, lv.color)}>{lv.labelTr}</span>
+   417→                  </div>
+   418→                  <p className="text-xs text-gray-500 mt-1">{lv.description}</p>
+   419→                </div>
+   420→              </div>
+   421→            </motion.button>
+   422→          ))}
+   423→        </div>
+   424→      </div>
+   425→    );
+   426→  }
+   427→
+   428→  // ─── Analyzing ───
+   429→  if (phase === 'analyzing' && selectedPicture) {
+   430→    return (
+   431→      <div className="space-y-4">
+   432→        <div className="rounded-2xl overflow-hidden border border-violet-200">
+   433→          <img src={selectedPicture.imageUrl} alt={selectedPicture.title} className="w-full h-48 object-cover" />
+   434→        </div>
+   435→        <div className="flex flex-col items-center justify-center py-8 gap-3">
+   436→          <div className="relative">
+   437→            <Eye className="h-10 w-10 text-violet-400" />
+   438→            <motion.div
+   439→              className="absolute inset-0 rounded-full border-2 border-violet-300"
+   440→              animate={{ opacity: [0.5, 0, 0.5], scale: [1, 1.5, 1] }}
+   441→              transition={{ duration: 1.5, repeat: Infinity }}
+   442→            />
+   443→          </div>
+   444→          <p className="text-sm font-medium text-violet-700">AI resmi analiz ediyor...</p>
+   445→          <p className="text-xs text-gray-400">Resim içeriğine göre yönlendirme hazırlanıyor</p>
+   446→        </div>
+   447→      </div>
+   448→    );
+   449→  }
+   450→
+   451→  // ─── Chat Interface ───
+   452→  const isBusy = phase === 'listening' || phase === 'loading-ai';
+   453→  const levelInfo = LEVELS.find(l => l.id === level);
+   454→
+   455→  return (
+   456→    <div className="flex flex-col h-[calc(100vh-12rem)] md:h-[calc(100vh-8rem)]">
+   457→      {/* Header with image thumbnail */}
+   458→      <div className="shrink-0 rounded-xl bg-violet-600 p-3 text-white shadow-sm">
+   459→        <div className="flex items-center justify-between gap-2">
+   460→          <div className="flex items-center gap-2.5 min-w-0">
+   461→            <div className="h-9 w-14 rounded-lg overflow-hidden bg-black/20 shrink-0">
+   462→              {selectedPicture && <img src={selectedPicture.imageUrl} alt="" className="h-full w-full object-cover" />}
+   463→            </div>
+   464→            <div className="min-w-0">
+   465→              <h2 className="text-sm font-bold leading-tight truncate">{selectedPicture?.title} · Bildbeschreibung</h2>
+   466→              <p className="text-xs opacity-90 truncate">{levelInfo?.label} ({levelInfo?.labelTr})</p>
+   467→            </div>
+   468→          </div>
+   469→          <div className="flex items-center gap-1 shrink-0">
+   470→            {fallbackNotice && (
+   471→              <span className="text-[10px] bg-amber-400/40 text-white px-1.5 py-0.5 rounded-full whitespace-nowrap" title="Vision API yok, varsayılan açıklama kullanılıyor">
+   472→                ⚠️ Metin bazlı
+   473→              </span>
+   474→            )}
+   475→            <button onClick={reset} className="h-8 w-8 flex items-center justify-center rounded-full hover:bg-white/20 transition-colors" title="Geri">
+   476→              <ArrowLeft className="h-4 w-4" />
+   477→            </button>
+   478→            <button onClick={() => setShowHints(v => !v)} className={cn('h-8 w-8 flex items-center justify-center rounded-full hover:bg-white/20 transition-colors', showHints && 'bg-white/20')} title="İpuçları">
+   479→              <Lightbulb className="h-4 w-4" />
+   480→            </button>
+   481→            <button onClick={reset} className="h-8 w-8 flex items-center justify-center rounded-full hover:bg-white/20 transition-colors" title="Kapat">
+   482→              <X className="h-4 w-4" />
+   483→            </button>
+   484→          </div>
+   485→        </div>
+   486→      </div>
+   487→
+   488→      <AnimatePresence>
+   489→        {showHints && selectedPicture && (
+   490→          <motion.div
+   491→            initial={{ height: 0, opacity: 0 }}
+   492→            animate={{ height: 'auto', opacity: 1 }}
+   493→            exit={{ height: 0, opacity: 0 }}
+   494→            transition={{ duration: 0.3, ease: 'easeInOut' }}
+   495→            className="overflow-hidden shrink-0"
+   496→          >
+   497→            <div className="mt-2 rounded-xl overflow-hidden border border-gray-200 relative">
+   498→              <img
+   499→                src={selectedPicture.imageUrl}
+   500→                alt={selectedPicture.title}
+   501→                className="w-full max-h-[50vh] object-contain bg-gray-50"
+   502→              />
+   503→              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-3 flex items-end justify-between">
+   504→                <p className="text-white/90 text-xs truncate">{selectedPicture.title} — {selectedPicture.titleTr}</p>
+   505→                <button
+   506→                  onClick={() => setShowHints(false)}
+   507→                  className="flex items-center gap-1 rounded-full bg-white/20 hover:bg-white/30 px-2 py-1 text-white text-[11px] transition-colors"
+   508→                >
+   509→                  <X className="h-3 w-3" /> Kapat
+   510→                </button>
+   511→              </div>
+   512→            </div>
+   513→          </motion.div>
+   514→        )}
+   515→      </AnimatePresence>
+   516→
+   517→      {/* Error */}
+   518→      <AnimatePresence>
+   519→        {error && (
+   520→          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+   521→            className="shrink-0 mt-2 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700 flex items-start justify-between gap-2 border border-red-200"
+   522→          >
+   523→            <p className="flex-1">{error}</p>
+   524→            <button onClick={() => setError(null)}><X className="h-3 w-3" /></button>
+   525→          </motion.div>
+   526→        )}
+   527→      </AnimatePresence>
+   528→
+   529→      {/* Messages */}
+   530→      <div className="flex-1 overflow-y-auto py-3 space-y-3 min-h-0">
+   531→        {messages.map(msg => (
+   532→          <motion.div key={msg.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+   533→            className={cn('flex gap-2', msg.sender === 'user' ? 'justify-end' : 'justify-start')}
+   534→          >
+   535→            {msg.sender === 'ai' && (
+   536→              <div className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold bg-violet-500">
+   537→                <GraduationCap className="h-4 w-4" />
+   538→              </div>
+   539→            )}
+   540→            <div className={cn(
+   541→              'max-w-[80%] rounded-2xl px-4 py-2.5 shadow-sm',
+   542→              msg.sender === 'user' ? 'bg-violet-600 text-white rounded-br-sm' : 'bg-white border border-gray-100 text-gray-800 rounded-bl-sm'
+   543→            )}>
+   544→              <p className="text-sm leading-relaxed" dir="auto">{msg.text}</p>
+   545→              {msg.sender === 'ai' && (
+   546→                <div className="mt-1.5 flex items-center gap-2">
+   547→                  <button onClick={() => tts.speak(msg.text)} className="text-xs text-violet-600 hover:underline flex items-center gap-0.5">
+   548→                    <Volume2 className="h-3 w-3" /> Tekrar dinle
+   549→                  </button>
+   550→                </div>
+   551→              )}
+   552→              {msg.tip && (
+   553→                <div className="mt-2 rounded-lg bg-amber-50 px-2 py-1.5 text-xs text-amber-800 border border-amber-100">
+   554→                  <span className="font-semibold">💡 </span>{msg.tip}
+   555→                </div>
+   556→              )}
+   557→              {msg.suggestions && msg.suggestions.length > 0 && level === 'beginner' && (
+   558→                <div className="mt-2 flex flex-wrap gap-1">
+   559→                  {msg.suggestions.map((s, i) => (
+   560→                    <button key={i} onClick={() => setTextInput(s)}
+   561→                      className="rounded-full bg-violet-50 border border-violet-100 px-2.5 py-1 text-[11px] text-violet-700 hover:bg-violet-100 transition-colors"
+   562→                    >{s}</button>
+   563→                  ))}
+   564→                </div>
+   565→              )}
+   566→            </div>
+   567→            {msg.sender === 'user' && (
+   568→              <div className="shrink-0 w-8 h-8 rounded-full bg-violet-100 text-violet-700 flex items-center justify-center text-sm">🧑</div>
+   569→            )}
+   570→          </motion.div>
+   571→        ))}
+   572→
+   573→        {/* Live transcript */}
+   574→        {phase === 'listening' && liveTranscript && (
+   575→          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex justify-end gap-2">
+   576→            <div className="bg-violet-100 border border-violet-200 rounded-2xl rounded-br-sm px-4 py-2.5 text-sm text-violet-800 italic">
+   577→              {liveTranscript}
+   578→              <span className="inline-block w-1 h-4 ml-1 bg-violet-500 animate-pulse align-middle" />
+   579→            </div>
+   580→            <div className="shrink-0 w-8 h-8 rounded-full bg-violet-100 text-violet-700 flex items-center justify-center text-sm">🧑</div>
+   581→          </motion.div>
+   582→        )}
+   583→
+   584→        {/* Loading */}
+   585→        {phase === 'loading-ai' && (
+   586→          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start gap-2">
+   587→            <div className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white bg-violet-500">
+   588→              <GraduationCap className="h-4 w-4" />
+   589→            </div>
+   590→            <div className="bg-white border border-gray-100 rounded-2xl rounded-bl-sm px-4 py-2.5 text-xs text-gray-500 flex items-center gap-2">
+   591→              <Loader2 className="h-3 w-3 animate-spin" /> AI düşünüyor...
+   592→            </div>
+   593→          </motion.div>
+   594→        )}
+   595→
+   596→        {/* Ended */}
+   597→        {phase === 'ended' && (
+   598→          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+   599→            className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-center"
+   600→          >
+   601→            <CheckCircle className="h-8 w-8 text-emerald-600 mx-auto mb-2" />
+   602→            <h3 className="font-bold text-emerald-900 mb-1">Oturum Tamamlandı!</h3>
+   603→            <p className="text-sm text-gray-600 mb-3">
+   604→              {messages.filter(m => m.sender === 'user').length} mesaj gönderdiniz.
+   605→            </p>
+   606→            <div className="flex gap-2 justify-center">
+   607→              <button onClick={reset} className="flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-medium bg-gray-100 text-gray-600 hover:bg-gray-200">
+   608→                <RotateCcw className="h-3.5 w-3.5" /> Yeniden Başla
+   609→              </button>
+   610→              <button onClick={() => { setPhase('select-level'); setMessages([]); setImageDescription(''); setLevel(null); }}
+   611→                className="flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-medium bg-violet-600 text-white hover:bg-violet-700"
+   612→              >
+   613→                <BookMarked className="h-3.5 w-3.5" /> Seviye Değiştir
+   614→              </button>
+   615→            </div>
+   616→          </motion.div>
+   617→        )}
+   618→
+   619→        <div ref={messagesEndRef} />
+   620→      </div>
+   621→
+   622→      {/* Listening indicator */}
+   623→      <AnimatePresence>
+   624→        {phase === 'listening' && (
+   625→          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
+   626→            className="shrink-0 mb-2 flex items-center gap-3 rounded-xl bg-red-50 px-3 py-2"
+   627→          >
+   628→            <div className="flex items-center gap-1">
+   629→              {[0, 1, 2, 3, 4].map(i => (
+   630→                <motion.span key={i} className="w-1 rounded-full bg-red-500"
+   631→                  animate={{ height: [4, 16 + i * 2, 4] }}
+   632→                  transition={{ duration: 0.4 + i * 0.05, repeat: Infinity, repeatType: 'reverse' }}
+   633→                  style={{ height: 4 }}
+   634→                />
+   635→              ))}
+   636→            </div>
+   637→            <span className="text-xs font-medium flex-1 text-red-700">🎤 Dinleniyor...</span>
+   638→          </motion.div>
+   639→        )}
+   640→      </AnimatePresence>
+   641→
+   642→      {/* Bottom input */}
+   643→      {phase !== 'ended' && (
+   644→        <div className="shrink-0 border-t border-gray-100 pt-3 space-y-1">
+   645→          <div className="flex items-center gap-2">
+   646→            <input
+   647→              type="text" value={textInput} onChange={e => setTextInput(e.target.value)}
+   648→              onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(textInput); } }}
+   649→              placeholder="Almanca yazarak cevap ver..." disabled={isBusy}
+   650→              className="flex-1 h-11 rounded-full border border-gray-200 bg-white px-4 text-sm focus:border-violet-400 focus:outline-none disabled:opacity-50"
+   651→              dir="auto"
+   652→            />
+   653→            <button onClick={handleMicToggle}
+   654→              disabled={!browserSupported || quotaExhausted || (phase !== 'chatting' && phase !== 'listening')}
+   655→              className={cn(
+   656→                'relative flex h-11 w-11 items-center justify-center rounded-full text-white shadow-md transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shrink-0',
+   657→                phase === 'listening' ? 'bg-red-500' : 'bg-violet-600'
+   658→              )}
+   659→            >
+   660→              {phase === 'listening' ? <Square className="h-5 w-5" fill="currentColor" /> : <Mic className="h-5 w-5" />}
+   661→            </button>
+   662→            <button onClick={() => sendMessage(textInput)} disabled={!textInput.trim() || isBusy}
+   663→              className="h-11 w-11 p-0 rounded-full bg-violet-600 hover:bg-violet-700 text-white shrink-0 disabled:opacity-50 flex items-center justify-center"
+   664→            >
+   665→              <Send className="h-4 w-4" />
+   666→            </button>
+   667→          </div>
+   668→          <p className="text-center text-[10px] text-muted-foreground">
+   669→            {phase === 'listening' ? '🎤 Dinleniyor... 5sn sessizlik = otomatik durdur'
+   670→              : quotaExhausted ? `🔒 Kota doldu — yazarak devam edebilirsin`
+   671→              : `🎤 ${quotaRemaining}/${speechUsage.monthlyLimit} kalan · Mikrofon veya yazı ile cevap ver`}
+   672→          </p>
+   673→        </div>
+   674→      )}
+   675→    </div>
+   676→  );
+   677→}
+   678→
